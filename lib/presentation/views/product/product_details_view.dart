@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:eshop/core/constant/strings.dart';
-import 'package:eshop/data/models/user/user_model.dart';
-import 'package:eshop/domain/auth/google_auth.dart';
-import 'package:eshop/presentation/blocs/user/user_bloc.dart';
+import 'package:trudor/core/constant/strings.dart';
+import 'package:trudor/data/models/user/user_model.dart';
+import 'package:trudor/domain/auth/google_auth.dart';
+import 'package:trudor/presentation/blocs/user/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';

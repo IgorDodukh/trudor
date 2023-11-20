@@ -1,4 +1,4 @@
-import 'package:eshop/core/constant/images.dart';
+import 'package:trudor/core/constant/images.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../domain/entities/user/user.dart';

@@ -1,13 +1,13 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eshop/core/error/exceptions.dart';
-import 'package:eshop/data/models/cart/cart_item_model.dart';
-import 'package:eshop/data/models/category/category_model.dart';
-import 'package:eshop/data/models/product/product_model.dart';
-import 'package:eshop/data/models/product/product_response_model.dart';
-import 'package:eshop/data/models/user/delivery_info_model.dart';
-import 'package:eshop/domain/usecases/product/get_product_usecase.dart';
+import 'package:trudor/core/error/exceptions.dart';
+import 'package:trudor/data/models/cart/cart_item_model.dart';
+import 'package:trudor/data/models/category/category_model.dart';
+import 'package:trudor/data/models/product/product_model.dart';
+import 'package:trudor/data/models/product/product_response_model.dart';
+import 'package:trudor/data/models/user/delivery_info_model.dart';
+import 'package:trudor/domain/usecases/product/get_product_usecase.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 

@@ -1,6 +1,6 @@
 // import 'dart:js_interop';
 
-import 'package:eshop/core/util/price_handler.dart';
+import 'package:trudor/core/util/price_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

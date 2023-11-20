@@ -1,5 +1,5 @@
-import 'package:eshop/data/data_sources/local/user_local_data_source.dart';
-import 'package:eshop/domain/auth/google_auth.dart';
+import 'package:trudor/data/data_sources/local/user_local_data_source.dart';
+import 'package:trudor/domain/auth/google_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class GoogleAuthRepository {

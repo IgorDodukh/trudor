@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:eshop/core/error/failures.dart';
-import 'package:eshop/domain/repositories/category_repository.dart';
-import 'package:eshop/domain/usecases/category/filter_category_usecase.dart';
+import 'package:trudor/core/error/failures.dart';
+import 'package:trudor/domain/repositories/category_repository.dart';
+import 'package:trudor/domain/usecases/category/filter_category_usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

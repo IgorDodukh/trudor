@@ -1,7 +1,7 @@
-import 'package:eshop/core/error/failures.dart';
-import 'package:eshop/data/repositories/auth/google_auth_repository.dart';
-import 'package:eshop/domain/auth/google_auth.dart';
-import 'package:eshop/domain/usecases/auth/google_auth_usecase.dart';
+import 'package:trudor/core/error/failures.dart';
+import 'package:trudor/data/repositories/auth/google_auth_repository.dart';
+import 'package:trudor/domain/auth/google_auth.dart';
+import 'package:trudor/domain/usecases/auth/google_auth_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';

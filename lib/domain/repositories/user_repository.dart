@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:eshop/domain/usecases/auth/google_auth_usecase.dart';
+import 'package:trudor/domain/usecases/auth/google_auth_usecase.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../core/usecases/usecase.dart';

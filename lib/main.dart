@@ -1,9 +1,9 @@
-import 'package:eshop/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:trudor/firebase_options.dart';
 
 import 'core/constant/strings.dart';
 import 'core/router/app_router.dart';

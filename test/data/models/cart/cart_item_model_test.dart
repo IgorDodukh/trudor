@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:eshop/data/models/cart/cart_item_model.dart';
-import 'package:eshop/domain/entities/cart/cart_item.dart';
+import 'package:trudor/data/models/cart/cart_item_model.dart';
+import 'package:trudor/domain/entities/cart/cart_item.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../fixtures/constant_objects.dart';

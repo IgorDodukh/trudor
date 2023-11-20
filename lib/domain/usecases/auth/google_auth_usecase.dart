@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:eshop/core/error/failures.dart';
-import 'package:eshop/core/usecases/usecase.dart';
-import 'package:eshop/domain/entities/user/user.dart';
-import 'package:eshop/domain/repositories/user_repository.dart';
+import 'package:trudor/core/error/failures.dart';
+import 'package:trudor/core/usecases/usecase.dart';
+import 'package:trudor/domain/entities/user/user.dart';
+import 'package:trudor/domain/repositories/user_repository.dart';
 
 class GoogleAuthUseCase implements UseCase<User, SignInGoogleParams> {
 

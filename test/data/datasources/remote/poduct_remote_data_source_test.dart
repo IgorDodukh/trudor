@@ -1,9 +1,9 @@
 import 'dart:convert';
-import 'package:eshop/core/constant/strings.dart';
-import 'package:eshop/core/error/exceptions.dart';
-import 'package:eshop/data/data_sources/remote/product_remote_data_source.dart';
-import 'package:eshop/data/models/product/product_response_model.dart';
-import 'package:eshop/domain/usecases/product/get_product_usecase.dart';
+import 'package:trudor/core/constant/strings.dart';
+import 'package:trudor/core/error/exceptions.dart';
+import 'package:trudor/data/data_sources/remote/product_remote_data_source.dart';
+import 'package:trudor/data/models/product/product_response_model.dart';
+import 'package:trudor/domain/usecases/product/get_product_usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';

@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:eshop/core/util/firstore_folder_methods.dart';
-import 'package:eshop/domain/entities/category/category.dart';
+import 'package:trudor/core/util/firstore_folder_methods.dart';
+import 'package:trudor/domain/entities/category/category.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../../../core/error/exceptions.dart';

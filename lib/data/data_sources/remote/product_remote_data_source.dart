@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:eshop/domain/entities/product/product.dart';
+import 'package:trudor/domain/entities/product/product.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../../core/error/exceptions.dart';

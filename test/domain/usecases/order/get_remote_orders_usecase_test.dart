@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:eshop/core/error/failures.dart';
-import 'package:eshop/core/usecases/usecase.dart';
-import 'package:eshop/domain/repositories/order_repository.dart';
-import 'package:eshop/domain/usecases/order/get_remote_orders_usecase.dart';
+import 'package:trudor/core/error/failures.dart';
+import 'package:trudor/core/usecases/usecase.dart';
+import 'package:trudor/domain/repositories/order_repository.dart';
+import 'package:trudor/domain/usecases/order/get_remote_orders_usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

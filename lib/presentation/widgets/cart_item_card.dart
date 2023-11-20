@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:eshop/core/constant/strings.dart';
-import 'package:eshop/data/models/user/user_model.dart';
-import 'package:eshop/domain/entities/cart/cart_item.dart';
-import 'package:eshop/presentation/blocs/cart/cart_bloc.dart';
-import 'package:eshop/presentation/blocs/user/user_bloc.dart';
+import 'package:trudor/core/constant/strings.dart';
+import 'package:trudor/data/models/user/user_model.dart';
+import 'package:trudor/domain/entities/cart/cart_item.dart';
+import 'package:trudor/presentation/blocs/cart/cart_bloc.dart';
+import 'package:trudor/presentation/blocs/user/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';

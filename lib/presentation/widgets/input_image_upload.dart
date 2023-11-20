@@ -1,5 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:eshop/core/util/firstore_folder_methods.dart';
+import 'package:trudor/core/util/firstore_folder_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';

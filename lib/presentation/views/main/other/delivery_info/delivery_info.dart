@@ -1,5 +1,5 @@
-import 'package:eshop/data/models/user/user_model.dart';
-import 'package:eshop/presentation/blocs/user/user_bloc.dart';
+import 'package:trudor/data/models/user/user_model.dart';
+import 'package:trudor/presentation/blocs/user/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';

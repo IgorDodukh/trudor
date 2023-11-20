@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:eshop/domain/usecases/auth/google_auth_usecase.dart';
+import 'package:trudor/domain/usecases/auth/google_auth_usecase.dart';
 
 import 'user_model.dart';
 

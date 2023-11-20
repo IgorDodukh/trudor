@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:eshop/core/util/firstore_folder_methods.dart';
-import 'package:eshop/data/data_sources/remote/product_firebase_data_source.dart';
-import 'package:eshop/domain/entities/product/product.dart';
+import 'package:trudor/core/util/firstore_folder_methods.dart';
+import 'package:trudor/data/data_sources/remote/product_firebase_data_source.dart';
+import 'package:trudor/domain/entities/product/product.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../../../core/error/exceptions.dart';

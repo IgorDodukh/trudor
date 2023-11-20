@@ -1,5 +1,5 @@
 
-import 'package:eshop/core/util/firstore_folder_methods.dart';
+import 'package:trudor/core/util/firstore_folder_methods.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 import '../../models/cart/cart_item_model.dart';

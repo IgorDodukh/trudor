@@ -1,4 +1,4 @@
-import 'package:eshop/core/error/failures.dart';
+import 'package:trudor/core/error/failures.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../models/category/category_model.dart';

@@ -1,4 +1,4 @@
-import 'package:eshop/domain/entities/product/price_tag.dart';
+import 'package:trudor/domain/entities/product/price_tag.dart';
 
 class PriceTagModel extends PriceTag {
   PriceTagModel({

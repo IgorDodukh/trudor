@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:eshop/domain/entities/cart/cart_item.dart';
+import 'package:trudor/domain/entities/cart/cart_item.dart';
 
 import '../../../../../core/error/failures.dart';
 import '../../../../../core/usecases/usecase.dart';

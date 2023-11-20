@@ -1,17 +1,17 @@
-import 'package:eshop/data/models/cart/cart_item_model.dart';
-import 'package:eshop/data/models/category/category_model.dart';
-import 'package:eshop/data/models/order/order_details_model.dart';
-import 'package:eshop/data/models/order/order_item_model.dart';
-import 'package:eshop/data/models/product/pagination_data_model.dart';
-import 'package:eshop/data/models/product/price_tag_model.dart';
-import 'package:eshop/data/models/product/product_model.dart';
-import 'package:eshop/data/models/product/product_response_model.dart';
-import 'package:eshop/data/models/user/authentication_response_model.dart';
-import 'package:eshop/data/models/user/delivery_info_model.dart';
-import 'package:eshop/data/models/user/user_model.dart';
-import 'package:eshop/domain/usecases/product/get_product_usecase.dart';
-import 'package:eshop/domain/usecases/user/sign_in_usecase.dart';
-import 'package:eshop/domain/usecases/user/sign_up_usecase.dart';
+import 'package:trudor/data/models/cart/cart_item_model.dart';
+import 'package:trudor/data/models/category/category_model.dart';
+import 'package:trudor/data/models/order/order_details_model.dart';
+import 'package:trudor/data/models/order/order_item_model.dart';
+import 'package:trudor/data/models/product/pagination_data_model.dart';
+import 'package:trudor/data/models/product/price_tag_model.dart';
+import 'package:trudor/data/models/product/product_model.dart';
+import 'package:trudor/data/models/product/product_response_model.dart';
+import 'package:trudor/data/models/user/authentication_response_model.dart';
+import 'package:trudor/data/models/user/delivery_info_model.dart';
+import 'package:trudor/data/models/user/user_model.dart';
+import 'package:trudor/domain/usecases/product/get_product_usecase.dart';
+import 'package:trudor/domain/usecases/user/sign_in_usecase.dart';
+import 'package:trudor/domain/usecases/user/sign_up_usecase.dart';
 
 //products
 final tProductModel = ProductModel(

@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:eshop/domain/usecases/cart/remove_cart_item_usecase.dart';
+import 'package:trudor/domain/usecases/cart/remove_cart_item_usecase.dart';
 
 import '../../../core/error/failures.dart';
 import '../../../core/usecases/usecase.dart';

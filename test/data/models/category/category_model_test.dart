@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:eshop/data/models/category/category_model.dart';
-import 'package:eshop/domain/entities/category/category.dart';
+import 'package:trudor/data/models/category/category_model.dart';
+import 'package:trudor/domain/entities/category/category.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../fixtures/constant_objects.dart';

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:custom_timer/custom_timer.dart';
-import 'package:eshop/core/util/sign_button.dart';
+import 'package:trudor/core/util/sign_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

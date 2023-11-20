@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:eshop/core/error/failures.dart';
-import 'package:eshop/domain/repositories/cart_repository.dart';
-import 'package:eshop/domain/usecases/cart/add_cart_item_usecase.dart';
+import 'package:trudor/core/error/failures.dart';
+import 'package:trudor/domain/repositories/cart_repository.dart';
+import 'package:trudor/domain/usecases/cart/add_cart_item_usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

@@ -1,11 +1,11 @@
 import 'dart:convert';
-import 'package:eshop/core/constant/strings.dart';
-import 'package:eshop/core/error/exceptions.dart';
-import 'package:eshop/core/error/failures.dart';
-import 'package:eshop/data/data_sources/remote/user_remote_data_source.dart';
-import 'package:eshop/data/models/user/authentication_response_model.dart';
-import 'package:eshop/domain/usecases/user/sign_in_usecase.dart';
-import 'package:eshop/domain/usecases/user/sign_up_usecase.dart';
+import 'package:trudor/core/constant/strings.dart';
+import 'package:trudor/core/error/exceptions.dart';
+import 'package:trudor/core/error/failures.dart';
+import 'package:trudor/data/data_sources/remote/user_remote_data_source.dart';
+import 'package:trudor/data/models/user/authentication_response_model.dart';
+import 'package:trudor/domain/usecases/user/sign_in_usecase.dart';
+import 'package:trudor/domain/usecases/user/sign_up_usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';

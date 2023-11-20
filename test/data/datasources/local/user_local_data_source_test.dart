@@ -1,7 +1,7 @@
-import 'package:eshop/core/error/exceptions.dart';
-import 'package:eshop/data/data_sources/local/cart_local_data_source.dart';
-import 'package:eshop/data/data_sources/local/user_local_data_source.dart';
-import 'package:eshop/data/models/user/user_model.dart';
+import 'package:trudor/core/error/exceptions.dart';
+import 'package:trudor/data/data_sources/local/cart_local_data_source.dart';
+import 'package:trudor/data/data_sources/local/user_local_data_source.dart';
+import 'package:trudor/data/models/user/user_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';

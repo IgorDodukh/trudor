@@ -1,5 +1,5 @@
-import 'package:eshop/core/util/firstore_folder_methods.dart';
-import 'package:eshop/data/models/category/category_model.dart';
+import 'package:trudor/core/util/firstore_folder_methods.dart';
+import 'package:trudor/data/models/category/category_model.dart';
 import 'package:flutter/material.dart';
 
 class CategoriesDropdownMenu extends StatefulWidget {

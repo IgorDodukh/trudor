@@ -1,6 +1,6 @@
-import 'package:eshop/core/constant/strings.dart';
-import 'package:eshop/core/error/failures.dart';
-import 'package:eshop/data/models/category/category_model.dart';
+import 'package:trudor/core/constant/strings.dart';
+import 'package:trudor/core/error/failures.dart';
+import 'package:trudor/data/models/category/category_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';
