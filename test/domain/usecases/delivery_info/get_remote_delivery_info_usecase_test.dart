@@ -32,7 +32,7 @@ void main() {
       /// Assert
       result.fold(
             (failure) => fail('Test Fail!'),
-            (cart) => expect(cart, [tDeliveryInfoModel]),
+            (cart) => expect(cart, tDeliveryInfoModel),
       );
       verify(() => mockProductRepository.getRemoteDeliveryInfo());
       verifyNoMoreInteractions(mockProductRepository);
