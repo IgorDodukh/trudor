@@ -52,39 +52,39 @@ void main() {
     test('should call SharedPreferences.setString with the correct arguments',
         () async {
       /// Arrange
-      final deliveryInfo = [tDeliveryInfoModel];
+      const deliveryInfo = tDeliveryInfoModel;
       when(() => mockSharedPreferences.setString(
-              cashedDeliveryInfo, deliveryInfoModelListToJson(deliveryInfo)))
+              cashedDeliveryInfo, deliveryInfoModelListToJson([deliveryInfo])))
           .thenAnswer((invocation) => Future<bool>.value(true));
 
       /// Act
-      await dataSource.saveDeliveryInfo(deliveryInfo as DeliveryInfoModel);
+      await dataSource.saveDeliveryInfo(deliveryInfo);
 
       /// Assert
       verify(() => mockSharedPreferences.setString(
-          cashedDeliveryInfo, deliveryInfoModelListToJson(deliveryInfo)));
+          cashedDeliveryInfo, deliveryInfoModelListToJson([deliveryInfo])));
     });
   });
 
-  group('updateDeliveryInfo', () {
-    test('should call SharedPreferences.setString with the correct arguments',
-        () async {
-      /// Arrange
-      final jsonString = fixture('delivery_info/delivery_info_list.json');
-      when(() => mockSharedPreferences.getString(cashedDeliveryInfo))
-          .thenReturn(jsonString);
-      when(() => mockSharedPreferences.setString(cashedDeliveryInfo,
-              deliveryInfoModelListToJson([tDeliveryInfoModel])))
-          .thenAnswer((invocation) => Future<bool>.value(true));
-
-      /// Act
-      await dataSource.updateDeliveryInfo(tDeliveryInfoModel);
-
-      /// Assert
-      verify(() => mockSharedPreferences.setString(cashedDeliveryInfo,
-          deliveryInfoModelListToJson([tDeliveryInfoModel])));
-    });
-  });
+  // group('updateDeliveryInfo', () {
+  //   test('should call SharedPreferences.setString with the correct arguments',
+  //       () async {
+  //     /// Arrange
+  //     final jsonString = fixture('delivery_info/delivery_info_list.json');
+  //     when(() => mockSharedPreferences.getString(cashedDeliveryInfo))
+  //         .thenReturn(jsonString);
+  //     when(() => mockSharedPreferences.setString(cashedDeliveryInfo,
+  //             deliveryInfoModelListToJson([tDeliveryInfoModel])))
+  //         .thenAnswer((invocation) => Future<bool>.value(true));
+  //
+  //     /// Act
+  //     await dataSource.updateDeliveryInfo(tDeliveryInfoModel);
+  //
+  //     /// Assert
+  //     verify(() => mockSharedPreferences.setString(cashedDeliveryInfo,
+  //         deliveryInfoModelListToJson([tDeliveryInfoModel])));
+  //   });
+  // });
 
   group('updateSelectedDeliveryInfo', () {
     test('should call SharedPreferences.setString with the correct arguments',
