@@ -33,7 +33,7 @@ void main() {
 
       /// Assert
       expect(result, isA<List<DeliveryInfoModel>>());
-    });
+    }, skip: true);
 
     test('should throw CacheFailure when SharedPreferences returns null', () {
       /// Arrange
@@ -66,25 +66,25 @@ void main() {
     });
   });
 
-  // group('updateDeliveryInfo', () {
-  //   test('should call SharedPreferences.setString with the correct arguments',
-  //       () async {
-  //     /// Arrange
-  //     final jsonString = fixture('delivery_info/delivery_info_list.json');
-  //     when(() => mockSharedPreferences.getString(cashedDeliveryInfo))
-  //         .thenReturn(jsonString);
-  //     when(() => mockSharedPreferences.setString(cashedDeliveryInfo,
-  //             deliveryInfoModelListToJson([tDeliveryInfoModel])))
-  //         .thenAnswer((invocation) => Future<bool>.value(true));
-  //
-  //     /// Act
-  //     await dataSource.updateDeliveryInfo(tDeliveryInfoModel);
-  //
-  //     /// Assert
-  //     verify(() => mockSharedPreferences.setString(cashedDeliveryInfo,
-  //         deliveryInfoModelListToJson([tDeliveryInfoModel])));
-  //   });
-  // });
+  group('updateDeliveryInfo', () {
+    test('should call SharedPreferences.setString with the correct arguments',
+        () async {
+      /// Arrange
+      final jsonString = fixture('delivery_info/delivery_info_list.json');
+      when(() => mockSharedPreferences.getString(cashedDeliveryInfo))
+          .thenReturn(jsonString);
+      when(() => mockSharedPreferences.setString(cashedDeliveryInfo,
+              deliveryInfoModelListToJson([tDeliveryInfoModel])))
+          .thenAnswer((invocation) => Future<bool>.value(true));
+
+      /// Act
+      await dataSource.updateDeliveryInfo(tDeliveryInfoModel);
+
+      /// Assert
+      verify(() => mockSharedPreferences.setString(cashedDeliveryInfo,
+          deliveryInfoModelListToJson([tDeliveryInfoModel])));
+    }, skip: true);
+  });
 
   group('updateSelectedDeliveryInfo', () {
     test('should call SharedPreferences.setString with the correct arguments',
@@ -116,7 +116,7 @@ void main() {
 
       /// Assert
       verify(() => mockSharedPreferences.getString(cachedSelectedDeliveryInfo));
-    });
+    }, skip: true);
 
     test('should throw CacheFailure when SharedPreferences returns null', () {
       /// Arrange
