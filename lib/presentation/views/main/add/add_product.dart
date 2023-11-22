@@ -16,6 +16,8 @@ import 'package:uuid/uuid.dart';
 
 
 class AddProductForm extends StatefulWidget {
+  // TODO: change add product form to floating card
+  // https://www.youtube.com/watch?v=Bxs8Zy2O4wk&t=7s
   final Product? productInfo;
 
   const AddProductForm({

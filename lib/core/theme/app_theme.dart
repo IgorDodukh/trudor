@@ -20,12 +20,13 @@ class AppTheme {
         .copyWith(background: kLightBackgroundColor),
   );
 
-  // static final darkTheme = ThemeData(
-  //     brightness: Brightness.dark,
-  //     primaryColor: darkPrimaryColor,
-  //     visualDensity: VisualDensity.adaptivePlatformDensity,
-  //     textButtonTheme: TextButtonThemeData(
-  //         style: TextButton.styleFrom(foregroundColor: darkTextColor)),
-  //     colorScheme: ColorScheme.light(secondary: lightSecondaryColor)
-  //         .copyWith(background: darkBackgroundColor));
+  static final darkTheme = ThemeData(
+      // brightness: Brightness.dark,
+      primaryColor: kDarkPrimaryColor,
+      visualDensity: VisualDensity.adaptivePlatformDensity,
+
+      textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(foregroundColor: kDarkTextColor)),
+      colorScheme: ColorScheme.dark(background: kDarkBackgroundColor)
+          .copyWith(secondary: kDarkBackgroundColor, brightness: Brightness.dark));
 }
