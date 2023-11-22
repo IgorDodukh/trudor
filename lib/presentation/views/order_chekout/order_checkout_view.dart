@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:trudor/core/extension/string_extension.dart';
-import 'package:trudor/presentation/blocs/cart/cart_bloc.dart';
+import 'package:trudor/presentation/blocs/favorites/favorites_bloc.dart';
 import 'package:trudor/presentation/blocs/home/navbar_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,7 +8,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import '../../../core/services/services_locator.dart' as di;
 import '../../../core/router/app_router.dart';
-import '../../../domain/entities/cart/cart_item.dart';
+import '../../../domain/entities/favorites/favorites_item.dart';
 import '../../../domain/entities/order/order_details.dart';
 import '../../../domain/entities/order/order_item.dart';
 import '../../blocs/delivery_info/delivery_info_fetch/delivery_info_fetch_cubit.dart';
@@ -17,7 +17,7 @@ import '../../widgets/input_form_button.dart';
 import '../../widgets/outline_label_card.dart';
 
 class OrderCheckoutView extends StatelessWidget {
-  final List<CartItem> items;
+  final List<FavoritesItem> items;
   const OrderCheckoutView({Key? key, required this.items}) : super(key: key);
 
   @override
@@ -32,7 +32,7 @@ class OrderCheckoutView extends StatelessWidget {
           } else if (state is OrderAddSuccess) {
             context.read<NavbarCubit>().update(0);
             context.read<NavbarCubit>().controller.jumpToPage(0);
-            context.read<CartBloc>().add(const ClearCart());
+            context.read<FavoritesBloc>().add(const ClearFavorites());
             Navigator.of(context).pop();
             EasyLoading.showSuccess("Order Placed Successfully");
           } else if (state is OrderAddFail) {

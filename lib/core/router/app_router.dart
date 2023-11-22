@@ -1,7 +1,7 @@
 import 'package:trudor/presentation/views/main/home/filter/filter_view.dart';
 import 'package:flutter/material.dart';
 
-import '../../domain/entities/cart/cart_item.dart';
+import '../../domain/entities/favorites/favorites_item.dart';
 import '../../domain/entities/product/product.dart';
 import '../../domain/entities/user/user.dart';
 import '../../presentation/views/authentication/signin_view.dart';
@@ -54,7 +54,7 @@ class AppRouter {
                   user: user,
                 ));
       case orderCheckout:
-        List<CartItem> items = routeSettings.arguments as List<CartItem>;
+        List<FavoritesItem> items = routeSettings.arguments as List<FavoritesItem>;
         return MaterialPageRoute(
             builder: (_) => OrderCheckoutView(
                   items: items,

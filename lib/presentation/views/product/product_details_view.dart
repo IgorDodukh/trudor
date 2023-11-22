@@ -1,21 +1,16 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:trudor/core/constant/strings.dart';
 import 'package:trudor/data/models/user/user_model.dart';
-import 'package:trudor/domain/auth/google_auth.dart';
 import 'package:trudor/presentation/blocs/user/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../../../../../domain/entities/cart/cart_item.dart';
+import '../../../../../domain/entities/favorites/favorites_item.dart';
 import '../../../../../domain/entities/product/price_tag.dart';
 import '../../../../../domain/entities/product/product.dart';
-import '../../../core/router/app_router.dart';
-import '../../blocs/cart/cart_bloc.dart';
-import '../../widgets/input_form_button.dart';
+import '../../blocs/favorites/favorites_bloc.dart';
 
 class ProductDetailsView extends StatefulWidget {
   final Product product;
@@ -39,8 +34,8 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
   Widget build(BuildContext context) {
     bool isFavorite = false;
     // bool isLoading = false;
-    final cartState = context.read<CartBloc>().state.cart;
-    for (var element in cartState) {
+    final favoritesState = context.read<FavoritesBloc>().state.favorites;
+    for (var element in favoritesState) {
       if (element.product.id == widget.product.id) {
         isFavorite = true;
         break;
@@ -49,6 +44,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        surfaceTintColor: Colors.white,
         foregroundColor: Colors.black,
         backgroundColor: Colors.white,
         actions: [
@@ -64,6 +60,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
               options: CarouselOptions(
                 height: double.infinity,
                 enlargeCenterPage: true,
+                enableInfiniteScroll: false,
                 aspectRatio: 16 / 9,
                 viewportFraction: 1,
                 onPageChanged: (index, reason) {
@@ -83,7 +80,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                           decoration: BoxDecoration(
                             image: DecorationImage(
                               image: imageProvider,
-                              fit: BoxFit.contain,
+                              fit: BoxFit.cover,
                               colorFilter: ColorFilter.mode(
                                   Colors.grey.shade50.withOpacity(0.25),
                                   BlendMode.softLight),
@@ -221,15 +218,15 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                 onPressed: () {
                   final userId = (context.read<UserBloc>().state.props.first as UserModel).id;
                   if (isFavorite) {
-                    context.read<CartBloc>().add(RemoveProduct(
-                        cartItem: CartItem(
+                    context.read<FavoritesBloc>().add(RemoveProduct(
+                        favoritesItem: FavoritesItem(
                             product: widget.product,
                             userId: userId,
                             priceTag: _selectedPriceTag)));
 
                   } else {
-                    context.read<CartBloc>().add(AddProduct(
-                        cartItem: CartItem(
+                    context.read<FavoritesBloc>().add(AddProduct(
+                        favoritesItem: FavoritesItem(
                             product: widget.product,
                             userId: userId,
                             priceTag: _selectedPriceTag)));
@@ -255,7 +252,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
             //     onClick: () {
             //       Navigator.of(context)
             //           .pushNamed(AppRouter.orderCheckout, arguments: [
-            //         CartItem(
+            //         FavoritesItem(
             //           product: widget.product,
             //           priceTag: _selectedPriceTag,
             //         )

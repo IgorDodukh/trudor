@@ -1,30 +1,30 @@
 import 'package:dartz/dartz.dart';
 import 'package:trudor/core/error/failures.dart';
 import 'package:trudor/core/usecases/usecase.dart';
-import 'package:trudor/domain/repositories/delivery_info_repository.dart';
-import 'package:trudor/domain/usecases/delivery_info/get_selected_delivery_info_usecase.dart';
+import 'package:trudor/domain/repositories/favorites_repository.dart';
+import 'package:trudor/domain/usecases/favorites/sync_favorites_usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../fixtures/constant_objects.dart';
 
-class MockFavoritesRepository extends Mock implements DeliveryInfoRepository {}
+class MockFavoritesRepository extends Mock implements FavoritesRepository {}
 
 void main() {
-  late GetSelectedDeliveryInfoInfoUseCase usecase;
+  late SyncFavoritesUseCase usecase;
   late MockFavoritesRepository mockProductRepository;
 
   setUp(() {
     mockProductRepository = MockFavoritesRepository();
-    usecase = GetSelectedDeliveryInfoInfoUseCase(mockProductRepository);
+    usecase = SyncFavoritesUseCase(mockProductRepository);
   });
 
   test(
-    'Should get delivery info from the repository when DeliveryInfo Repository add data successfully',
+    'Should get favorites item from the repository when Favorites Repository add data successfully',
         () async {
       /// Arrange
-      when(() => mockProductRepository.getSelectedDeliveryInfo())
-          .thenAnswer((_) async => const Right(tDeliveryInfoModel));
+      when(() => mockProductRepository.syncFavorites())
+          .thenAnswer((_) async => Right([tFavoritesItemModel]));
 
       /// Act
       final result = await usecase(NoParams());
@@ -32,17 +32,17 @@ void main() {
       /// Assert
       result.fold(
             (failure) => fail('Test Fail!'),
-            (data) => expect(data, tDeliveryInfoModel),
+            (favorites) => expect(favorites, [tFavoritesItemModel]),
       );
-      verify(() => mockProductRepository.getSelectedDeliveryInfo());
+      verify(() => mockProductRepository.syncFavorites());
       verifyNoMoreInteractions(mockProductRepository);
     },
   );
 
   test('should return a Failure from the repository', () async {
     /// Arrange
-    final failure = CacheFailure();
-    when(() => mockProductRepository.getSelectedDeliveryInfo())
+    final failure = NetworkFailure();
+    when(() => mockProductRepository.syncFavorites())
         .thenAnswer((_) async => Left(failure));
 
     /// Act
@@ -50,7 +50,7 @@ void main() {
 
     /// Assert
     expect(result, Left(failure));
-    verify(() => mockProductRepository.getSelectedDeliveryInfo());
+    verify(() => mockProductRepository.syncFavorites());
     verifyNoMoreInteractions(mockProductRepository);
   });
 }

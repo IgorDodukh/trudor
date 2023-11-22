@@ -1,4 +1,4 @@
-import 'package:trudor/data/models/cart/cart_item_model.dart';
+import 'package:trudor/data/models/favorites/favorites_item_model.dart';
 import 'package:trudor/data/models/category/category_model.dart';
 import 'package:trudor/data/models/order/order_details_model.dart';
 import 'package:trudor/data/models/order/order_item_model.dart';
@@ -47,8 +47,8 @@ final tProductResponseModel = ProductResponseModel(
 //price tag
 final tPriceTagModel = PriceTagModel(id: "1", name: "name", price: 100);
 
-//cart
-final tCartItemModel = CartItemModel(
+//favorites
+final tFavoritesItemModel = FavoritesItemModel(
   id: "1",
   product: tProductModel,
   priceTag: tPriceTagModel,

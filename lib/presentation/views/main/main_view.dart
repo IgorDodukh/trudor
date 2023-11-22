@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 
 import '../../blocs/home/navbar_cubit.dart';
-import 'cart/favorites_view.dart';
+import 'favorites/favorites_view.dart';
 import 'category/category_view.dart';
 import 'home/home_view.dart';
 import 'other/other_view.dart';

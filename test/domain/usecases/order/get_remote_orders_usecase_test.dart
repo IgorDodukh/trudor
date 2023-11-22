@@ -8,14 +8,14 @@ import 'package:mocktail/mocktail.dart';
 
 import '../../../fixtures/constant_objects.dart';
 
-class MockCartRepository extends Mock implements OrderRepository {}
+class MockFavoritesRepository extends Mock implements OrderRepository {}
 
 void main() {
   late GetRemoteOrdersUseCase usecase;
-  late MockCartRepository mockRepository;
+  late MockFavoritesRepository mockRepository;
 
   setUp(() {
-    mockRepository = MockCartRepository();
+    mockRepository = MockFavoritesRepository();
     usecase = GetRemoteOrdersUseCase(mockRepository);
   });
 
@@ -32,7 +32,7 @@ void main() {
       /// Assert
       result.fold(
             (failure) => fail('Test Fail!'),
-            (cart) => expect(cart, [tOrderDetailsModel]),
+            (favorites) => expect(favorites, [tOrderDetailsModel]),
       );
       verify(() => mockRepository.getRemoteOrders());
       verifyNoMoreInteractions(mockRepository);

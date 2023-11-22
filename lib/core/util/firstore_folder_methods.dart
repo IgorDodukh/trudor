@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:trudor/core/error/exceptions.dart';
-import 'package:trudor/data/models/cart/cart_item_model.dart';
+import 'package:trudor/data/models/favorites/favorites_item_model.dart';
 import 'package:trudor/data/models/category/category_model.dart';
 import 'package:trudor/data/models/product/product_model.dart';
 import 'package:trudor/data/models/product/product_response_model.dart';
@@ -34,7 +34,7 @@ class FirestoreService {
       }
     }
 
-    Future<void> addProductToFavorites(CartItemModel favoritesItem) async {
+    Future<void> addProductToFavorites(FavoritesItemModel favoritesItem) async {
       try {
         DocumentReference productRef = _firestore.collection('favorites').doc(favoritesItem.userId);
         final snapshot = await productRef.get();
@@ -84,7 +84,7 @@ class FirestoreService {
       return null;
     }
 
-    Future<void> removeProductFromFavorites(CartItemModel favoritesItem) async {
+    Future<void> removeProductFromFavorites(FavoritesItemModel favoritesItem) async {
       try {
         DocumentReference productRef = _firestore.collection('favorites').doc(favoritesItem.userId);
         await productRef.update({favoritesItem.product.id: false});
@@ -126,7 +126,7 @@ class FirestoreService {
           productsQuery = productsQuery.where('name', arrayContains: params.keyword);
         }
 
-        if (params.categories != null && params.categories.isNotEmpty) {
+        if (params.categories.isNotEmpty) {
           productsQuery = productsQuery.where('categories', arrayContainsAny: params.categories.map((e) => e.id).toList());
         }
 

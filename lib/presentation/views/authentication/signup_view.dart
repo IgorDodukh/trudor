@@ -7,7 +7,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import '../../../core/constant/images.dart';
 import '../../../core/error/failures.dart';
 import '../../../core/router/app_router.dart';
-import '../../blocs/cart/cart_bloc.dart';
+import '../../blocs/favorites/favorites_bloc.dart';
 import '../../widgets/input_form_button.dart';
 import '../../widgets/input_text_form_field.dart';
 
@@ -35,7 +35,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         if (state is UserLoading) {
           EasyLoading.show(status: 'Loading...');
         } else if (state is UserLogged) {
-          context.read<CartBloc>().add(const GetCart());
+          context.read<FavoritesBloc>().add(const GetFavorites());
           Navigator.of(context).pushNamedAndRemoveUntil(
             AppRouter.home,
             ModalRoute.withName(''),

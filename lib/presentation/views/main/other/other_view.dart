@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/constant/images.dart';
 import '../../../../core/router/app_router.dart';
-import '../../../blocs/cart/cart_bloc.dart';
+import '../../../blocs/favorites/favorites_bloc.dart';
 import '../../../blocs/user/user_bloc.dart';
 import '../../../widgets/other_item_card.dart';
 
@@ -167,9 +167,9 @@ class OtherView extends StatelessWidget {
           const SizedBox(height: 6),
           OtherItemCard(
             onClick: () {
-              context.read<CartBloc>().add(const ClearCart());
+              context.read<FavoritesBloc>().add(const ClearFavorites());
             },
-            title: "Clear cart",
+            title: "Clear Favorites",
           ),
           const SizedBox(height: 6),
           // OtherItemCard(
@@ -186,7 +186,7 @@ class OtherView extends StatelessWidget {
                 return OtherItemCard(
                   onClick: () {
                     context.read<UserBloc>().add(SignOutUser());
-                    context.read<CartBloc>().add(const ClearCart());
+                    context.read<FavoritesBloc>().add(const ClearFavorites());
                   },
                   title: "Sign Out",
                 );

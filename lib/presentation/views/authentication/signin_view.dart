@@ -10,7 +10,7 @@ import 'package:sign_in_button/sign_in_button.dart';
 import '../../../core/constant/images.dart';
 import '../../../core/router/app_router.dart';
 import '../../../domain/usecases/user/sign_in_usecase.dart';
-import '../../blocs/cart/cart_bloc.dart';
+import '../../blocs/favorites/favorites_bloc.dart';
 import '../../blocs/user/user_bloc.dart';
 import '../../widgets/input_form_button.dart';
 import '../../widgets/input_text_form_field.dart';
@@ -35,7 +35,7 @@ class _SignInViewState extends State<SignInView> {
         if (state is UserLoading) {
           EasyLoading.show(status: 'Loading...');
         } else if (state is UserLogged) {
-          context.read<CartBloc>().add(const GetCart());
+          context.read<FavoritesBloc>().add(const GetFavorites());
           Navigator.of(context).pushNamedAndRemoveUntil(
             AppRouter.home,
             ModalRoute.withName(''),
