@@ -44,6 +44,7 @@ class ProductCard extends StatelessWidget {
         children: [
           Expanded(
               child: Container(
+                width: MediaQuery.of(context).size.width / 2,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
@@ -78,9 +79,10 @@ class ProductCard extends StatelessWidget {
                   : Hero(
                       tag: product!.id,
                       child: Padding(
-                        padding: const EdgeInsets.all(32.0),
+                        padding: const EdgeInsets.all(0.0),
                         child: CachedNetworkImage(
                           imageUrl: product!.images.first.isNotEmpty ? product!.images.first : noImagePlaceholder,
+                          fit: BoxFit.cover,
                           placeholder: (context, url) => Shimmer.fromColors(
                             baseColor: Colors.grey.shade100,
                             highlightColor: Colors.white,

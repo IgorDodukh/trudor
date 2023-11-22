@@ -17,7 +17,6 @@ class MainView extends StatefulWidget {
 }
 
 class _MainViewState extends State<MainView> {
-  // int _selectedItemPosition = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -43,9 +42,9 @@ class _MainViewState extends State<MainView> {
             },
           ),
           Positioned(
-            bottom: 10,
-            left: 18,
-            right: 18,
+            bottom: -34,
+            left: 0,
+            right: 0,
             child: Padding(
               padding: const EdgeInsets.only(left: 0, right: 0),
               child: BlocBuilder<NavbarCubit, int>(
@@ -54,23 +53,27 @@ class _MainViewState extends State<MainView> {
                     behaviour: SnakeBarBehaviour.floating,
                     snakeShape: SnakeShape.indicator,
                     shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(48)),
+                      borderRadius: BorderRadius.all(Radius.circular(25)),
                     ),
                     backgroundColor: Colors.black87,
                     snakeViewColor: Colors.black87,
-                    height: 68,
-                    elevation: 4,
+                    height: 90,
+                    elevation: 6,
                     selectedItemColor: SnakeShape.circle == SnakeShape.indicator
                         ? Colors.black87
                         : null,
                     unselectedItemColor: Colors.white,
                     selectedLabelStyle: const TextStyle(
                       color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                      fontStyle: FontStyle.italic,
+                      fontWeight: FontWeight.w600,
                       fontSize: 12,
                     ),
-                    showUnselectedLabels: false,
+                    unselectedLabelStyle: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
+                    ),
+                    showUnselectedLabels: true,
                     showSelectedLabels: true,
                     currentIndex: state,
                     onTap: (index) => setState(() {
@@ -82,37 +85,55 @@ class _MainViewState extends State<MainView> {
                     }),
                     items: const [
                       BottomNavigationBarItem(
-                          icon: Icon(Icons.home_outlined, size: 30),
-                          activeIcon: Icon(Icons.home, size: 30),
-                          // label: 'Home'
+                          icon: Icon(Icons.home_outlined, size: 25),
+                          activeIcon: Icon(Icons.home, size: 25),
+                          label: 'Home',
                       ),
                       BottomNavigationBarItem(
-                          icon: Icon(Icons.dashboard_outlined, size: 30),
-                          activeIcon: Icon(Icons.dashboard, size: 30),
-                          // label: 'Category'
+                          icon: Icon(Icons.dashboard_outlined, size: 25),
+                          activeIcon: Icon(Icons.dashboard, size: 25),
+                          label: 'Category'
                       ),
                       BottomNavigationBarItem(
-                          icon: Icon(Icons.add_circle_outline_rounded, size: 40),
-                          activeIcon: Icon(Icons.add_circle, size: 40),
-                          // label: 'Sell'
+                          icon: Icon(Icons.add_circle_outline_rounded, size: 25),
+                          activeIcon: Icon(Icons.add_circle, size: 25),
+                          label: 'Sell'
                       ),
                       BottomNavigationBarItem(
-                          icon: Icon(Icons.favorite_border, size: 30),
-                          activeIcon: Icon(Icons.favorite, size: 30),
-                          // label: 'Favorites'
+                          icon: Icon(Icons.favorite_border, size: 25),
+                          activeIcon: Icon(Icons.favorite, size: 25),
+                          label: 'Favorites'
                       ),
                       BottomNavigationBarItem(
-                          icon: Icon(Icons.manage_accounts_outlined, size: 35),
-                          activeIcon: Icon(Icons.manage_accounts, size: 35),
-                          // label: 'User'
+                          icon: Icon(Icons.manage_accounts_outlined, size: 25),
+                          activeIcon: Icon(Icons.manage_accounts, size: 25),
+                          label: 'User'
                       ),
-                      // BottomNavigationBarItem(icon: Icon(Icons.search), label: 'search')
                     ],
                   );
                 },
               ),
             ),
           ),
+          // TODO: add overlapped button to open add product form
+          // Positioned(
+          //   bottom: 65.0,
+          //   left: 0,
+          //   right: 0,
+          //   child: Container(
+          //     // width: MediaQuery.of(context).size.width,
+          //     height: 50.0, // Adjust the height as needed
+          //     // color: Colors.blue,
+          //     child: Center(
+          //       child: IconButton(
+          //         icon: const Icon(
+          //           Icons.add_circle, size: 70),
+          //         color: Colors.deepOrange,
+          //         onPressed: () {  },
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
