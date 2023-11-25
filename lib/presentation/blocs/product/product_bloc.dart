@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:trudor/domain/usecases/product/add_product_usecase.dart';
 
 import '../../../core/error/failures.dart';
@@ -50,7 +51,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         )),
       );
     } catch (e) {
-      print("_onLoadProducts EXCEPTION: $e");
+      EasyLoading.showError("Failed to Load Products: $e");
       emit(ProductError(
         products: state.products,
         metaData: state.metaData,
@@ -77,7 +78,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
             )),
       );
     } catch (e) {
-      print("_onAddProduct EXCEPTION: $e");
+      EasyLoading.showError("Failed to add Product: $e");
       emit(ProductError(
         products: state.products,
         metaData: state.metaData,
@@ -122,7 +123,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
           },
         );
       } catch (e) {
-        print("_onLoadMoreProducts EXCEPTION: $e");
+        EasyLoading.showError("Failed to Load More Products: $e");
         emit(ProductError(
           products: state.products,
           metaData: state.metaData,

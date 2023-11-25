@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:trudor/domain/usecases/favorites/remove_favorites_item_usecase.dart';
 
 import '../../../core/error/failures.dart';
@@ -47,7 +48,7 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
         (favorites) => emit(FavoritesLoaded(favorites: favorites)),
       );
     } catch (e) {
-      print("_onGetFavorites EXCEPTION: $e");
+      EasyLoading.showError("Failed to get Favorites: $e");
       emit(FavoritesError(failure: ExceptionFailure(), favorites: state.favorites));
     }
   }
@@ -62,14 +63,13 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
       } else {
         favorites.add(event.favoritesItem);
         var result = await _addFavoritesUseCase(event.favoritesItem);
-        print("Product added to Favorites");
         result.fold(
               (failure) => emit(FavoritesError(favorites: state.favorites, failure: failure)),
               (_) => emit(FavoritesLoaded(favorites: favorites)),
         );
       }
     } catch (e) {
-      print("_onAddToFavorites() EXCEPTION: $e");
+      EasyLoading.showError("Failed to add Favorites: $e");
       emit(FavoritesError(favorites: state.favorites, failure: ExceptionFailure()));
     }
   }
@@ -82,13 +82,12 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
       final indexToRemove = favorites.indexWhere((favoritesItem) => favoritesItem.product.id == event.favoritesItem.product.id);
       favorites.removeAt(indexToRemove);
       var result = await _removeFavoritesItemUseCase(event.favoritesItem);
-      print("Product removed from Favorites");
       result.fold(
             (failure) => emit(FavoritesError(favorites: state.favorites, failure: failure)),
             (_) => emit(FavoritesLoaded(favorites: favorites)),
       );
     } catch (e) {
-      print("_onRemoveFromFavorites() EXCEPTION: $e");
+      EasyLoading.showError("Failed to remove Favorites: $e");
       emit(FavoritesError(favorites: state.favorites, failure: ExceptionFailure()));
     }  }
 
@@ -98,7 +97,7 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
       emit(const FavoritesLoaded(favorites: []));
       await _clearFavoritesUseCase(NoParams());
     } catch (e) {
-      print("_onClearFavorites EXCEPTION: $e");
+      EasyLoading.showError("Failed to clear Favorites: $e");
       emit(FavoritesError(favorites: const [], failure: ExceptionFailure()));
     }
   }

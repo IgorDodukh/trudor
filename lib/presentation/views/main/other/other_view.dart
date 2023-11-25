@@ -115,23 +115,6 @@ class OtherView extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 6),
                   child: OtherItemCard(
                     onClick: () {
-                      Navigator.of(context).pushNamed(AppRouter.orders);
-                    },
-                    title: "Orders",
-                  ),
-                );
-              } else {
-                return const SizedBox();
-              }
-            },
-          ),
-          BlocBuilder<UserBloc, UserState>(
-            builder: (context, state) {
-              if (state is UserLogged) {
-                return Padding(
-                  padding: const EdgeInsets.only(top: 6),
-                  child: OtherItemCard(
-                    onClick: () {
                       Navigator.of(context)
                           .pushNamed(AppRouter.deliveryDetails);
                     },
@@ -171,14 +154,6 @@ class OtherView extends StatelessWidget {
             },
             title: "Clear Favorites",
           ),
-          const SizedBox(height: 6),
-          // OtherItemCard(
-          //   onClick: () async {
-          //     FirestoreService firestoreService = FirestoreService();
-          //     await firestoreService.addProductToFirestore();
-          //   },
-          //   title: "Add new product",
-          // ),
           const SizedBox(height: 6),
           BlocBuilder<UserBloc, UserState>(
             builder: (context, state) {

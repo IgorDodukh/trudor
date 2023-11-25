@@ -41,7 +41,6 @@ class _SignInViewState extends State<SignInView> {
             ModalRoute.withName(''),
           );
         } else if (state is UserLoggedFail) {
-          print(state.failure);
           if (state.failure is CredentialFailure) {
             EasyLoading.showError("Username/Password Wrong!");
           } else {

@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:trudor/data/data_sources/remote/favorites_firebase_data_source.dart';
 
 import '../../../../core/error/failures.dart';
@@ -56,7 +57,7 @@ class FavoritesRepositoryImpl implements FavoritesRepository {
       final localProducts = await localDataSource.getFavorites();
       return Right(localProducts);
     } on Failure catch (failure) {
-      print("getCachedFavorites failure: $failure");
+      EasyLoading.showError("Failed to get cashed Favorites: $failure");
       return Left(failure);
     }
   }

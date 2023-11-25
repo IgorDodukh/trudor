@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:trudor/core/error/exceptions.dart';
 import 'package:trudor/core/util/typesense_service.dart';
 import 'package:trudor/data/models/favorites/favorites_item_model.dart';
@@ -25,7 +26,7 @@ class FirestoreService {
         DocumentReference productRef = _firestore.collection('products').doc(productData['_id']);
         await productRef.set(productData);
       } catch (e) {
-        print('Error adding product to Firestore: $e');
+        EasyLoading.showError("Failed to add product: $e");
       }
     }
 
@@ -35,7 +36,7 @@ class FirestoreService {
         DocumentReference productRef = _firestore.collection('products').doc(productData['_id']);
         await productRef.update(productData);
       } catch (e) {
-        print('Error updating product in Firestore: $e');
+        EasyLoading.showError("Failed to update product: $e");
       }
     }
 
@@ -49,7 +50,7 @@ class FirestoreService {
           await productRef.update({favoritesItem.product.id: true});
         }
       } catch (e) {
-        print('Error adding product to Firestore Favorites: $e');
+        EasyLoading.showError("Failed to add product to favorites: $e");
       }
     }
 
@@ -59,7 +60,7 @@ class FirestoreService {
         DocumentReference productRef = _firestore.collection('users').doc(deliveryInfo.userId);
         await productRef.set(info);
       } catch (e) {
-        print('Error adding Delivery info to Firestore: $e');
+        EasyLoading.showError("Failed to add address info: $e");
       }
     }
 
@@ -69,7 +70,7 @@ class FirestoreService {
         DocumentReference productRef = _firestore.collection('users').doc(deliveryInfo.userId);
         await productRef.update(info);
       } catch (e) {
-        print('Error updating Delivery info in Firestore: $e');
+        EasyLoading.showError("Failed to update address info: $e");
       }
     }
 
@@ -84,7 +85,7 @@ class FirestoreService {
         } else {
         }
       } catch (e) {
-        print('Error adding Delivery info to Firestore: $e');
+        EasyLoading.showError("Failed to get address info: $e");
       }
       return null;
     }
@@ -94,7 +95,7 @@ class FirestoreService {
         DocumentReference productRef = _firestore.collection('favorites').doc(favoritesItem.userId);
         await productRef.update({favoritesItem.product.id: false});
       } catch (e) {
-        print('Error removing product from Firestore Favorites: $e');
+        EasyLoading.showError("Failed to remove product from favorites: $e");
       }
     }
 
@@ -104,7 +105,7 @@ class FirestoreService {
           'name': newName,
         });
       } catch (e) {
-        print('Error updating product name: $e');
+        EasyLoading.showError("Failed to update product name: $e");
       }
     }
 
@@ -118,7 +119,7 @@ class FirestoreService {
           print('Product not found');
         }
       } catch (e) {
-        print('Error getting product: $e');
+        EasyLoading.showError("Failed to get product details: $e");
       }
     }
 
@@ -128,7 +129,7 @@ class FirestoreService {
         final foundProducts = typesenseService.searchProducts(params).then((value) => productResponseModelFromTypesense(value));
         return foundProducts;
       } catch (e) {
-        print('Error getting products: $e');
+        EasyLoading.showError("Failed to get products: $e");
         throw ServerException();
       }
     }
@@ -145,7 +146,7 @@ class FirestoreService {
         QuerySnapshot querySnapshot = await productsQuery.get();
         return productResponseModelFromFirestore(querySnapshot);
       } catch (e) {
-        print('Error getting products: $e');
+        EasyLoading.showError("Failed to get products: $e");
         throw ServerException();
       }
     }
@@ -158,7 +159,7 @@ class FirestoreService {
             .toList();
         return List<CategoryModel>.from(categories.map((x) => CategoryModel.fromJson(x)));
       } catch (e) {
-        print('Error getting products: $e');
+        EasyLoading.showError("Failed to get categories: $e");
       }
       return null;
     }
@@ -180,7 +181,7 @@ class FirestoreService {
     final Reference fileRef = FirebaseStorage.instance.refFromURL(imageUrl);
     fileRef.delete().then((value) => {
       print("Image was deleted"),
-    }).catchError((error) => {print("Error happened: $error")});
+    }).catchError((error) => {EasyLoading.showError("Failed to remove image: $error")});
   }
 
 }
