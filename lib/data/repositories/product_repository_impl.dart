@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:trudor/core/util/firstore_folder_methods.dart';
 import 'package:trudor/data/data_sources/remote/product_firebase_data_source.dart';
 import 'package:trudor/domain/entities/product/product.dart';
 
@@ -27,6 +26,8 @@ class ProductRepositoryImpl implements ProductRepository {
     required this.localDataSource,
     required this.networkInfo,
   });
+  // TODO: https://medium.com/@ravipatel84184/flutter-auto-complete-search-list-step-by-step-implementation-guide-472a80d98e22
+  // TODO: https://medium.com/codechai/implementing-search-in-flutter-17dc5aa72018
 
   @override
   Future<Either<Failure, ProductResponse>> getProducts(FilterProductParams params) async {

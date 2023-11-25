@@ -30,7 +30,6 @@ class FavoritesRepositoryImpl implements FavoritesRepository {
       final remoteProduct = await firebaseDataSource.addToFavorites(FavoritesItemModel.fromParent(params));
       return Right(remoteProduct);
     } else {
-      print("FavoritesRepositoryImpl.addToFavorites.isTokenAvailable.else");
       await localDataSource.saveFavoritesItem(FavoritesItemModel.fromParent(params));
       return Right(params);
     }
@@ -74,7 +73,6 @@ class FavoritesRepositoryImpl implements FavoritesRepository {
           final syncedResult = await firebaseDataSource.syncFavorites(
             localFavoritesItems,
           );
-          print("Saving Favorites items: $syncedResult");
           await localDataSource.saveFavorites(syncedResult);
           return Right(syncedResult);
         } on Failure catch (failure) {

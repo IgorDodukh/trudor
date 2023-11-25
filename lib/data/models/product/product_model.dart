@@ -9,6 +9,7 @@ class ProductModel extends Product {
     required String description,
     required List<PriceTagModel> priceTags,
     required List<CategoryModel> categories,
+    required String category,
     required List<String> images,
     required DateTime createdAt,
     required DateTime updatedAt,
@@ -18,6 +19,7 @@ class ProductModel extends Product {
           description: description,
           priceTags: priceTags,
           categories: categories,
+          category: category,
           images: images,
           createdAt: createdAt,
           updatedAt: updatedAt,
@@ -31,6 +33,7 @@ class ProductModel extends Product {
             json["priceTags"].map((x) => PriceTagModel.fromJson(x))),
         categories: List<CategoryModel>.from(
             json["categories"].map((x) => CategoryModel.fromJson(x))),
+        category: json["category"],
         images: List<String>.from(json["images"].map((x) => x)),
         createdAt: DateTime.parse(json["createdAt"]),
         updatedAt: DateTime.parse(json["updatedAt"]),
@@ -44,6 +47,7 @@ class ProductModel extends Product {
             (priceTags as List<PriceTagModel>).map((x) => x.toJson())),
         "categories": List<dynamic>.from(
             (categories as List<CategoryModel>).map((x) => x.toJson())),
+        "category": category,
         "images": List<dynamic>.from(images.map((x) => x)),
         "createdAt": createdAt.toIso8601String(),
         "updatedAt": updatedAt.toIso8601String(),
@@ -59,6 +63,7 @@ class ProductModel extends Product {
         categories: entity.categories
             .map((category) => CategoryModel.fromEntity(category))
             .toList(),
+        category: entity.category,
         images: entity.images,
         createdAt: entity.createdAt,
         updatedAt: entity.updatedAt,

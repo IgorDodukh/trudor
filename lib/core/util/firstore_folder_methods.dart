@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:trudor/core/error/exceptions.dart';
+import 'package:trudor/core/util/typesense_service.dart';
 import 'package:trudor/data/models/favorites/favorites_item_model.dart';
 import 'package:trudor/data/models/category/category_model.dart';
 import 'package:trudor/data/models/product/product_model.dart';
@@ -13,10 +14,14 @@ import 'package:image_picker/image_picker.dart';
 
 class FirestoreService {
     final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+    TypesenseService typesenseService = TypesenseService();
 
     Future<void> createProduct(ProductModel product) async {
       try {
         final productData = product.toJson();
+        await typesenseService.createCollection();
+        await typesenseService.createDocument(productData);
+
         DocumentReference productRef = _firestore.collection('products').doc(productData['_id']);
         await productRef.set(productData);
       } catch (e) {
@@ -118,20 +123,24 @@ class FirestoreService {
     }
 
     Future<ProductResponseModel> getProducts(FilterProductParams params) async {
+      /// getting products from Typesense
+      try {
+        final foundProducts = typesenseService.searchProducts(params).then((value) => productResponseModelFromTypesense(value));
+        return foundProducts;
+      } catch (e) {
+        print('Error getting products: $e');
+        throw ServerException();
+      }
+    }
+
+    Future<ProductResponseModel> getProductsFromFirebase(FilterProductParams params) async {
+      /// getting products from Firebase
       try {
         CollectionReference productsCollection = _firestore.collection('products');
         Query productsQuery = productsCollection;
 
         if (params.keyword != null && params.keyword!.isNotEmpty) {
-          productsQuery = productsQuery.where('name', arrayContains: params.keyword);
-        }
-
-        if (params.categories.isNotEmpty) {
-          productsQuery = productsQuery.where('categories', arrayContainsAny: params.categories.map((e) => e.id).toList());
-        }
-
-        if (params.pageSize != null && params.pageSize! > 0) {
-          productsQuery = productsQuery.limit(params.pageSize!);
+          productsQuery = productsQuery.where('name', isGreaterThanOrEqualTo: params.keyword);
         }
         QuerySnapshot querySnapshot = await productsQuery.get();
         return productResponseModelFromFirestore(querySnapshot);

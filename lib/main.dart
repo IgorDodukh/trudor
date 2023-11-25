@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,10 +23,9 @@ import 'presentation/blocs/product/product_bloc.dart';
 import 'presentation/blocs/user/user_bloc.dart';
 
 Future<void> main() async {
+  await dotenv.load(fileName: "lib/.env");
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await di.init();
 
   runApp(const MyApp());
@@ -54,7 +54,8 @@ class MyApp extends StatelessWidget {
               di.sl<CategoryBloc>()..add(const GetCategories()),
         ),
         BlocProvider(
-          create: (context) => di.sl<FavoritesBloc>()..add(const GetFavorites()),
+          create: (context) =>
+              di.sl<FavoritesBloc>()..add(const GetFavorites()),
         ),
         BlocProvider(
           create: (context) => di.sl<UserBloc>()..add(CheckUser()),
@@ -63,7 +64,8 @@ class MyApp extends StatelessWidget {
           create: (context) => di.sl<DeliveryInfoActionCubit>(),
         ),
         BlocProvider(
-          create: (context) => di.sl<DeliveryInfoFetchCubit>()..fetchDeliveryInfo(),
+          create: (context) =>
+              di.sl<DeliveryInfoFetchCubit>()..fetchDeliveryInfo(),
         ),
         BlocProvider(
           create: (context) => di.sl<OrderFetchCubit>()..getOrders(),

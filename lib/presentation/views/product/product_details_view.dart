@@ -75,7 +75,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                     return Hero(
                       tag: widget.product.id,
                       child: CachedNetworkImage(
-                        imageUrl: image.isNotEmpty ? image : noImagePlaceholder,
+                        imageUrl: image.isEmpty ? noImagePlaceholder : image,
                         imageBuilder: (context, imageProvider) => Container(
                           decoration: BoxDecoration(
                             image: DecorationImage(
@@ -131,43 +131,43 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
               style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 20,
-              right: 20,
-            ),
-            child: Wrap(
-              children: widget.product.priceTags
-                  .map((priceTag) => GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _selectedPriceTag = priceTag;
-                          });
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              width: _selectedPriceTag.id == priceTag.id
-                                  ? 2.0
-                                  : 1.0,
-                              color: Colors.grey,
-                            ),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(5.0)),
-                          ),
-                          padding: const EdgeInsets.all(8),
-                          margin: const EdgeInsets.only(right: 4),
-                          child: Column(
-                            children: [
-                              Text(priceTag.name),
-                              Text(priceTag.price.toString()),
-                            ],
-                          ),
-                        ),
-                      ))
-                  .toList(),
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.only(
+          //     left: 20,
+          //     right: 20,
+          //   ),
+          //   child: Wrap(
+          //     children: widget.product.priceTags
+          //         .map((priceTag) => GestureDetector(
+          //               onTap: () {
+          //                 setState(() {
+          //                   _selectedPriceTag = priceTag;
+          //                 });
+          //               },
+          //               child: Container(
+          //                 decoration: BoxDecoration(
+          //                   border: Border.all(
+          //                     width: _selectedPriceTag.id == priceTag.id
+          //                         ? 2.0
+          //                         : 1.0,
+          //                     color: Colors.grey,
+          //                   ),
+          //                   borderRadius:
+          //                       const BorderRadius.all(Radius.circular(5.0)),
+          //                 ),
+          //                 padding: const EdgeInsets.all(8),
+          //                 margin: const EdgeInsets.only(right: 4),
+          //                 child: Column(
+          //                   children: [
+          //                     Text(priceTag.name),
+          //                     Text(priceTag.price.toString()),
+          //                   ],
+          //                 ),
+          //               ),
+          //             ))
+          //         .toList(),
+          //   ),
+          // ),
           Padding(
             padding: EdgeInsets.only(
                 left: 20,

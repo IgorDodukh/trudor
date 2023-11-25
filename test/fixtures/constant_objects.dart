@@ -20,6 +20,7 @@ final tProductModel = ProductModel(
   description: "description",
   priceTags: [PriceTagModel(id: "1", name: "name", price: 100)],
   categories: const [CategoryModel(id: "1", name: "name", image: "image")],
+  category: "category",
   images: const ["image"],
   createdAt: DateTime(2000),
   updatedAt: DateTime(2000),
@@ -70,7 +71,8 @@ const tDeliveryInfoModel = DeliveryInfoModel(
   addressLineTwo: 'addressLineTwo',
   city: 'city',
   zipCode: 'zipCode',
-  contactNumber: 'contactNumber', userId: '1',
+  contactNumber: 'contactNumber',
+  userId: '1',
 );
 
 // order details
@@ -103,4 +105,8 @@ const tAuthenticationResponseModel =
     AuthenticationResponseModel(token: 'token', user: tUserModel);
 //params
 const tSignInParams = SignInParams(username: 'username', password: 'password');
-const tSignUpParams = SignUpParams(firstName: 'firstName', lastName: 'lastName', email: 'email', password: 'password');
+const tSignUpParams = SignUpParams(
+    firstName: 'firstName',
+    lastName: 'lastName',
+    email: 'email',
+    password: 'password');

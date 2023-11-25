@@ -47,14 +47,14 @@ dependencies:
   firebase_database: 10.2.5
   firebase_auth: 4.9.0
   image_picker: 1.0.4
-#  image_picker_plus: 0.5.6+1
+  typesense: 0.4.0
 
   #state management
   bloc: ^8.1.2
   flutter_bloc: ^8.0.1
   get_it: ^7.6.0
 
-  http: ^0.13.3
+  http: ^1.1.0
   equatable: ^2.0.5
   dartz: ^0.10.1
   internet_connection_checker: ^1.0.0+1
@@ -110,6 +110,7 @@ flutter:
     - assets/status_image/
     - assets/other_images/
     - assets/icons/
+    - lib/.env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

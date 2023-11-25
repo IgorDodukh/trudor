@@ -36,7 +36,7 @@ class _ImageUploadFormState extends State<ImageUploadForm> {
     return imageUrls;
   }
 
-  showAlertDialog(BuildContext context, String imageUrl) {
+  void showAlertDialog(BuildContext context, String imageUrl) {
     Widget cancelButton = TextButton(
       child: const Text("Cancel"),
       onPressed: () {

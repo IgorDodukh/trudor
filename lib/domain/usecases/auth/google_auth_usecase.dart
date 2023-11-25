@@ -11,7 +11,6 @@ class GoogleAuthUseCase implements UseCase<User, SignInGoogleParams> {
 
   @override
   Future<Either<Failure, User>> call(SignInGoogleParams params) async {
-    print("call in GoogleAuthUseCase");
     return await repository.googleSignIn(params);
   }
 }

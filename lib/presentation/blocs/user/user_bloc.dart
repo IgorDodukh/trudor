@@ -1,10 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:trudor/data/repositories/auth/google_auth_repository.dart';
-import 'package:trudor/domain/auth/google_auth.dart';
 import 'package:trudor/domain/usecases/auth/google_auth_usecase.dart';
 import 'package:trudor/domain/usecases/user/sign_out_usecase.dart';
 import 'package:trudor/domain/usecases/user/sign_up_usecase.dart';

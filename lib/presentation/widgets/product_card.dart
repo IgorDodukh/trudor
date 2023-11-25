@@ -81,7 +81,7 @@ class ProductCard extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(0.0),
                         child: CachedNetworkImage(
-                          imageUrl: product!.images.first.isNotEmpty ? product!.images.first : noImagePlaceholder,
+                          imageUrl: product!.images.isNotEmpty ? product!.images.first : noImagePlaceholder,
                           fit: BoxFit.cover,
                           placeholder: (context, url) => Shimmer.fromColors(
                             baseColor: Colors.grey.shade100,
@@ -89,7 +89,7 @@ class ProductCard extends StatelessWidget {
                             child: Container(),
                           ),
                           errorWidget: (context, url, error) =>
-                              const Center(child: Icon(Icons.error)),
+                              Center(child: CachedNetworkImage(imageUrl: noImagePlaceholder)),
                         ),
                       ),
                     ),

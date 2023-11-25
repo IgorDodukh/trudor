@@ -9,6 +9,7 @@ class Product extends Equatable {
   final String description;
   final List<PriceTag> priceTags;
   final List<Category> categories;
+  final String category;
   final List<String> images;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -19,6 +20,7 @@ class Product extends Equatable {
     required this.description,
     required this.priceTags,
     required this.categories,
+    required this.category,
     required this.images,
     required this.createdAt,
     required this.updatedAt,

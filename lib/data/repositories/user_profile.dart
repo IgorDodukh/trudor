@@ -62,7 +62,7 @@ class UserProfile extends StatelessWidget {
   Widget _buildName() {
     return Text(
       data.name!,
-      style: TextStyle(
+      style: const TextStyle(
         fontWeight: FontWeight.bold,
         color: Color.fromRGBO(26, 31, 56, 1),
       ),
@@ -74,7 +74,7 @@ class UserProfile extends StatelessWidget {
   Widget _buildJobdesk() {
     return Text(
       data.jobDesk,
-      style: TextStyle(
+      style: const TextStyle(
         fontWeight: FontWeight.w300,
         color: Color.fromRGBO(72, 76, 99, 1),
       ),

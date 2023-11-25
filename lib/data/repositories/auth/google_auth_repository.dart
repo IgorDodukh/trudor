@@ -1,14 +1,13 @@
-import 'package:trudor/data/data_sources/local/user_local_data_source.dart';
-import 'package:trudor/domain/auth/google_auth.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:trudor/domain/auth/google_auth.dart';
 
 class GoogleAuthRepository {
   final GoogleSignIn _googleSignIn;
 
-  GoogleAuthRepository() : _googleSignIn = GoogleSignIn(clientId: "251304641663-ti4h232vb33f3uk7rhsa1nm5rvrmpbf2.apps.googleusercontent.com");
+  GoogleAuthRepository() : _googleSignIn = GoogleSignIn(clientId: dotenv.env["GOOGLE_CLIENT_ID"]);
 
   Future<GoogleAuth?> signIn() async {
-
     final GoogleSignInAccount? account = await _googleSignIn.signIn();
 
     if (_googleSignIn.currentUser != null) {
