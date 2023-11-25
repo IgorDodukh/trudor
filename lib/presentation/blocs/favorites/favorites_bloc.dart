@@ -33,8 +33,8 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
   }
 
   void _onGetFavorites(GetFavorites event, Emitter<FavoritesState> emit) async {
+    emit(FavoritesLoading(favorites: state.favorites));
     try {
-      emit(FavoritesLoading(favorites: state.favorites));
       final result = await _getCachedFavoritesUseCase(NoParams());
       result.fold(
         (failure) => emit(FavoritesError(favorites: state.favorites, failure: failure)),
@@ -53,8 +53,8 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
   }
 
   void _onAddToFavorites(AddProduct event, Emitter<FavoritesState> emit) async {
+    emit(FavoritesLoading(favorites: state.favorites));
     try {
-      emit(FavoritesLoading(favorites: state.favorites));
       List<FavoritesItem> favorites = List.from(state.favorites);
       final index = favorites.indexWhere((favoritesItem) => favoritesItem.product.id == event.favoritesItem.product.id);
       if (index != -1) {
@@ -62,6 +62,7 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
       } else {
         favorites.add(event.favoritesItem);
         var result = await _addFavoritesUseCase(event.favoritesItem);
+        print("Product added to Favorites");
         result.fold(
               (failure) => emit(FavoritesError(favorites: state.favorites, failure: failure)),
               (_) => emit(FavoritesLoaded(favorites: favorites)),
@@ -74,13 +75,14 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
   }
 
   void _onRemoveFromFavorites(RemoveProduct event, Emitter<FavoritesState> emit) async {
+    emit(FavoritesLoading(favorites: state.favorites));
     try {
-      emit(FavoritesLoading(favorites: state.favorites));
       List<FavoritesItem> favorites = [];
       favorites.addAll(state.favorites);
       final indexToRemove = favorites.indexWhere((favoritesItem) => favoritesItem.product.id == event.favoritesItem.product.id);
       favorites.removeAt(indexToRemove);
       var result = await _removeFavoritesItemUseCase(event.favoritesItem);
+      print("Product removed from Favorites");
       result.fold(
             (failure) => emit(FavoritesError(favorites: state.favorites, failure: failure)),
             (_) => emit(FavoritesLoaded(favorites: favorites)),

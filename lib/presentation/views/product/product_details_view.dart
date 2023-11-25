@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:trudor/core/constant/strings.dart';
 import 'package:trudor/data/models/user/user_model.dart';
 import 'package:trudor/presentation/blocs/user/user_bloc.dart';
@@ -14,6 +17,7 @@ import '../../blocs/favorites/favorites_bloc.dart';
 
 class ProductDetailsView extends StatefulWidget {
   final Product product;
+
   const ProductDetailsView({Key? key, required this.product}) : super(key: key);
 
   @override
@@ -23,6 +27,50 @@ class ProductDetailsView extends StatefulWidget {
 class _ProductDetailsViewState extends State<ProductDetailsView> {
   int _currentIndex = 0;
   late PriceTag _selectedPriceTag;
+  bool isFavorite = false;
+  bool isLoading = false;
+  late Timer? _loadingTimer;
+
+  void _startLoadingTimer() {
+    // Start the timer to simulate loading
+    _loadingTimer = Timer(const Duration(seconds: 3), () {
+      // Check if the widget is still mounted before calling setState
+      if (mounted) {
+        // Set loading state back to false when loading is complete
+        setIsLoading();
+        setIsFavorite();
+      }
+      final popupMessage = isFavorite? "Successfully added to favorites" : "Removed from favorites";
+      EasyLoading.showSuccess(popupMessage);
+    });
+  }
+
+  void setIsFavorite() {
+    setState(() {
+      isFavorite = !isFavorite;
+    });
+  }
+
+  void setIsLoading() {
+    setState(() {
+      isLoading = !isLoading;
+    });
+  }
+
+  void _cancelTimer() {
+    // Cancel the timer if it's active
+    if (_loadingTimer!.isActive) {
+      _loadingTimer!.cancel();
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    // Cancel the timer if the widget is disposed
+    _cancelTimer();
+  }
+
 
   @override
   void initState() {
@@ -32,8 +80,6 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
 
   @override
   Widget build(BuildContext context) {
-    bool isFavorite = false;
-    // bool isLoading = false;
     final favoritesState = context.read<FavoritesBloc>().state.favorites;
     for (var element in favoritesState) {
       if (element.product.id == widget.product.id) {
@@ -131,43 +177,6 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
               style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
             ),
           ),
-          // Padding(
-          //   padding: const EdgeInsets.only(
-          //     left: 20,
-          //     right: 20,
-          //   ),
-          //   child: Wrap(
-          //     children: widget.product.priceTags
-          //         .map((priceTag) => GestureDetector(
-          //               onTap: () {
-          //                 setState(() {
-          //                   _selectedPriceTag = priceTag;
-          //                 });
-          //               },
-          //               child: Container(
-          //                 decoration: BoxDecoration(
-          //                   border: Border.all(
-          //                     width: _selectedPriceTag.id == priceTag.id
-          //                         ? 2.0
-          //                         : 1.0,
-          //                     color: Colors.grey,
-          //                   ),
-          //                   borderRadius:
-          //                       const BorderRadius.all(Radius.circular(5.0)),
-          //                 ),
-          //                 padding: const EdgeInsets.all(8),
-          //                 margin: const EdgeInsets.only(right: 4),
-          //                 child: Column(
-          //                   children: [
-          //                     Text(priceTag.name),
-          //                     Text(priceTag.price.toString()),
-          //                   ],
-          //                 ),
-          //               ),
-          //             ))
-          //         .toList(),
-          //   ),
-          // ),
           Padding(
             padding: EdgeInsets.only(
                 left: 20,
@@ -212,55 +221,49 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
               ],
             ),
             const Spacer(),
-            SizedBox(
-              width: 50,
-              child: IconButton(
-                onPressed: () {
-                  final userId = (context.read<UserBloc>().state.props.first as UserModel).id;
-                  if (isFavorite) {
-                    context.read<FavoritesBloc>().add(RemoveProduct(
-                        favoritesItem: FavoritesItem(
-                            product: widget.product,
-                            userId: userId,
-                            priceTag: _selectedPriceTag)));
-
-                  } else {
-                    context.read<FavoritesBloc>().add(AddProduct(
-                        favoritesItem: FavoritesItem(
-                            product: widget.product,
-                            userId: userId,
-                            priceTag: _selectedPriceTag)));
-                  }
-
-                  setState(() {
-                    isFavorite = !isFavorite;
-                  });
-                  Navigator.pop(context);
-                },
-                icon: Icon(
-                  isFavorite ? Icons.favorite : Icons.favorite_border,
-                  color: Colors.white,
-                  size: 36),
-              ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Display loading spinner when isLoading is true
+                isLoading
+                    ? const SizedBox(
+                        height: 60.0,
+                        width: 60.0,
+                        child: Center(child: CircularProgressIndicator.adaptive(backgroundColor: Colors.yellowAccent,)),
+                      )
+                    : Container(),
+                // Display IconButton when not loading
+                !isLoading
+                    ? IconButton(
+                        onPressed: () {
+                          // Set loading state to true when the IconButton is pressed
+                          setIsLoading();
+                          final userId = (context.read<UserBloc>().state.props.first as UserModel).id;
+                          if (isFavorite) {
+                            context.read<FavoritesBloc>().add(RemoveProduct(
+                                favoritesItem: FavoritesItem(
+                                    product: widget.product,
+                                    userId: userId,
+                                    priceTag: _selectedPriceTag)));
+                          } else {
+                            context.read<FavoritesBloc>().add(AddProduct(
+                                favoritesItem: FavoritesItem(
+                                    product: widget.product,
+                                    userId: userId,
+                                    priceTag: _selectedPriceTag)));
+                          }
+                          // Simulate loading for 3 seconds
+                          _startLoadingTimer();
+                        },
+                        icon: Icon(
+                          isFavorite ? Icons.favorite : Icons.favorite_border,
+                          color: Colors.white,
+                          size: 36,
+                        ),
+                      )
+                    : Container(),
+              ],
             ),
-            // const SizedBox(
-            //   width: 6,
-            // ),
-            // SizedBox(
-            //   width: 90,
-            //   child: InputFormButton(
-            //     onClick: () {
-            //       Navigator.of(context)
-            //           .pushNamed(AppRouter.orderCheckout, arguments: [
-            //         FavoritesItem(
-            //           product: widget.product,
-            //           priceTag: _selectedPriceTag,
-            //         )
-            //       ]);
-            //     },
-            //     titleText: "Buy",
-            //   ),
-            // ),
           ],
         ),
       ),
