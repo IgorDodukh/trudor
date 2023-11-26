@@ -36,7 +36,7 @@ class AddProductForm extends StatefulWidget {
 
 class _AddProductFormState extends State<AddProductForm> {
   String? id;
-  bool isNew = true;
+  bool? isNew;
   final TextEditingController name = TextEditingController();
   final TextEditingController description = TextEditingController();
   final TextEditingController priceTags = TextEditingController();
@@ -159,7 +159,10 @@ class _AddProductFormState extends State<AddProductForm> {
                         );
                       },
                     ),
-                    const SizedBox(
+                  if (isNew == null)
+                    const Text('This selection is required', style: TextStyle(color: Colors.redAccent)),
+
+                  const SizedBox(
                       height: 10,
                     ),
                     InputTextFormField(
@@ -188,7 +191,7 @@ class _AddProductFormState extends State<AddProductForm> {
                     InputFormButton(
                       color: Colors.black87,
                       onClick: () async {
-                        if (_formKey.currentState!.validate()) {
+                        if (_formKey.currentState!.validate() && isNew != null) {
                           final userId = (context.read<UserBloc>().state.props.first as UserModel).id;
                           var uuid = const Uuid();
                           FirestoreService firestoreService =

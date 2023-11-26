@@ -72,7 +72,7 @@ class _HomeViewState extends State<HomeView> {
                       GestureDetector(
                         onTap: () {
                           Navigator.of(context)
-                              .pushNamed(AppRouter.userProfile);
+                              .pushNamed(AppRouter.userProfile, arguments: state.user);
                         },
                         child: Text(
                           "${state.user.firstName} ${state.user.lastName}",
@@ -86,7 +86,7 @@ class _HomeViewState extends State<HomeView> {
                       GestureDetector(
                         onTap: () {
                           Navigator.of(context)
-                              .pushNamed(AppRouter.userProfile);
+                              .pushNamed(AppRouter.userProfile, arguments: state.user);
                         },
                         child: state.user.image != null
                             ? CachedNetworkImage(
