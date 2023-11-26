@@ -1,5 +1,6 @@
 import 'package:trudor/presentation/views/main/home/filter/filter_view.dart';
 import 'package:flutter/material.dart';
+import 'package:trudor/presentation/views/main/other/my_publications/my_publications_view.dart';
 
 import '../../domain/entities/favorites/favorites_item.dart';
 import '../../domain/entities/product/product.dart';
@@ -28,6 +29,7 @@ class AppRouter {
   //other
   static const String userProfile = '/user-profile';
   static const String orderCheckout = '/order-checkout';
+  static const String myPublications = '/my-publications';
   static const String deliveryDetails = '/delivery-details';
   static const String orders = '/orders';
   static const String settings = '/settings';
@@ -43,6 +45,7 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const SignInView());
       case signUp:
         return MaterialPageRoute(builder: (_) => const SignUpScreen());
+      case myPublications: return MaterialPageRoute(builder: (_) => const MyPublicationsView());
       case productDetails:
         Product product = routeSettings.arguments as Product;
         return MaterialPageRoute(
@@ -54,7 +57,7 @@ class AppRouter {
                   user: user,
                 ));
       case orderCheckout:
-        List<FavoritesItem> items = routeSettings.arguments as List<FavoritesItem>;
+        List<ListViewItem> items = routeSettings.arguments as List<ListViewItem>;
         return MaterialPageRoute(
             builder: (_) => OrderCheckoutView(
                   items: items,

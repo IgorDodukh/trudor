@@ -8,7 +8,7 @@ import '../../../../core/constant/images.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../domain/entities/favorites/favorites_item.dart';
 import '../../../blocs/favorites/favorites_bloc.dart';
-import '../../../widgets/favorites_item_card.dart';
+import '../../../widgets/list_view_item_card.dart';
 
 class FavoritesView extends StatefulWidget {
   const FavoritesView({Key? key}) : super(key: key);
@@ -18,7 +18,7 @@ class FavoritesView extends StatefulWidget {
 }
 
 class _FavoritesViewState extends State<FavoritesView> {
-  List<FavoritesItem> selectedFavoritesItems = [];
+  List<ListViewItem> selectedFavoritesItems = [];
 
   @override
   Widget build(BuildContext context) {
@@ -83,26 +83,13 @@ class _FavoritesViewState extends State<FavoritesView> {
                           shrinkWrap: true,
                           itemBuilder: (BuildContext context, int index) {
                             if (state is FavoritesLoading && state.favorites.isEmpty) {
-                              return const FavoritesItemCard();
+                              return const ListViewItemCard();
                             } else {
                               if (state.favorites.length < index) {
-                                return const FavoritesItemCard();
+                                return const ListViewItemCard();
                               }
-                              return FavoritesItemCard(
+                              return ListViewItemCard(
                                 favoritesItem: state.favorites[index],
-                                isSelected: selectedFavoritesItems.any(
-                                    (element) => element == state.favorites[index]),
-                                onLongClick: () {
-                                  setState(() {
-                                    if (selectedFavoritesItems.any((element) =>
-                                        element == state.favorites[index])) {
-                                      selectedFavoritesItems
-                                          .remove(state.favorites[index]);
-                                    } else {
-                                      selectedFavoritesItems.add(state.favorites[index]);
-                                    }
-                                  });
-                                },
                               );
                             }
                           },
@@ -146,21 +133,6 @@ class _FavoritesViewState extends State<FavoritesView> {
                           ],
                         ),
                       ),
-                      // SizedBox(
-                      //   height: 40,
-                      //   width: 100,
-                      //   child: InputFormButton(
-                      //     color: Colors.black87,
-                      //     cornerRadius: 36,
-                      //     padding: EdgeInsets.zero,
-                      //     onClick: () {
-                      //       Navigator.of(context).pushNamed(
-                      //           AppRouter.orderCheckout,
-                      //           arguments: state.favorites);
-                      //     },
-                      //     titleText: 'Checkout',
-                      //   ),
-                      // ),
                     ],
                   ),
                 ),

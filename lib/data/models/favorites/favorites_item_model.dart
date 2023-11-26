@@ -19,7 +19,7 @@ List<FavoritesItemModel> favoritesItemModelFromJson(String str) =>
 String favoritesItemModelToJson(List<FavoritesItemModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class FavoritesItemModel extends FavoritesItem {
+class FavoritesItemModel extends ListViewItem {
   const FavoritesItemModel({
     String? id,
     String? addedAt,
@@ -52,7 +52,7 @@ class FavoritesItemModel extends FavoritesItem {
         "userId": userId,
       };
 
-  factory FavoritesItemModel.fromParent(FavoritesItem favoritesItem) {
+  factory FavoritesItemModel.fromParent(ListViewItem favoritesItem) {
     return FavoritesItemModel(
       id: favoritesItem.id,
       product: favoritesItem.product as ProductModel,

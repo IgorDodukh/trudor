@@ -24,7 +24,7 @@ class FavoritesRepositoryImpl implements FavoritesRepository {
   });
 
   @override
-  Future<Either<Failure, FavoritesItem>> addToFavorites(FavoritesItem params) async {
+  Future<Either<Failure, ListViewItem>> addToFavorites(ListViewItem params) async {
     // TODO: Implement a method to add a product to the when user is logged in
     if (await userLocalDataSource.isTokenAvailable()) {
       await localDataSource.saveFavoritesItem(FavoritesItemModel.fromParent(params));
@@ -37,7 +37,7 @@ class FavoritesRepositoryImpl implements FavoritesRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> deleteFormFavorites(FavoritesItem params) async {
+  Future<Either<Failure, bool>> deleteFormFavorites(ListViewItem params) async {
     try {
       bool result = await localDataSource.removeFavoritesItem(FavoritesItemModel.fromParent(params));
       await firebaseDataSource.removeFromFavorites(FavoritesItemModel.fromParent(params));
@@ -52,7 +52,7 @@ class FavoritesRepositoryImpl implements FavoritesRepository {
   }
 
   @override
-  Future<Either<Failure, List<FavoritesItem>>> getCachedFavorites() async {
+  Future<Either<Failure, List<ListViewItem>>> getCachedFavorites() async {
     try {
       final localProducts = await localDataSource.getFavorites();
       return Right(localProducts);
@@ -63,7 +63,7 @@ class FavoritesRepositoryImpl implements FavoritesRepository {
   }
 
   @override
-  Future<Either<Failure, List<FavoritesItem>>> syncFavorites() async {
+  Future<Either<Failure, List<ListViewItem>>> syncFavorites() async {
     if (await networkInfo.isConnected) {
       if (await userLocalDataSource.isTokenAvailable()) {
         List<FavoritesItemModel> localFavoritesItems = [];

@@ -30,6 +30,7 @@ class TypesenseService {
         Field('_id', type: Type.string),
         Field('productId', type: Type.string),
         Field('isNew', type: Type.bool),
+        Field('ownerId', type: Type.string),
         Field('name', type: Type.string, ),
         Field('description', type: Type.string),
         Field('images', type: Type.auto),
@@ -59,7 +60,7 @@ class TypesenseService {
     final searchParameters = {
       'q': searchName,
       'infix': 'always',
-      'query_by': 'name',
+      'query_by': params.searchField,
       'pre_segmented_query': 'true',
       'sort_by': 'createdAt:desc'
     };

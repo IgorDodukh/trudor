@@ -1,0 +1,171 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:toggle_switch/toggle_switch.dart';
+import 'package:trudor/core/constant/collections.dart';
+import 'package:trudor/core/constant/images.dart';
+import 'package:trudor/core/error/failures.dart';
+import 'package:trudor/core/util/mappings.dart';
+import 'package:trudor/data/models/user/user_model.dart';
+import 'package:trudor/domain/usecases/product/get_product_usecase.dart';
+import 'package:trudor/presentation/blocs/product/product_bloc.dart';
+import 'package:trudor/presentation/blocs/user/user_bloc.dart';
+import 'package:trudor/presentation/widgets/alert_card.dart';
+import 'package:trudor/presentation/widgets/list_view_item_card.dart';
+
+class MyPublicationsView extends StatefulWidget {
+  const MyPublicationsView({Key? key}) : super(key: key);
+
+  @override
+  State<MyPublicationsView> createState() => _MyPublicationsViewState();
+}
+
+class _MyPublicationsViewState extends State<MyPublicationsView> {
+  final ScrollController scrollController = ScrollController();
+
+  void _scrollListener() {
+    double maxScroll = scrollController.position.maxScrollExtent;
+    double currentScroll = scrollController.position.pixels;
+    double scrollPercentage = 0.7;
+    if (currentScroll > (maxScroll * scrollPercentage)) {
+      if (context.read<ProductBloc>().state is ProductLoaded) {
+        context.read<ProductBloc>().add(const GetMoreProducts());
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProducts();
+    scrollController.addListener(_scrollListener);
+  }
+
+  void _loadProducts() {
+    final userId = (context.read<UserBloc>().state.props.first as UserModel).id;
+    context.read<ProductBloc>().add(GetProducts(FilterProductParams(
+          keyword: userId,
+          searchField: "ownerId",
+        )));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        surfaceTintColor: Theme.of(context).scaffoldBackgroundColor,
+        title: const Text('My publications'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                ToggleSwitch(
+                  minWidth: MediaQuery.of(context).size.width * 0.43,
+                  cornerRadius: 20.0,
+                  activeBgColor: const [Colors.black87],
+                  activeFgColor: Colors.white,
+                  inactiveBgColor: Colors.black12,
+                  initialLabelIndex: 0,
+                  totalSwitches: 2,
+                  labels: publicationType,
+                  radiusStyle: true,
+                  onToggle: (index) {
+                    print("Switch to publications screen #$index");
+                    setState(() {});
+                  },
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: BlocListener<ProductBloc, ProductState>(
+                      listener: (context, state) {
+                        if (state is ProductError) {
+                          print("state is ProductError in Home View");
+                        }
+                      },
+                      child: BlocBuilder<ProductBloc, ProductState>(
+                        builder: (context, state) {
+                          if (state is ProductLoaded &&
+                              state.products.isEmpty) {
+                            return const AlertCard(
+                              image: kEmpty,
+                              message: "No publications found!",
+                            );
+                          }
+                          if (state is ProductError && state.products.isEmpty) {
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                if (state.failure is NetworkFailure)
+                                  Image.asset(kNoConnection),
+                                if (state.failure is ServerFailure)
+                                  Image.asset(kInternalServerError),
+                                if (state.failure is ExceptionFailure)
+                                  Image.asset(kInternalServerError),
+                                Text(state.failure.toString()),
+                                const Text("No publications found"),
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.1,
+                                )
+                              ],
+                            );
+                          }
+                          return RefreshIndicator(
+                            onRefresh: () async {
+                              final userId = (context
+                                      .read<UserBloc>()
+                                      .state
+                                      .props
+                                      .first as UserModel)
+                                  .id;
+                              context.read<ProductBloc>().add(GetProducts(
+                                  FilterProductParams(
+                                      keyword: userId,
+                                      searchField: "ownerId")));
+                            },
+                            child: ListView.builder(
+                              itemCount: state.products.length +
+                                  ((state is ProductLoading) ? 10 : 0),
+                              controller: scrollController,
+                              padding: EdgeInsets.only(
+                                  top:
+                                      (MediaQuery.of(context).padding.top + 20),
+                                  bottom:
+                                      MediaQuery.of(context).padding.bottom +
+                                          200),
+                              physics: const BouncingScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (BuildContext context, int index) {
+                                if (state.products.length > index) {
+                                  return ListViewItemCard(
+                                    favoritesItem:
+                                        ProductMapping.productToListViewItem(
+                                            state.products[index]),
+                                  );
+                                }
+                                return Shimmer.fromColors(
+                                  baseColor: Colors.grey.shade100,
+                                  highlightColor: Colors.white,
+                                  child: const ListViewItemCard(),
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

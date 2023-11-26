@@ -12,7 +12,7 @@ class GetFavorites extends FavoritesEvent {
 }
 
 class AddProduct extends FavoritesEvent {
-  final FavoritesItem favoritesItem;
+  final ListViewItem favoritesItem;
   const AddProduct({required this.favoritesItem});
 
   @override
@@ -20,7 +20,7 @@ class AddProduct extends FavoritesEvent {
 }
 
 class RemoveProduct extends FavoritesEvent {
-  final FavoritesItem favoritesItem;
+  final ListViewItem favoritesItem;
   const RemoveProduct({required this.favoritesItem});
 
   @override

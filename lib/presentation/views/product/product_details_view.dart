@@ -244,13 +244,13 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                           final userId = (context.read<UserBloc>().state.props.first as UserModel).id;
                           if (isFavorite) {
                             context.read<FavoritesBloc>().add(RemoveProduct(
-                                favoritesItem: FavoritesItem(
+                                favoritesItem: ListViewItem(
                                     product: widget.product,
                                     userId: userId,
                                     priceTag: _selectedPriceTag)));
                           } else {
                             context.read<FavoritesBloc>().add(AddProduct(
-                                favoritesItem: FavoritesItem(
+                                favoritesItem: ListViewItem(
                                     product: widget.product,
                                     userId: userId,
                                     priceTag: _selectedPriceTag)));

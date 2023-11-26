@@ -17,7 +17,7 @@ import '../../widgets/input_form_button.dart';
 import '../../widgets/outline_label_card.dart';
 
 class OrderCheckoutView extends StatelessWidget {
-  final List<FavoritesItem> items;
+  final List<ListViewItem> items;
   const OrderCheckoutView({Key? key, required this.items}) : super(key: key);
 
   @override

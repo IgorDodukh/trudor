@@ -56,7 +56,7 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
   void _onAddToFavorites(AddProduct event, Emitter<FavoritesState> emit) async {
     emit(FavoritesLoading(favorites: state.favorites));
     try {
-      List<FavoritesItem> favorites = List.from(state.favorites);
+      List<ListViewItem> favorites = List.from(state.favorites);
       final index = favorites.indexWhere((favoritesItem) => favoritesItem.product.id == event.favoritesItem.product.id);
       if (index != -1) {
         print("Product is already in Favorites. Add removing from Favorites");
@@ -77,7 +77,7 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
   void _onRemoveFromFavorites(RemoveProduct event, Emitter<FavoritesState> emit) async {
     emit(FavoritesLoading(favorites: state.favorites));
     try {
-      List<FavoritesItem> favorites = [];
+      List<ListViewItem> favorites = [];
       favorites.addAll(state.favorites);
       final indexToRemove = favorites.indexWhere((favoritesItem) => favoritesItem.product.id == event.favoritesItem.product.id);
       favorites.removeAt(indexToRemove);

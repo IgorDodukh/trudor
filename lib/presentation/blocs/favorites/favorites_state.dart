@@ -1,7 +1,7 @@
 part of 'favorites_bloc.dart';
 
 abstract class FavoritesState extends Equatable {
-  final List<FavoritesItem> favorites;
+  final List<ListViewItem> favorites;
   const FavoritesState({required this.favorites});
 }
 

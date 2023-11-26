@@ -10,14 +10,14 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../core/router/app_router.dart';
 
-class FavoritesItemCard extends StatelessWidget {
-  final FavoritesItem? favoritesItem;
+class ListViewItemCard extends StatelessWidget {
+  final ListViewItem? favoritesItem;
   final Function? onFavoriteToggle;
   final Function? onClick;
   final Function()? onLongClick;
   final bool isSelected;
 
-  const FavoritesItemCard({
+  const ListViewItemCard({
     Key? key,
     this.favoritesItem,
     this.onFavoriteToggle,
@@ -54,19 +54,6 @@ class FavoritesItemCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // if (isSelected)
-              //   Container(
-              //     width: 20,
-              //     alignment: Alignment.center,
-              //     child: Container(
-              //       width: 25,
-              //       height: 25,
-              //       decoration: BoxDecoration(
-              //           color: Colors.black87,
-              //           shape: BoxShape.circle
-              //       ),
-              //     ),
-              //   ),
               Container(
                 padding: const EdgeInsets.all(2),
                 decoration: BoxDecoration(
@@ -176,7 +163,7 @@ class FavoritesItemCard extends StatelessWidget {
                     onPressed: () {
                       final userId = (context.read<UserBloc>().state.props.first as UserModel).id;
                       context.read<FavoritesBloc>().add(RemoveProduct(
-                          favoritesItem: FavoritesItem(
+                          favoritesItem: ListViewItem(
                               product: favoritesItem!.product,
                               userId: userId,
                               priceTag: favoritesItem!.priceTag)));

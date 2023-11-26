@@ -20,6 +20,7 @@ class GetProductUseCase
 
 class FilterProductParams {
   final String? keyword;
+  final String? searchField;
   final List<Category> categories;
   final double minPrice;
   final double maxPrice;
@@ -28,6 +29,7 @@ class FilterProductParams {
 
   const FilterProductParams({
     this.keyword = '',
+    this.searchField = 'name',
     this.categories = const [],
     this.minPrice = 0,
     this.maxPrice = 10000,
@@ -38,6 +40,7 @@ class FilterProductParams {
   FilterProductParams copyWith({
     int? skip,
     String? keyword,
+    String? searchField,
     List<Category>? categories,
     double? minPrice,
     double? maxPrice,
@@ -46,6 +49,7 @@ class FilterProductParams {
   }) =>
       FilterProductParams(
         keyword: keyword ?? this.keyword,
+        searchField: searchField ?? this.searchField,
         categories: categories ?? this.categories,
         minPrice: minPrice ?? this.minPrice,
         maxPrice: maxPrice ?? this.maxPrice,

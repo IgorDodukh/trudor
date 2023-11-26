@@ -30,17 +30,20 @@ class _HomeViewState extends State<HomeView> {
     double scrollPercentage = 0.7;
     if (currentScroll > (maxScroll * scrollPercentage)) {
       if (context.read<ProductBloc>().state is ProductLoaded) {
-        context
-            .read<ProductBloc>()
-            .add(const GetMoreProducts());
+        context.read<ProductBloc>().add(const GetMoreProducts());
       }
     }
   }
 
   @override
   void initState() {
-    scrollController.addListener(_scrollListener);
     super.initState();
+    _loadProducts();
+    scrollController.addListener(_scrollListener);
+  }
+
+  void _loadProducts() {
+    context.read<ProductBloc>().add(const GetProducts(FilterProductParams()));
   }
 
   @override
@@ -55,84 +58,94 @@ class _HomeViewState extends State<HomeView> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: BlocBuilder<UserBloc, UserState>(builder: (context, state) {
-              if (state is UserLogged) {
-                return Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pushNamed(AppRouter.userProfile);
-                      },
-                      child: Text(
-                        "${state.user.firstName} ${state.user.lastName}",
-                        style: const TextStyle(fontSize: 26),
+            child: BlocListener<ProductBloc, ProductState>(
+              listener: (context, state) {
+                if (state is ProductError) {
+                  print("state is ProductError in Home View");
+                }
+              },
+              child:
+                  BlocBuilder<UserBloc, UserState>(builder: (context, state) {
+                if (state is UserLogged) {
+                  return Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context)
+                              .pushNamed(AppRouter.userProfile);
+                        },
+                        child: Text(
+                          "${state.user.firstName} ${state.user.lastName}",
+                          style: const TextStyle(fontSize: 26),
+                        ),
                       ),
-                    ),
-                    const Spacer(),
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pushNamed(AppRouter.userProfile);
-                      },
-                      child: state.user.image != null
-                          ? CachedNetworkImage(
-                              imageUrl: state.user.image!,
-                              imageBuilder: (context, image) => CircleAvatar(
+                      const Spacer(),
+                      const SizedBox(
+                        width: 8,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context)
+                              .pushNamed(AppRouter.userProfile);
+                        },
+                        child: state.user.image != null
+                            ? CachedNetworkImage(
+                                imageUrl: state.user.image!,
+                                imageBuilder: (context, image) => CircleAvatar(
+                                  radius: 24.0,
+                                  backgroundImage: image,
+                                  backgroundColor: Colors.transparent,
+                                ),
+                              )
+                            : const CircleAvatar(
                                 radius: 24.0,
-                                backgroundImage: image,
+                                backgroundImage: AssetImage(kUserAvatar),
                                 backgroundColor: Colors.transparent,
                               ),
-                            )
-                          : const CircleAvatar(
-                              radius: 24.0,
-                              backgroundImage: AssetImage(kUserAvatar),
-                              backgroundColor: Colors.transparent,
-                            ),
-                    )
-                  ],
-                );
-              } else {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 8,
-                        ),
-                        Text(
-                          "Welcome,",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 36),
-                        ),
-                        Text(
-                          "E-Shop mobile store",
-                          style: TextStyle(
-                              fontWeight: FontWeight.normal, fontSize: 22),
-                        ),
-                      ],
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pushNamed(AppRouter.signIn);
-                      },
-                      child: const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: CircleAvatar(
-                          radius: 24.0,
-                          backgroundImage: AssetImage(kUserAvatar),
-                          backgroundColor: Colors.transparent,
-                        ),
+                      )
+                    ],
+                  );
+                } else {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            "Welcome,",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 36),
+                          ),
+                          Text(
+                            "E-Shop mobile store",
+                            style: TextStyle(
+                                fontWeight: FontWeight.normal, fontSize: 22),
+                          ),
+                        ],
                       ),
-                    )
-                  ],
-                );
-              }
-            }),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pushNamed(AppRouter.signIn);
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: CircleAvatar(
+                            radius: 24.0,
+                            backgroundImage: AssetImage(kUserAvatar),
+                            backgroundColor: Colors.transparent,
+                          ),
+                        ),
+                      )
+                    ],
+                  );
+                }
+              }),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(
@@ -151,7 +164,8 @@ class _HomeViewState extends State<HomeView> {
                             context.read<FilterCubit>().searchController,
                         onChanged: (val) => setState(() {}),
                         onSubmitted: (val) => context.read<ProductBloc>().add(
-                            GetProducts(FilterProductParams(keyword: val))),
+                            GetProducts(FilterProductParams(
+                                keyword: val, searchField: "name"))),
                         decoration: InputDecoration(
                             contentPadding: const EdgeInsets.only(
                                 left: 20, bottom: 22, top: 22),
@@ -252,7 +266,8 @@ class _HomeViewState extends State<HomeView> {
                                   keyword: context
                                       .read<FilterCubit>()
                                       .searchController
-                                      .text)));
+                                      .text,
+                                  searchField: "name")));
                         },
                       );
                     }
@@ -260,9 +275,11 @@ class _HomeViewState extends State<HomeView> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         if (state.failure is ExceptionFailure)
-                          Image.asset('assets/status_image/internal-server-error.png'),
+                          Image.asset(
+                              'assets/status_image/internal-server-error.png'),
                         if (state.failure is ServerFailure)
-                          Image.asset('assets/status_image/internal-server-error.png'),
+                          Image.asset(
+                              'assets/status_image/internal-server-error.png'),
                         if (state.failure is CacheFailure)
                           Image.asset('assets/status_image/no-connection.png'),
                         const Text("Products not found!"),
@@ -273,7 +290,8 @@ class _HomeViewState extends State<HomeView> {
                                       keyword: context
                                           .read<FilterCubit>()
                                           .searchController
-                                          .text)));
+                                          .text,
+                                      searchField: "name")));
                             },
                             icon: const Icon(Icons.refresh)),
                         SizedBox(

@@ -12,7 +12,7 @@ void main() {
     'FavoritesItemModel should be a subclass of FavoritesItem entity',
     () async {
       /// Assert
-      expect(tFavoritesItemModel, isA<FavoritesItem>());
+      expect(tFavoritesItemModel, isA<ListViewItem>());
     },
   );
 
