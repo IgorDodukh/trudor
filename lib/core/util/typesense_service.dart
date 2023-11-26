@@ -28,6 +28,8 @@ class TypesenseService {
       _collectionName,
       {
         Field('_id', type: Type.string),
+        Field('productId', type: Type.string),
+        Field('isNew', type: Type.bool),
         Field('name', type: Type.string, ),
         Field('description', type: Type.string),
         Field('images', type: Type.auto),

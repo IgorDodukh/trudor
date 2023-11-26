@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:toggle_switch/toggle_switch.dart';
+import 'package:trudor/core/constant/collections.dart';
 import 'package:trudor/core/constant/strings.dart';
 import 'package:trudor/core/router/app_router.dart';
 import 'package:trudor/core/util/firstore_folder_methods.dart';
 import 'package:trudor/data/models/category/category_model.dart';
 import 'package:trudor/data/models/product/price_tag_model.dart';
 import 'package:trudor/data/models/product/product_model.dart';
+import 'package:trudor/data/models/user/user_model.dart';
 import 'package:trudor/domain/entities/category/category.dart';
 import 'package:trudor/domain/entities/product/product.dart';
 import 'package:trudor/presentation/blocs/home/navbar_cubit.dart';
+import 'package:trudor/presentation/blocs/user/user_bloc.dart';
 import 'package:trudor/presentation/widgets/input_dropdown_menu.dart';
 import 'package:trudor/presentation/widgets/input_form_button.dart';
 import 'package:trudor/presentation/widgets/input_image_upload.dart';
@@ -31,22 +36,26 @@ class AddProductForm extends StatefulWidget {
 
 class _AddProductFormState extends State<AddProductForm> {
   String? id;
+  bool isNew = true;
   final TextEditingController name = TextEditingController();
   final TextEditingController description = TextEditingController();
   final TextEditingController priceTags = TextEditingController();
   List<String> images = [];
   Category? selectedCategory;
   final _formKey = GlobalKey<FormState>();
+  int? initialLabelIndex;
 
   @override
   void initState() {
     if (widget.productInfo != null) {
       id = widget.productInfo!.id;
       name.text = widget.productInfo!.name;
+      isNew = widget.productInfo!.isNew!;
       description.text = widget.productInfo!.description;
       priceTags.text = widget.productInfo!.priceTags.first.toString();
       selectedCategory = widget.productInfo!.categories.first;
       images = [];
+      initialLabelIndex = null;
     }
     super.initState();
   }
@@ -67,8 +76,11 @@ class _AddProductFormState extends State<AddProductForm> {
     name.text = "";
     description.text = "";
     priceTags.text = "";
-    selectedCategory = null;
-    images = [];
+    setState(() {
+      images = [];
+      initialLabelIndex = null;
+      selectedCategory = null;
+    });
   }
 
   @override
@@ -129,6 +141,27 @@ class _AddProductFormState extends State<AddProductForm> {
                     const SizedBox(
                       height: 10,
                     ),
+                    ToggleSwitch(
+                      minWidth: 90.0,
+                      cornerRadius: 20.0,
+                      activeBgColor: const [Colors.black87],
+                      activeFgColor: Colors.white,
+                      inactiveBgColor: Colors.black12,
+                      initialLabelIndex: initialLabelIndex,
+                      totalSwitches: 2,
+                      labels: productType,
+                      radiusStyle: true,
+                      onToggle: (index) {
+                        setState(() {
+                            initialLabelIndex = index!;
+                            isNew = (index == 0);
+                          },
+                        );
+                      },
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     InputTextFormField(
                       controller: priceTags,
                       hint: 'Price',
@@ -156,13 +189,16 @@ class _AddProductFormState extends State<AddProductForm> {
                       color: Colors.black87,
                       onClick: () async {
                         if (_formKey.currentState!.validate()) {
+                          final userId = (context.read<UserBloc>().state.props.first as UserModel).id;
                           var uuid = const Uuid();
                           FirestoreService firestoreService =
                               FirestoreService();
                           await firestoreService.createProduct(ProductModel(
                               id: uuid.v1(),
+                              ownerId: userId,
                               name: name.text,
                               description: description.text,
+                              isNew: isNew!,
                               priceTags: [
                                 PriceTagModel(
                                     id: '1',
@@ -179,6 +215,7 @@ class _AddProductFormState extends State<AddProductForm> {
                               createdAt: DateTime.now(),
                               updatedAt: DateTime.now()));
                           cleanUp();
+                          EasyLoading.showSuccess("Product was published successfully");
                           context.read<NavbarCubit>().controller.animateToPage(
                               0,
                               duration: const Duration(milliseconds: 400),

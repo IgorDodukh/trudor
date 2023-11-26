@@ -58,9 +58,11 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
   }
 
   void _cancelTimer() {
-    // Cancel the timer if it's active
-    if (_loadingTimer!.isActive) {
-      _loadingTimer!.cancel();
+    // Cancel the timer if it's active and initialised
+    if (_loadingTimer != null) {
+      if (_loadingTimer!.isActive) {
+        _loadingTimer!.cancel();
+      }
     }
   }
 
@@ -74,6 +76,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
 
   @override
   void initState() {
+    _loadingTimer = null;
     _selectedPriceTag = widget.product.priceTags.first;
     super.initState();
   }

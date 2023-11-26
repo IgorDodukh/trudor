@@ -5,6 +5,8 @@ import 'price_tag.dart';
 
 class Product extends Equatable {
   final String id;
+  final String? ownerId;
+  final bool? isNew;
   final String name;
   final String description;
   final List<PriceTag> priceTags;
@@ -16,6 +18,8 @@ class Product extends Equatable {
 
   const Product({
     required this.id,
+    required this.ownerId,
+    required this.isNew,
     required this.name,
     required this.description,
     required this.priceTags,

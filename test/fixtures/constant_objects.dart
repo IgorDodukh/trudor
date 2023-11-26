@@ -24,6 +24,8 @@ final tProductModel = ProductModel(
   images: const ["image"],
   createdAt: DateTime(2000),
   updatedAt: DateTime(2000),
+  ownerId: '1',
+  isNew: true,
 );
 
 final tProductModelList = [tProductModel, tProductModel];

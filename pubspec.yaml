@@ -42,12 +42,12 @@ dependencies:
 
   #data storage
   cloud_firestore: 4.9.1
-  firebase_storage: 11.2.6
-  firebase_core: 2.15.1
-  firebase_database: 10.2.5
-  firebase_auth: 4.9.0
-  image_picker: 1.0.4
-  typesense: 0.4.0
+  firebase_storage: ^11.2.6
+  firebase_core: ^2.15.1
+  firebase_database: ^10.2.5
+  firebase_auth: ^4.9.0
+  image_picker: ^1.0.4
+  typesense: ^0.4.0
 
   #state management
   bloc: ^8.1.2
@@ -58,7 +58,7 @@ dependencies:
   equatable: ^2.0.5
   dartz: ^0.10.1
   internet_connection_checker: ^1.0.0+1
-  google_sign_in: 6.1.4
+  google_sign_in: ^6.1.4
   flutter_dotenv: ^5.0.2
   custom_timer: ^0.1.2
   uuid: ^4.2.1
@@ -71,10 +71,11 @@ dependencies:
   carousel_slider: ^4.2.1
   smooth_page_indicator: ^1.1.0
   flutter_easyloading: ^3.0.5
-  sign_in_button: 3.2.0
+  sign_in_button: ^3.2.0
   google_fonts: ^4.0.4
   lottie: ^2.6.0
   material_design_icons_flutter: ^7.0.7296
+  toggle_switch: ^2.1.0
 #  babstrap_settings_screen: ^0.1.6 # settings screen
 # TODO: ALERTS https://gallery.flutter.dev/#/demo/cupertino-alerts
 

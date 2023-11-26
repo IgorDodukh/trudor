@@ -5,6 +5,8 @@ import 'price_tag_model.dart';
 class ProductModel extends Product {
   const ProductModel({
     required String id,
+    required String? ownerId,
+    required bool? isNew,
     required String name,
     required String description,
     required List<PriceTagModel> priceTags,
@@ -15,6 +17,8 @@ class ProductModel extends Product {
     required DateTime updatedAt,
   }) : super(
           id: id,
+          ownerId: ownerId,
+          isNew: isNew,
           name: name,
           description: description,
           priceTags: priceTags,
@@ -27,6 +31,8 @@ class ProductModel extends Product {
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
         id: json["_id"],
+        ownerId: json["ownerId"],
+        isNew: json["isNew"],
         name: json["name"],
         description: json["description"],
         priceTags: List<PriceTagModel>.from(
@@ -41,6 +47,8 @@ class ProductModel extends Product {
 
   Map<String, dynamic> toJson() => {
         "_id": id,
+        "ownerId": ownerId,
+        "isNew": isNew,
         "name": name,
         "description": description,
         "priceTags": List<dynamic>.from(
@@ -55,6 +63,8 @@ class ProductModel extends Product {
 
   factory ProductModel.fromEntity(Product entity) => ProductModel(
         id: entity.id,
+        ownerId: entity.ownerId,
+        isNew: entity.isNew,
         name: entity.name,
         description: entity.description,
         priceTags: entity.priceTags
