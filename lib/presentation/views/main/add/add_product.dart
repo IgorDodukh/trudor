@@ -4,7 +4,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:trudor/core/constant/collections.dart';
 import 'package:trudor/core/constant/strings.dart';
-import 'package:trudor/core/router/app_router.dart';
 import 'package:trudor/core/util/firstore_folder_methods.dart';
 import 'package:trudor/data/models/category/category_model.dart';
 import 'package:trudor/data/models/product/price_tag_model.dart';
@@ -14,6 +13,7 @@ import 'package:trudor/domain/entities/category/category.dart';
 import 'package:trudor/domain/entities/product/product.dart';
 import 'package:trudor/presentation/blocs/home/navbar_cubit.dart';
 import 'package:trudor/presentation/blocs/user/user_bloc.dart';
+import 'package:trudor/presentation/widgets/adaptive_alert_dialog.dart';
 import 'package:trudor/presentation/widgets/input_dropdown_menu.dart';
 import 'package:trudor/presentation/widgets/input_form_button.dart';
 import 'package:trudor/presentation/widgets/input_image_upload.dart';
@@ -21,8 +21,7 @@ import 'package:trudor/presentation/widgets/input_text_form_field.dart';
 import 'package:uuid/uuid.dart';
 
 class AddProductForm extends StatefulWidget {
-  // TODO: change add product form to floating card
-  // https://www.youtube.com/watch?v=Bxs8Zy2O4wk&t=7s
+  // TODO: implement https://fluttergems.dev/packages/flutter_onboarding_slider/
   final Product? productInfo;
 
   const AddProductForm({
@@ -37,13 +36,15 @@ class AddProductForm extends StatefulWidget {
 class _AddProductFormState extends State<AddProductForm> {
   String? id;
   bool? isNew;
+  bool isPublishPressed = false;
+  int? initialLabelIndex;
+
   final TextEditingController name = TextEditingController();
   final TextEditingController description = TextEditingController();
   final TextEditingController priceTags = TextEditingController();
   List<String> images = [];
   Category? selectedCategory;
   final _formKey = GlobalKey<FormState>();
-  int? initialLabelIndex;
 
   @override
   void initState() {
@@ -60,6 +61,12 @@ class _AddProductFormState extends State<AddProductForm> {
     super.initState();
   }
 
+  void _setIsPublishPressed() {
+    setState(() {
+      isPublishPressed = !isPublishPressed;
+    });
+  }
+
   void _handleImageUpload(List<String> imageURLs) {
     setState(() {
       images = imageURLs;
@@ -72,6 +79,23 @@ class _AddProductFormState extends State<AddProductForm> {
     });
   }
 
+  Future<dynamic>? onClickClose() {
+    if (name.text.isNotEmpty ||
+        description.text.isNotEmpty ||
+        isNew != null ||
+        selectedCategory != null ||
+        priceTags.text.isNotEmpty) {
+      return showDialog(
+        context: context,
+        builder: (context) {
+          return const AdaptiveDialog();
+        },
+      );
+    }
+    Navigator.of(context).pop();
+    return Future(() => null);
+  }
+
   void cleanUp() {
     name.text = "";
     description.text = "";
@@ -80,7 +104,38 @@ class _AddProductFormState extends State<AddProductForm> {
       images = [];
       initialLabelIndex = null;
       selectedCategory = null;
+      isNew = null;
+      isPublishPressed = false;
     });
+  }
+
+  Widget productTypeToggle() {
+    return Column(
+      children: [
+        ToggleSwitch(
+          minWidth: 120,
+          cornerRadius: 20.0,
+          activeBgColor: const [Colors.black87],
+          activeFgColor: Colors.white,
+          inactiveBgColor: Colors.black12,
+          initialLabelIndex: initialLabelIndex,
+          totalSwitches: 2,
+          labels: productType,
+          radiusStyle: true,
+          onToggle: (index) {
+            setState(
+              () {
+                initialLabelIndex = index!;
+                isNew = (index == 0);
+              },
+            );
+          },
+        ),
+        if (isNew == null && isPublishPressed)
+          const Text('Type selection is required',
+              style: TextStyle(color: Colors.red)),
+      ],
+    );
   }
 
   @override
@@ -141,28 +196,8 @@ class _AddProductFormState extends State<AddProductForm> {
                     const SizedBox(
                       height: 10,
                     ),
-                    ToggleSwitch(
-                      minWidth: 90.0,
-                      cornerRadius: 20.0,
-                      activeBgColor: const [Colors.black87],
-                      activeFgColor: Colors.white,
-                      inactiveBgColor: Colors.black12,
-                      initialLabelIndex: initialLabelIndex,
-                      totalSwitches: 2,
-                      labels: productType,
-                      radiusStyle: true,
-                      onToggle: (index) {
-                        setState(() {
-                            initialLabelIndex = index!;
-                            isNew = (index == 0);
-                          },
-                        );
-                      },
-                    ),
-                  if (isNew == null)
-                    const Text('This selection is required', style: TextStyle(color: Colors.redAccent)),
-
-                  const SizedBox(
+                    productTypeToggle(),
+                    const SizedBox(
                       height: 10,
                     ),
                     InputTextFormField(
@@ -191,8 +226,15 @@ class _AddProductFormState extends State<AddProductForm> {
                     InputFormButton(
                       color: Colors.black87,
                       onClick: () async {
-                        if (_formKey.currentState!.validate() && isNew != null) {
-                          final userId = (context.read<UserBloc>().state.props.first as UserModel).id;
+                        _setIsPublishPressed();
+                        if (_formKey.currentState!.validate() &&
+                            isNew != null) {
+                          final userId = (context
+                                  .read<UserBloc>()
+                                  .state
+                                  .props
+                                  .first as UserModel)
+                              .id;
                           var uuid = const Uuid();
                           FirestoreService firestoreService =
                               FirestoreService();
@@ -218,7 +260,8 @@ class _AddProductFormState extends State<AddProductForm> {
                               createdAt: DateTime.now(),
                               updatedAt: DateTime.now()));
                           cleanUp();
-                          EasyLoading.showSuccess("Product was published successfully");
+                          EasyLoading.showSuccess(
+                              "Product was published successfully");
                           context.read<NavbarCubit>().controller.animateToPage(
                               0,
                               duration: const Duration(milliseconds: 400),
@@ -230,17 +273,32 @@ class _AddProductFormState extends State<AddProductForm> {
                           widget.productInfo == null ? 'Publish' : 'Update',
                     ),
                     const SizedBox(
+                      height: 10,
+                    ),
+                    InputFormButton(
+                      color: Colors.black26,
+                      onClick: () {
+                        context.read<NavbarCubit>().controller.animateToPage(0,
+                            duration: const Duration(milliseconds: 400),
+                            curve: Curves.linear);
+                        context.read<NavbarCubit>().update(0);
+                      },
+                      titleText: 'Save draft',
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    InputFormButton(
+                      color: Colors.black26,
+                      onClick: () {
+                        cleanUp();
+                      },
+                      titleText: 'Cancel',
+                    ),
+                    const SizedBox(
                       height: 90,
                     ),
                   ])),
-              InputFormButton(
-                color: Colors.black87,
-                onClick: () {
-                  super.initState();
-                  Navigator.of(context).pushNamed(AppRouter.home);
-                },
-                titleText: 'Cancel',
-              ),
             ],
           ),
         ),

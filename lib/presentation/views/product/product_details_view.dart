@@ -255,7 +255,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                                     userId: userId,
                                     priceTag: _selectedPriceTag)));
                           }
-                          // Simulate loading for 3 seconds
+                          // TODO: Workaround. Simulate loading for 3 seconds to wait util the changes are applied to database.
                           _startLoadingTimer();
                         },
                         icon: Icon(

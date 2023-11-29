@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:trudor/core/util/firstore_folder_methods.dart';
 import 'package:trudor/data/models/category/category_model.dart';
-import 'package:flutter/material.dart';
 
 class CategoriesDropdownMenu extends StatefulWidget {
   final ValueChanged<CategoryModel> onCategorySelected;
@@ -17,17 +17,25 @@ class _CategoriesDropdownMenuState extends State<CategoriesDropdownMenu> {
   FirestoreService firestoreService = FirestoreService();
   String? _selectedCategory;
   List<CategoryModel>? _categoriesList;
+  late final Future<List<CategoryModel>> getCategoriesFuture;
+
+  @override
+  void initState() {
+    _selectedCategory = null;
+    getCategoriesFuture = getAllCategories();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<CategoryModel>>(
-      future: getAllCategories(),
+      future: getCategoriesFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const SizedBox(
             height: 55,
             child: Center(
-              child: CircularProgressIndicator(), // Loading indicator
+              child: CircularProgressIndicator.adaptive(), // Loading indicator
             ),
           );
         } else if (snapshot.hasError) {

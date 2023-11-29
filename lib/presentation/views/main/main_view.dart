@@ -1,11 +1,12 @@
-import 'package:trudor/presentation/views/main/add/add_product.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
+import 'package:trudor/presentation/views/main/add/add_product.dart';
+import 'package:trudor/presentation/widgets/popup_card/add_todo_button.dart';
 
 import '../../blocs/home/navbar_cubit.dart';
-import 'favorites/favorites_view.dart';
 import 'category/category_view.dart';
+import 'favorites/favorites_view.dart';
 import 'home/home_view.dart';
 import 'other/other_view.dart';
 
@@ -17,7 +18,6 @@ class MainView extends StatefulWidget {
 }
 
 class _MainViewState extends State<MainView> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,55 +85,39 @@ class _MainViewState extends State<MainView> {
                     }),
                     items: const [
                       BottomNavigationBarItem(
-                          icon: Icon(Icons.home_outlined, size: 25),
-                          activeIcon: Icon(Icons.home, size: 25),
-                          label: 'Home',
+                        icon: Icon(Icons.home_outlined, size: 25),
+                        activeIcon: Icon(Icons.home, size: 25),
+                        label: 'Home',
                       ),
                       BottomNavigationBarItem(
                           icon: Icon(Icons.dashboard_outlined, size: 25),
                           activeIcon: Icon(Icons.dashboard, size: 25),
-                          label: 'Category'
-                      ),
+                          label: 'Category'),
                       BottomNavigationBarItem(
-                          icon: Icon(Icons.add_circle_outline_rounded, size: 25),
-                          activeIcon: Icon(Icons.add_circle, size: 25),
-                          label: 'Sell'
+                        icon: Icon(Icons.add_circle_outline_rounded, size: 0),
+                        activeIcon: Icon(Icons.add_circle, size: 0),
+                        // label: 'Publish'
                       ),
                       BottomNavigationBarItem(
                           icon: Icon(Icons.favorite_border, size: 25),
                           activeIcon: Icon(Icons.favorite, size: 25),
-                          label: 'Favorites'
-                      ),
+                          label: 'Favorites'),
                       BottomNavigationBarItem(
                           icon: Icon(Icons.manage_accounts_outlined, size: 25),
                           activeIcon: Icon(Icons.manage_accounts, size: 25),
-                          label: 'User'
-                      ),
+                          label: 'User'),
                     ],
                   );
                 },
               ),
             ),
           ),
-          // TODO: add overlapped button to open add product form
-          // Positioned(
-          //   bottom: 65.0,
-          //   left: 0,
-          //   right: 0,
-          //   child: Container(
-          //     // width: MediaQuery.of(context).size.width,
-          //     height: 50.0, // Adjust the height as needed
-          //     // color: Colors.blue,
-          //     child: Center(
-          //       child: IconButton(
-          //         icon: const Icon(
-          //           Icons.add_circle, size: 70),
-          //         color: Colors.deepOrange,
-          //         onPressed: () {  },
-          //       ),
-          //     ),
-          //   ),
-          // ),
+          const Positioned(
+            bottom: 20.0,
+            left: 105,
+            right: 105,
+            child: AddProductFloatingCard(),
+          ),
         ],
       ),
     );

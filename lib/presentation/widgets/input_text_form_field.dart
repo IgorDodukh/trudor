@@ -10,6 +10,7 @@ class InputTextFormField extends StatefulWidget {
   final double hintTextSize;
   final bool enable;
   final int maxLines;
+
   const InputTextFormField(
       {Key? key,
       required this.controller,
@@ -20,8 +21,7 @@ class InputTextFormField extends StatefulWidget {
       this.hint,
       this.validation,
       this.contentPadding,
-        this.hintTextSize = 14
-      })
+      this.hintTextSize = 16})
       : super(key: key);
 
   @override
@@ -30,6 +30,7 @@ class InputTextFormField extends StatefulWidget {
 
 class _InputTextFormFieldState extends State<InputTextFormField> {
   bool _passwordVisible = false;
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -42,7 +43,7 @@ class _InputTextFormFieldState extends State<InputTextFormField> {
       enabled: widget.enable,
       maxLines: widget.maxLines,
       decoration: InputDecoration(
-        filled: true,
+        filled: false,
         hintText: widget.hint,
         hintStyle: TextStyle(
           fontSize: widget.hintTextSize,
