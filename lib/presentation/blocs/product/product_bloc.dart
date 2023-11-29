@@ -103,8 +103,17 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
           metaData: state.metaData,
           params: state.params,
         ));
+        final updatedParams = FilterProductParams(
+          keyword: state.params.keyword,
+          searchField: state.params.searchField,
+          categories: state.params.categories,
+          minPrice: state.params.minPrice,
+          maxPrice: state.params.maxPrice,
+          limit: limit + 1,
+          pageSize: state.params.pageSize
+        );
         final result =
-            await _getProductUseCase(FilterProductParams(limit: limit + 10));
+            await _getProductUseCase(updatedParams);
         result.fold(
           (failure) => emit(ProductError(
             products: state.products,

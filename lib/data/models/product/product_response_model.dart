@@ -46,9 +46,9 @@ class ProductResponseModel extends ProductResponse {
   factory ProductResponseModel.fromTypesense(Map<String, dynamic> result) =>
       ProductResponseModel(
         meta: PaginationMetaDataModel(
-          pageSize: 20,
-          total: 0,
-          page: 1,
+          pageSize: result["found"],
+          total: result["out_of"],
+          page: result["page"],
         ),
         data: List<ProductModel>.from(
             result["hits"].map((x) => ProductModel.fromJson(x["document"] as Map<String, dynamic>))),

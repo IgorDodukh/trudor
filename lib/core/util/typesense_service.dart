@@ -62,7 +62,9 @@ class TypesenseService {
       'infix': 'always',
       'query_by': params.searchField,
       'pre_segmented_query': 'true',
-      'sort_by': 'createdAt:desc'
+      'sort_by': 'createdAt:desc',
+      'page': '${params.limit}',
+      'per_page': '${params.pageSize}'
     };
     if (searchCategory.isNotEmpty) {
       searchParameters.addAll({'filter_by': 'category:[${searchCategory.join(",")}]'});
