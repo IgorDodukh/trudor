@@ -184,40 +184,79 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                   });
                 },
               ),
-              items: widget.product.images.map((image) {
-                return Builder(
-                  builder: (BuildContext context) {
-                    return Hero(
-                      tag: widget.product.id,
-                      child: CachedNetworkImage(
-                        imageUrl: image.isEmpty ? noImagePlaceholder : image,
-                        imageBuilder: (context, imageProvider) => Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.cover,
-                              colorFilter: ColorFilter.mode(
-                                  Colors.grey.shade50.withOpacity(0.25),
-                                  BlendMode.softLight),
+              items: widget.product.images.isEmpty
+                  ? [
+                      Builder(
+                        builder: (BuildContext context) {
+                          return Hero(
+                            tag: widget.product.id,
+                            child: CachedNetworkImage(
+                              imageUrl: noImagePlaceholder,
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: imageProvider,
+                                    fit: BoxFit.cover,
+                                    colorFilter: ColorFilter.mode(
+                                        Colors.grey.shade50.withOpacity(0.25),
+                                        BlendMode.softLight),
+                                  ),
+                                ),
+                              ),
+                              placeholder: (context, url) => Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade100,
+                                ),
+                              ),
+                              errorWidget: (context, url, error) =>
+                                  const Center(
+                                child: Icon(
+                                  Icons.error_outline,
+                                  color: Colors.grey,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        placeholder: (context, url) => Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade100,
-                          ),
-                        ),
-                        errorWidget: (context, url, error) => const Center(
-                          child: Icon(
-                            Icons.error_outline,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                );
-              }).toList(),
+                          );
+                        },
+                      )
+                    ]
+                  : widget.product.images.map((image) {
+                      return Builder(
+                        builder: (BuildContext context) {
+                          return Hero(
+                            tag: widget.product.id,
+                            child: CachedNetworkImage(
+                              imageUrl: image.isEmpty ? noImagePlaceholder : image,
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: imageProvider,
+                                    fit: BoxFit.cover,
+                                    colorFilter: ColorFilter.mode(
+                                        Colors.grey.shade50.withOpacity(0.25),
+                                        BlendMode.softLight),
+                                  ),
+                                ),
+                              ),
+                              placeholder: (context, url) => Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade100,
+                                ),
+                              ),
+                              errorWidget: (context, url, error) =>
+                                  const Center(
+                                child: Icon(
+                                  Icons.error_outline,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    }).toList(),
             ),
           ),
           Padding(

@@ -219,7 +219,7 @@ class _PopupCardState extends State<PopupCard> {
                 CategoryModel.fromEntity(selectedCategory!)
               ],
               category: selectedCategory!.name,
-              images: images.isEmpty ? [noImagePlaceholder] : images,
+              images: images.isEmpty ? [] : images,
               createdAt: DateTime.now(),
               updatedAt: DateTime.now()));
           EasyLoading.showSuccess("Product was published successfully");

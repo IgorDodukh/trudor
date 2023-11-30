@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:trudor/core/constant/collections.dart';
-import 'package:trudor/core/constant/strings.dart';
 import 'package:trudor/core/util/firstore_folder_methods.dart';
 import 'package:trudor/data/models/category/category_model.dart';
 import 'package:trudor/data/models/product/price_tag_model.dart';
@@ -255,7 +254,7 @@ class _AddProductFormState extends State<AddProductForm> {
                               ],
                               category: selectedCategory!.name,
                               images: images.isEmpty
-                                  ? [noImagePlaceholder]
+                                  ? []
                                   : images,
                               createdAt: DateTime.now(),
                               updatedAt: DateTime.now()));

@@ -46,7 +46,7 @@ class _ImageUploadFormState extends State<ImageUploadForm> {
 
   Future<List<XFile>> pickImages() async {
     final ImagePicker picker = ImagePicker();
-    final result = await picker.pickMultiImage();
+    final result = await picker.pickMultiImage(imageQuality: 50);
     return result.map((XFile file) => file).toList();
   }
 
