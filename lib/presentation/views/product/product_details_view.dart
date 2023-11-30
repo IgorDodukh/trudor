@@ -9,6 +9,8 @@ import 'package:trudor/presentation/blocs/user/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:trudor/presentation/widgets/popup_card/add_product_floating_card.dart';
+import 'package:trudor/presentation/widgets/popup_card/hero_dialog_route.dart';
 
 import '../../../../../domain/entities/favorites/favorites_item.dart';
 import '../../../../../domain/entities/product/price_tag.dart';
@@ -29,6 +31,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
   late PriceTag _selectedPriceTag;
   bool isFavorite = false;
   bool isLoading = false;
+  bool isOwner = false;
   late Timer? _loadingTimer;
 
   void _startLoadingTimer() {
@@ -40,7 +43,9 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
         setIsLoading();
         setIsFavorite();
       }
-      final popupMessage = isFavorite? "Successfully added to favorites" : "Removed from favorites";
+      final popupMessage = isFavorite
+          ? "Successfully added to Favorites"
+          : "Successfully removed from Favorites";
       EasyLoading.showSuccess(popupMessage);
     });
   }
@@ -73,6 +78,67 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
     _cancelTimer();
   }
 
+  Widget favoritesButtonLoading() {
+    // Display loading spinner when isLoading is true
+    return isLoading
+        ? const SizedBox(
+            height: 52.0,
+            width: 52.0,
+            child: Center(
+                child: CircularProgressIndicator.adaptive(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+              backgroundColor: Colors.yellowAccent,
+            )),
+          )
+        : Container();
+  }
+
+  void getOwnedProducts() {
+    final userId = (context.read<UserBloc>().state.props.first as UserModel).id;
+    final ownerId = widget.product.ownerId;
+    setState(() {
+      isOwner = userId == ownerId;
+    });
+  }
+
+  Widget editButton() {
+    getOwnedProducts();
+    return Container();
+  }
+
+  Widget favoritesButton() {
+    // Display IconButton when not loading
+    return !isLoading
+        ? IconButton(
+            onPressed: () {
+              // Set loading state to true when the IconButton is pressed
+              setIsLoading();
+              final userId =
+                  (context.read<UserBloc>().state.props.first as UserModel).id;
+              if (isFavorite) {
+                context.read<FavoritesBloc>().add(RemoveProduct(
+                    favoritesItem: ListViewItem(
+                        product: widget.product,
+                        userId: userId,
+                        priceTag: _selectedPriceTag)));
+              } else {
+                context.read<FavoritesBloc>().add(AddProduct(
+                    favoritesItem: ListViewItem(
+                        product: widget.product,
+                        userId: userId,
+                        priceTag: _selectedPriceTag)));
+              }
+              // TODO: Workaround. Simulate loading for 3 seconds to wait util the changes are applied to database.
+              _startLoadingTimer();
+            },
+            icon: Icon(
+              isFavorite ? Icons.favorite : Icons.favorite_border,
+              color: Colors.white,
+              size: 36,
+            ),
+          )
+        : Container();
+  }
 
   @override
   void initState() {
@@ -206,16 +272,12 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
+            Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  "Total",
-                  style: TextStyle(color: Colors.white70, fontSize: 16),
-                ),
                 Text(
-                  '\$${_selectedPriceTag.price}',
+                  '${_selectedPriceTag.price} €',
                   style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -224,47 +286,32 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
               ],
             ),
             const Spacer(),
-            Column(
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                editButton(),
+                isOwner
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.edit,
+                                color: Colors.white, size: 36),
+                            onPressed: () {
+                              Navigator.of(context)
+                                  .push(HeroDialogRoute(builder: (context) {
+                                return PopupCard(
+                                    existingProduct: widget.product);
+                              }));
+                            },
+                          ),
+                        ],
+                      )
+                    : Container(),
                 // Display loading spinner when isLoading is true
-                isLoading
-                    ? const SizedBox(
-                        height: 60.0,
-                        width: 60.0,
-                        child: Center(child: CircularProgressIndicator.adaptive(backgroundColor: Colors.yellowAccent,)),
-                      )
-                    : Container(),
+                favoritesButtonLoading(),
                 // Display IconButton when not loading
-                !isLoading
-                    ? IconButton(
-                        onPressed: () {
-                          // Set loading state to true when the IconButton is pressed
-                          setIsLoading();
-                          final userId = (context.read<UserBloc>().state.props.first as UserModel).id;
-                          if (isFavorite) {
-                            context.read<FavoritesBloc>().add(RemoveProduct(
-                                favoritesItem: ListViewItem(
-                                    product: widget.product,
-                                    userId: userId,
-                                    priceTag: _selectedPriceTag)));
-                          } else {
-                            context.read<FavoritesBloc>().add(AddProduct(
-                                favoritesItem: ListViewItem(
-                                    product: widget.product,
-                                    userId: userId,
-                                    priceTag: _selectedPriceTag)));
-                          }
-                          // TODO: Workaround. Simulate loading for 3 seconds to wait util the changes are applied to database.
-                          _startLoadingTimer();
-                        },
-                        icon: Icon(
-                          isFavorite ? Icons.favorite : Icons.favorite_border,
-                          color: Colors.white,
-                          size: 36,
-                        ),
-                      )
-                    : Container(),
+                favoritesButton(),
               ],
             ),
           ],

@@ -34,6 +34,14 @@ class _MyPublicationsViewState extends State<MyPublicationsView> {
     }
   }
 
+  void getOwnedProducts() {
+    final userId = (context.read<UserBloc>().state.props.first as UserModel).id;
+    context.read<ProductBloc>().add(GetProducts(FilterProductParams(
+            keyword: userId,
+            searchField: "ownerId"))
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -117,16 +125,7 @@ class _MyPublicationsViewState extends State<MyPublicationsView> {
                           }
                           return RefreshIndicator(
                             onRefresh: () async {
-                              final userId = (context
-                                      .read<UserBloc>()
-                                      .state
-                                      .props
-                                      .first as UserModel)
-                                  .id;
-                              context.read<ProductBloc>().add(GetProducts(
-                                  FilterProductParams(
-                                      keyword: userId,
-                                      searchField: "ownerId")));
+                              getOwnedProducts();
                             },
                             child: ListView.builder(
                               itemCount: state.products.length +

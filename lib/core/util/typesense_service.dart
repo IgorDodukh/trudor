@@ -53,6 +53,17 @@ class TypesenseService {
     await client.collection(_collectionName).documents.create(productData);
   }
 
+  Future<void> updateDocument(Map<String, dynamic> productData) async {
+    final searchParameters = {
+      'q': productData['_id'],
+      'query_by': '_id',
+    };
+    final querySnapshot = await client.collection(_collectionName).documents.search(searchParameters);
+    final document = querySnapshot['hits'][0]['document'];
+
+    await client.collection(_collectionName).document(document['id']).update(productData);
+  }
+
   Future<Map<String, dynamic>> searchProducts(FilterProductParams params) async {
     final searchName = params.keyword;
     final searchCategory = params.categories.isEmpty ? [] : params.categories.map((category) => category.name).toList();

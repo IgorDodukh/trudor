@@ -10,9 +10,11 @@ import 'package:trudor/core/util/firstore_folder_methods.dart';
 class ImageUploadForm extends StatefulWidget {
   // TODO: https://medium.flutterdevs.com/multiimage-picker-in-flutter-69bd9f6cedfb
   final ValueChanged<List<String>> onImagesUploaded;
+  final List<String>? existingImages;
 
   const ImageUploadForm({
     super.key,
+    this.existingImages,
     required this.onImagesUploaded,
   });
 
@@ -27,6 +29,14 @@ class _ImageUploadFormState extends State<ImageUploadForm> {
   bool photosLimitReached = false;
   bool isLoading = false;
   FirestoreService firestoreService = FirestoreService();
+
+  @override
+  void initState() {
+    setState(() {
+      imageUrls = widget.existingImages ?? [];
+    });
+    super.initState();
+  }
 
   void setIsLoading() {
     setState(() {

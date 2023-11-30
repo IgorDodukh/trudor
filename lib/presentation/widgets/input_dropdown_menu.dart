@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:trudor/core/util/firstore_folder_methods.dart';
 import 'package:trudor/data/models/category/category_model.dart';
+import 'package:trudor/domain/entities/category/category.dart';
 
 class CategoriesDropdownMenu extends StatefulWidget {
   final ValueChanged<CategoryModel> onCategorySelected;
+  final Category? existingCategory;
 
-  const CategoriesDropdownMenu({Key? key, required this.onCategorySelected})
+  const CategoriesDropdownMenu({Key? key, this.existingCategory, required this.onCategorySelected})
       : super(key: key);
 
   @override
@@ -21,7 +23,7 @@ class _CategoriesDropdownMenuState extends State<CategoriesDropdownMenu> {
 
   @override
   void initState() {
-    _selectedCategory = null;
+    _selectedCategory = widget.existingCategory?.name;
     getCategoriesFuture = getAllCategories();
     super.initState();
   }

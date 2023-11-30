@@ -33,6 +33,7 @@ class FirestoreService {
     Future<void> updateProduct(ProductModel product) async {
       try {
         final productData = product.toJson();
+        await typesenseService.updateDocument(productData);
         DocumentReference productRef = _firestore.collection('products').doc(productData['_id']);
         await productRef.update(productData);
       } catch (e) {

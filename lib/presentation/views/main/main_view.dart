@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:trudor/presentation/views/main/add/add_product.dart';
-import 'package:trudor/presentation/widgets/popup_card/add_todo_button.dart';
+import 'package:trudor/presentation/widgets/popup_card/add_product_floating_card.dart';
 
 import '../../blocs/home/navbar_cubit.dart';
 import 'category/category_view.dart';

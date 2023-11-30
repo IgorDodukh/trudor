@@ -5,6 +5,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:trudor/core/constant/collections.dart';
+import 'package:trudor/core/constant/colors.dart';
 import 'package:trudor/core/constant/strings.dart';
 import 'package:trudor/core/util/firstore_folder_methods.dart';
 import 'package:trudor/data/models/category/category_model.dart';
@@ -12,6 +13,7 @@ import 'package:trudor/data/models/product/price_tag_model.dart';
 import 'package:trudor/data/models/product/product_model.dart';
 import 'package:trudor/data/models/user/user_model.dart';
 import 'package:trudor/domain/entities/category/category.dart';
+import 'package:trudor/domain/entities/product/product.dart';
 import 'package:trudor/presentation/blocs/user/user_bloc.dart';
 import 'package:trudor/presentation/widgets/adaptive_alert_dialog.dart';
 import 'package:trudor/presentation/widgets/input_dropdown_menu.dart';
@@ -23,15 +25,7 @@ import 'package:uuid/uuid.dart';
 import 'custom_rect_tween.dart';
 import 'hero_dialog_route.dart';
 
-/// {@template add_todo_button}
-/// Button to add a new [Todo].
-///
-/// Opens a [HeroDialogRoute] of [PopupCard].
-///
-/// Uses a [Hero] with tag [_heroAddTodo].
-/// {@endtemplate}
 class AddProductFloatingCard extends StatelessWidget {
-  /// {@macro add_todo_button}
   const AddProductFloatingCard({Key? key}) : super(key: key);
 
   @override
@@ -61,17 +55,10 @@ class AddProductFloatingCard extends StatelessWidget {
   }
 }
 
-/// Tag-value used for the add todo popup button.
 const String _heroAddTodo = 'add-todo-hero';
-
-/// {@template add_todo_popup_card}
-/// Popup card to add a new [Todo]. Should be used in conjuction with
-/// [HeroDialogRoute] to achieve the popup effect.
-///
-/// Uses a [Hero] with tag [_heroAddTodo].
-/// {@endtemplate}
 class PopupCard extends StatefulWidget {
-  const PopupCard({Key? key}) : super(key: key);
+  final Product? existingProduct;
+  const PopupCard({Key? key, this.existingProduct}) : super(key: key);
 
   @override
   _PopupCardState createState() => _PopupCardState();
@@ -97,8 +84,21 @@ class _PopupCardState extends State<PopupCard> {
 
   @override
   void initState() {
-    super.initState();
+    final existingProduct = widget.existingProduct;
+
+    images = existingProduct?.images ?? [];
+    title.text = existingProduct?.name ?? "";
+    description.text = existingProduct?.description ?? "";
+    priceTags.text = existingProduct?.priceTags.first.price.toString() ?? "";
+
+    setState(() {
+      isNew = existingProduct?.isNew;
+      initialLabelIndex = isNew != null ? (isNew! ? 0 : 1) : null;
+      selectedCategory = existingProduct?.categories.first;
+    });
+
     myFuture = Future.delayed(const Duration(milliseconds: 550));
+    super.initState();
   }
 
   @override
@@ -146,8 +146,8 @@ class _PopupCardState extends State<PopupCard> {
   }
 
   Divider formDivider() {
-    return const Divider(
-      color: Colors.white,
+    return Divider(
+      color: kLightSecondaryColor,
       thickness: 0.2,
     );
   }
@@ -195,6 +195,75 @@ class _PopupCardState extends State<PopupCard> {
     );
   }
 
+  Widget addProductButton(){
+    return TextButton(
+      onPressed: () async {
+        _setIsPublishPressed();
+        if (_formKey.currentState!.validate() && isNew != null) {
+          final userId = (context.read<UserBloc>().state.props.first as UserModel).id;
+          var uuid = const Uuid();
+          FirestoreService firestoreService = FirestoreService();
+          await firestoreService.createProduct(ProductModel(
+              id: uuid.v1(),
+              ownerId: userId,
+              name: title.text,
+              description: description.text,
+              isNew: isNew!,
+              priceTags: [
+                PriceTagModel(
+                    id: '1',
+                    name: "base",
+                    price: int.parse(priceTags.text))
+              ],
+              categories: [
+                CategoryModel.fromEntity(selectedCategory!)
+              ],
+              category: selectedCategory!.name,
+              images: images.isEmpty ? [noImagePlaceholder] : images,
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now()));
+          EasyLoading.showSuccess("Product was published successfully");
+          Navigator.of(context).pop();
+        }
+      },
+      child: const Text('Publish'),
+    );
+  }
+
+  Widget updateProductButton(){
+    return TextButton(
+      onPressed: () async {
+        _setIsPublishPressed();
+        if (_formKey.currentState!.validate() && isNew != null) {
+          FirestoreService firestoreService = FirestoreService();
+          await firestoreService.updateProduct(ProductModel(
+              id: widget.existingProduct!.id,
+              ownerId: widget.existingProduct!.ownerId,
+              name: title.text,
+              description: description.text,
+              isNew: isNew!,
+              priceTags: [
+                PriceTagModel(
+                    id: '1',
+                    name: "base",
+                    price: int.parse(priceTags.text))
+              ],
+              categories: [
+                CategoryModel.fromEntity(selectedCategory!)
+              ],
+              category: selectedCategory!.name,
+              images: images.isEmpty ? [noImagePlaceholder] : images,
+              createdAt: widget.existingProduct!.createdAt,
+              updatedAt: DateTime.now()));
+          EasyLoading.showSuccess("Updated successfully.\nRefresh to see changes.");
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
+        }
+      },
+      child: const Text('Update'),
+    );
+  }
+
   Widget buttonsBar() {
     return FutureBuilder(
         future: myFuture,
@@ -208,46 +277,7 @@ class _PopupCardState extends State<PopupCard> {
                     },
                     child: const Text('Cancel'),
                   ),
-                  TextButton(
-                    onPressed: () async {
-                      _setIsPublishPressed();
-                      if (_formKey.currentState!.validate() && isNew != null) {
-                        final userId = (context
-                                .read<UserBloc>()
-                                .state
-                                .props
-                                .first as UserModel)
-                            .id;
-                        var uuid = const Uuid();
-                        FirestoreService firestoreService = FirestoreService();
-                        await firestoreService.createProduct(ProductModel(
-                            id: uuid.v1(),
-                            ownerId: userId,
-                            name: title.text,
-                            description: description.text,
-                            isNew: isNew!,
-                            priceTags: [
-                              PriceTagModel(
-                                  id: '1',
-                                  name: "base",
-                                  price: int.parse(priceTags.text))
-                            ],
-                            categories: [
-                              CategoryModel.fromEntity(selectedCategory!)
-                            ],
-                            category: selectedCategory!.name,
-                            images:
-                                images.isEmpty ? [noImagePlaceholder] : images,
-                            createdAt: DateTime.now(),
-                            updatedAt: DateTime.now()));
-                        EasyLoading.showSuccess(
-                            "Product was published successfully");
-                        Navigator.of(context).pop();
-                      }
-                    },
-                    // titleText: widget.productInfo == null ? 'Publish' : 'Update',
-                    child: const Text('Publish'),
-                  ),
+                  widget.existingProduct == null ? addProductButton() : updateProductButton(),
                 ],
               )
             : const CircularProgressIndicator.adaptive());
@@ -287,12 +317,13 @@ class _PopupCardState extends State<PopupCard> {
     );
   }
 
-  Widget categoryDropdown() {
+  Widget categoryDropdown(Category? selectedCategory) {
     return FutureBuilder(
         future: myFuture,
         builder: (c, s) => s.connectionState == ConnectionState.done
             ? CategoriesDropdownMenu(
-                onCategorySelected: _handleCategorySelection)
+                onCategorySelected: _handleCategorySelection,
+            existingCategory: selectedCategory)
             : const CircularProgressIndicator.adaptive());
   }
 
@@ -306,7 +337,7 @@ class _PopupCardState extends State<PopupCard> {
       },
       child: Center(
         child: Padding(
-          padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+          padding: const EdgeInsets.only(left: 3.0, right: 3.0),
           child: Hero(
             tag: _heroAddTodo,
             createRectTween: (begin, end) {
@@ -328,7 +359,9 @@ class _PopupCardState extends State<PopupCard> {
                           physics: const BouncingScrollPhysics(),
                           children: <Widget>[
                             ImageUploadForm(
-                                onImagesUploaded: _handleImageUpload),
+                                onImagesUploaded: _handleImageUpload,
+                                existingImages: images
+                            ),
                             formDivider(),
                             Padding(
                                 padding:
@@ -342,9 +375,9 @@ class _PopupCardState extends State<PopupCard> {
                                   formDivider(),
                                   priceField(),
                                   formDivider(),
-                                  categoryDropdown(),
+                                  categoryDropdown(selectedCategory),
                                 ])),
-                            SizedBox(height: 40),
+                            const SizedBox(height: 40),
                           ],
                         ),
                       ),
