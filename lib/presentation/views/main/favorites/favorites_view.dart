@@ -83,13 +83,14 @@ class _FavoritesViewState extends State<FavoritesView> {
                           shrinkWrap: true,
                           itemBuilder: (BuildContext context, int index) {
                             if (state is FavoritesLoading && state.favorites.isEmpty) {
-                              return const ListViewItemCard();
+                              return const ListViewItemCard(isFavorite: true);
                             } else {
                               if (state.favorites.length < index) {
-                                return const ListViewItemCard();
+                                return const ListViewItemCard(isFavorite: true);
                               }
                               return ListViewItemCard(
-                                favoritesItem: state.favorites[index],
+                                listViewItem: state.favorites[index],
+                                isFavorite: true
                               );
                             }
                           },

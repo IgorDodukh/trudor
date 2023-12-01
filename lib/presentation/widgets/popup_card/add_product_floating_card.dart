@@ -255,8 +255,7 @@ class _PopupCardState extends State<PopupCard> {
               images: images.isEmpty ? [noImagePlaceholder] : images,
               createdAt: widget.existingProduct!.createdAt,
               updatedAt: DateTime.now()));
-          EasyLoading.showSuccess("Updated successfully.\nRefresh to see changes.");
-          Navigator.of(context).pop();
+          EasyLoading.showSuccess("Updated successfully.\nChanges will appear soon.");
           Navigator.of(context).pop();
         }
       },

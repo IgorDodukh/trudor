@@ -142,15 +142,16 @@ class _MyPublicationsViewState extends State<MyPublicationsView> {
                               itemBuilder: (BuildContext context, int index) {
                                 if (state.products.length > index) {
                                   return ListViewItemCard(
-                                    favoritesItem:
+                                    listViewItem:
                                         ProductMapping.productToListViewItem(
                                             state.products[index]),
+                                    isOwned: true
                                   );
                                 }
                                 return Shimmer.fromColors(
                                   baseColor: Colors.grey.shade100,
                                   highlightColor: Colors.white,
-                                  child: const ListViewItemCard(),
+                                  child: const ListViewItemCard(isOwned: true),
                                 );
                               },
                             ),

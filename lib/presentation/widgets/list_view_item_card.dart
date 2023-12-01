@@ -7,30 +7,36 @@ import 'package:trudor/presentation/blocs/user/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:trudor/presentation/widgets/popup_card/add_product_floating_card.dart';
+import 'package:trudor/presentation/widgets/popup_card/hero_dialog_route.dart';
 
 import '../../core/router/app_router.dart';
 
 class ListViewItemCard extends StatelessWidget {
-  final ListViewItem? favoritesItem;
+  final ListViewItem? listViewItem;
   final Function? onFavoriteToggle;
   final Function? onClick;
   final Function()? onLongClick;
   final bool isSelected;
+  final bool isFavorite;
+  final bool isOwned;
 
   const ListViewItemCard({
     Key? key,
-    this.favoritesItem,
+    this.listViewItem,
     this.onFavoriteToggle,
     this.onClick,
     this.onLongClick,
     this.isSelected = false,
+    this.isFavorite = false,
+    this.isOwned = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
-      child: favoritesItem == null
+      child: listViewItem == null
           ? Shimmer.fromColors(
               highlightColor: Colors.white,
               baseColor: Colors.grey.shade100,
@@ -40,12 +46,49 @@ class ListViewItemCard extends StatelessWidget {
     );
   }
 
+  Widget deactivateProductButton(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        print("Attempt to deactivate: ${listViewItem!.product.name}");
+      },
+      icon: const Icon(Icons.close),
+    );
+  }
+
+  Widget editProductButton(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        Navigator.of(context).push(HeroDialogRoute(builder: (context) {
+          return PopupCard(existingProduct: listViewItem!.product);
+        }));
+        // Navigator.of(context).pushNamed(AppRouter.editProduct,
+        //     arguments: listViewItem!.product);
+      },
+      icon: const Icon(Icons.edit),
+    );
+  }
+
+  Widget removeFromFavoritesButton(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        final userId =
+            (context.read<UserBloc>().state.props.first as UserModel).id;
+        context.read<FavoritesBloc>().add(RemoveProduct(
+            favoritesItem: ListViewItem(
+                product: listViewItem!.product,
+                userId: userId,
+                priceTag: listViewItem!.priceTag)));
+      },
+      icon: const Icon(Icons.close),
+    );
+  }
+
   Widget buildBody(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (favoritesItem != null) {
+        if (listViewItem != null) {
           Navigator.of(context).pushNamed(AppRouter.productDetails,
-              arguments: favoritesItem!.product);
+              arguments: listViewItem!.product);
         }
       },
       onLongPress: onLongClick,
@@ -76,7 +119,7 @@ class ListViewItemCard extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: favoritesItem == null
+                    child: listViewItem == null
                         ? Padding(
                             padding: const EdgeInsets.all(24.0),
                             child: Container(
@@ -87,7 +130,10 @@ class ListViewItemCard extends StatelessWidget {
                             padding: const EdgeInsets.all(0.0),
                             child: CachedNetworkImage(
                               fit: BoxFit.cover,
-                              imageUrl: favoritesItem!.product.images.first.isNotEmpty ? favoritesItem!.product.images.first : noImagePlaceholder,
+                              imageUrl:
+                                  listViewItem!.product.images.first.isNotEmpty
+                                      ? listViewItem!.product.images.first
+                                      : noImagePlaceholder,
                               placeholder: (context, url) => const Center(
                                   child: CircularProgressIndicator()),
                               errorWidget: (context, url, error) =>
@@ -105,7 +151,7 @@ class ListViewItemCard extends StatelessWidget {
                         padding: const EdgeInsets.fromLTRB(4, 8, 35, 0),
                         child: SizedBox(
                           // height: 18,
-                          child: favoritesItem == null
+                          child: listViewItem == null
                               ? Container(
                                   width: 150,
                                   height: 18,
@@ -116,7 +162,7 @@ class ListViewItemCard extends StatelessWidget {
                                 )
                               : SizedBox(
                                   child: Text(
-                                    favoritesItem!.product.name,
+                                    listViewItem!.product.name,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
@@ -131,7 +177,7 @@ class ListViewItemCard extends StatelessWidget {
                         children: [
                           SizedBox(
                             height: 18,
-                            child: favoritesItem == null
+                            child: listViewItem == null
                                 ? Container(
                                     width: 100,
                                     decoration: BoxDecoration(
@@ -140,7 +186,8 @@ class ListViewItemCard extends StatelessWidget {
                                     ),
                                   )
                                 : Text(
-                                    r'$' + favoritesItem!.priceTag.price.toString(),
+                                    r'$' +
+                                        listViewItem!.priceTag.price.toString(),
                                     style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
@@ -156,20 +203,33 @@ class ListViewItemCard extends StatelessWidget {
             ],
           ),
           Positioned(
-            top: 10,
-            right: 0,
-            child:
-            IconButton(
-                    onPressed: () {
-                      final userId = (context.read<UserBloc>().state.props.first as UserModel).id;
-                      context.read<FavoritesBloc>().add(RemoveProduct(
-                          favoritesItem: ListViewItem(
-                              product: favoritesItem!.product,
-                              userId: userId,
-                              priceTag: favoritesItem!.priceTag)));
-                    },
-                    icon: const Icon(Icons.close)),
-          ),
+              top: 10,
+              right: 0,
+              child: isOwned
+                  ? Row(
+                      children: [
+                        editProductButton(context),
+                        deactivateProductButton(context),
+                      ],
+                    )
+                  : isFavorite
+                      ? removeFromFavoritesButton(context)
+                      : IconButton(
+                          onPressed: () {
+                            final userId = (context
+                                    .read<UserBloc>()
+                                    .state
+                                    .props
+                                    .first as UserModel)
+                                .id;
+                            context.read<FavoritesBloc>().add(AddProduct(
+                                favoritesItem: ListViewItem(
+                                    product: listViewItem!.product,
+                                    userId: userId,
+                                    priceTag: listViewItem!.priceTag)));
+                          },
+                          icon: const Icon(Icons.favorite_border),
+                        )),
         ],
       ),
     );
