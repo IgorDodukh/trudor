@@ -30,6 +30,7 @@ class TypesenseService {
         Field('_id', type: Type.string),
         Field('productId', type: Type.string),
         Field('isNew', type: Type.bool),
+        Field('status', type: Type.string),
         Field('ownerId', type: Type.string),
         Field('name', type: Type.string, ),
         Field('description', type: Type.string),

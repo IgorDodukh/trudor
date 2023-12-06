@@ -48,7 +48,7 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
         (favorites) => emit(FavoritesLoaded(favorites: favorites)),
       );
     } catch (e) {
-      EasyLoading.showError("Failed to get Favorites: $e");
+      EasyLoading.showError("Failed to get Favorites: $e.\nState: $state");
       emit(FavoritesError(failure: ExceptionFailure(), favorites: state.favorites));
     }
   }

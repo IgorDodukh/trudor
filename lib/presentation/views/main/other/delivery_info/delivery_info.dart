@@ -1,3 +1,4 @@
+import 'package:trudor/core/constant/messages.dart';
 import 'package:trudor/data/models/user/user_model.dart';
 import 'package:trudor/presentation/blocs/user/user_bloc.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ class _DeliveryInfoViewState extends State<DeliveryInfoView> {
       listener: (context, state) {
         EasyLoading.dismiss();
         if (state is DeliveryInfoActionLoading) {
-          EasyLoading.show(status: 'Loading...');
+          EasyLoading.show(status: loadingTitle);
         } else if (state is DeliveryInfoSelectActionSuccess) {
           context
               .read<DeliveryInfoFetchCubit>()
@@ -37,7 +38,7 @@ class _DeliveryInfoViewState extends State<DeliveryInfoView> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Delivery Details"),
+          title: const Text(deliveryDetailsTitle),
         ),
         body: BlocBuilder<DeliveryInfoFetchCubit, DeliveryInfoFetchState>(
           builder: (context, state) {
@@ -131,19 +132,19 @@ class _DeliveryInfoFormState extends State<DeliveryInfoForm> {
       listener: (context, state) {
         EasyLoading.dismiss();
         if (state is DeliveryInfoActionLoading) {
-          EasyLoading.show(status: 'Loading...');
+          EasyLoading.show(status: loadingTitle);
         } else if (state is DeliveryInfoAddActionSuccess) {
           Navigator.of(context).pop();
           context
               .read<DeliveryInfoFetchCubit>()
               .addDeliveryInfo(state.deliveryInfo);
-          EasyLoading.showSuccess("Delivery info successfully added!");
+          EasyLoading.showSuccess(addDeliveryInfoSuccess);
         } else if (state is DeliveryInfoEditActionSuccess) {
           Navigator.of(context).pop();
           context
               .read<DeliveryInfoFetchCubit>()
               .editDeliveryInfo(state.deliveryInfo);
-          EasyLoading.showSuccess("Delivery info successfully edited!");
+          EasyLoading.showSuccess(updateDeliveryInfoSuccess);
         } else if (state is DeliveryInfoActionFail) {
           EasyLoading.showError("Error");
         }

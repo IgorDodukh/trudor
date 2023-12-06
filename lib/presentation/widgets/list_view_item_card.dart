@@ -1,4 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:trudor/core/constant/messages.dart';
 import 'package:trudor/core/constant/strings.dart';
 import 'package:trudor/data/models/user/user_model.dart';
 import 'package:trudor/domain/entities/favorites/favorites_item.dart';
@@ -78,8 +80,9 @@ class ListViewItemCard extends StatelessWidget {
                 product: listViewItem!.product,
                 userId: userId,
                 priceTag: listViewItem!.priceTag)));
+        EasyLoading.showSuccess(removedFromFavoritesTitle);
       },
-      icon: const Icon(Icons.close),
+      icon: const Icon(Icons.favorite),
     );
   }
 

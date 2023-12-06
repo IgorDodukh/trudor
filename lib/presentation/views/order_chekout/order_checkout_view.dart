@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:trudor/core/constant/messages.dart';
 import 'package:trudor/core/extension/string_extension.dart';
 import 'package:trudor/presentation/blocs/favorites/favorites_bloc.dart';
 import 'package:trudor/presentation/blocs/home/navbar_cubit.dart';
@@ -28,7 +29,7 @@ class OrderCheckoutView extends StatelessWidget {
         listener: (context, state) {
           EasyLoading.dismiss();
           if (state is OrderAddLoading) {
-            EasyLoading.show(status: 'Loading...');
+            EasyLoading.show(status: loadingTitle);
           } else if (state is OrderAddSuccess) {
             context.read<NavbarCubit>().update(0);
             context.read<NavbarCubit>().controller.jumpToPage(0);

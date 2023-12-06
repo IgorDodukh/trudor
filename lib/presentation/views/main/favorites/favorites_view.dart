@@ -37,7 +37,8 @@ class _FavoritesViewState extends State<FavoritesView> {
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: BlocBuilder<FavoritesBloc, FavoritesState>(
                       builder: (context, state) {
-                        if (state is FavoritesError && state.favorites.isEmpty) {
+                        if (state is FavoritesError &&
+                            state.favorites.isEmpty) {
                           return Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -52,7 +53,14 @@ class _FavoritesViewState extends State<FavoritesView> {
                               SizedBox(
                                 height:
                                     MediaQuery.of(context).size.height * 0.1,
-                              )
+                              ),
+                              IconButton(
+                                  onPressed: () {
+                                    context
+                                        .read<FavoritesBloc>()
+                                        .add(const GetFavorites());
+                                  },
+                                  icon: const Icon(Icons.refresh)),
                             ],
                           );
                         }
@@ -65,16 +73,16 @@ class _FavoritesViewState extends State<FavoritesView> {
                               SizedBox(
                                 height:
                                     MediaQuery.of(context).size.height * 0.1,
-                              )
+                              ),
                             ],
                           );
                         }
                         return ListView.builder(
-                          itemCount:
-                              (state is FavoritesLoading && state.favorites.isEmpty)
-                                  ? 10
-                                  : (state.favorites.length +
-                                      ((state is FavoritesLoading) ? 10 : 0)),
+                          itemCount: (state is FavoritesLoading &&
+                                  state.favorites.isEmpty)
+                              ? 10
+                              : (state.favorites.length +
+                                  ((state is FavoritesLoading) ? 10 : 0)),
                           padding: EdgeInsets.only(
                               top: (MediaQuery.of(context).padding.top + 20),
                               bottom:
@@ -82,16 +90,16 @@ class _FavoritesViewState extends State<FavoritesView> {
                           physics: const BouncingScrollPhysics(),
                           shrinkWrap: true,
                           itemBuilder: (BuildContext context, int index) {
-                            if (state is FavoritesLoading && state.favorites.isEmpty) {
+                            if (state is FavoritesLoading &&
+                                state.favorites.isEmpty) {
                               return const ListViewItemCard(isFavorite: true);
                             } else {
                               if (state.favorites.length < index) {
                                 return const ListViewItemCard(isFavorite: true);
                               }
                               return ListViewItemCard(
-                                listViewItem: state.favorites[index],
-                                isFavorite: true
-                              );
+                                  listViewItem: state.favorites[index],
+                                  isFavorite: true);
                             }
                           },
                         );
@@ -101,7 +109,8 @@ class _FavoritesViewState extends State<FavoritesView> {
                 ),
               ],
             ),
-            BlocBuilder<FavoritesBloc, FavoritesState>(builder: (context, state) {
+            BlocBuilder<FavoritesBloc, FavoritesState>(
+                builder: (context, state) {
               if (state.favorites.isEmpty) {
                 return const SizedBox();
               }

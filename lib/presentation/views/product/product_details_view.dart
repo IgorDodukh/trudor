@@ -2,13 +2,15 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:trudor/core/constant/messages.dart';
 import 'package:trudor/core/constant/strings.dart';
 import 'package:trudor/data/models/user/user_model.dart';
 import 'package:trudor/presentation/blocs/user/user_bloc.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:trudor/presentation/widgets/adaptive_alert_dialog.dart';
 import 'package:trudor/presentation/widgets/popup_card/add_product_floating_card.dart';
 import 'package:trudor/presentation/widgets/popup_card/hero_dialog_route.dart';
 
@@ -32,20 +34,20 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
   bool isFavorite = false;
   bool isLoading = false;
   bool isOwner = false;
+  String userId = "";
   late Timer? _loadingTimer;
 
   void _startLoadingTimer() {
     // Start the timer to simulate loading
-    _loadingTimer = Timer(const Duration(seconds: 3), () {
+    _loadingTimer = Timer(const Duration(seconds: 1), () {
       // Check if the widget is still mounted before calling setState
       if (mounted) {
         // Set loading state back to false when loading is complete
         setIsLoading();
         setIsFavorite();
       }
-      final popupMessage = isFavorite
-          ? "Successfully added to Favorites"
-          : "Successfully removed from Favorites";
+      final popupMessage =
+          isFavorite ? addedToFavoritesTitle : removedFromFavoritesTitle;
       EasyLoading.showSuccess(popupMessage);
     });
   }
@@ -94,54 +96,48 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
   }
 
   void getOwnedProducts() {
-    final userId = (context.read<UserBloc>().state.props.first as UserModel).id;
-    final ownerId = widget.product.ownerId;
     setState(() {
-      isOwner = userId == ownerId;
+      isOwner = userId == widget.product.ownerId;
     });
   }
 
-  Widget editButton() {
-    getOwnedProducts();
-    return Container();
-  }
-
-  Widget favoritesButton() {
-    // Display IconButton when not loading
-    return !isLoading
-        ? IconButton(
-            onPressed: () {
-              // Set loading state to true when the IconButton is pressed
-              setIsLoading();
-              final userId =
-                  (context.read<UserBloc>().state.props.first as UserModel).id;
-              if (isFavorite) {
-                context.read<FavoritesBloc>().add(RemoveProduct(
-                    favoritesItem: ListViewItem(
-                        product: widget.product,
-                        userId: userId,
-                        priceTag: _selectedPriceTag)));
-              } else {
-                context.read<FavoritesBloc>().add(AddProduct(
-                    favoritesItem: ListViewItem(
-                        product: widget.product,
-                        userId: userId,
-                        priceTag: _selectedPriceTag)));
-              }
-              // TODO: Workaround. Simulate loading for 3 seconds to wait util the changes are applied to database.
-              _startLoadingTimer();
-            },
-            icon: Icon(
-              isFavorite ? Icons.favorite : Icons.favorite_border,
-              color: Colors.white,
-              size: 36,
-            ),
-          )
-        : Container();
+  void addToFavorites() {
+    setIsLoading();
+    if (isFavorite) {
+      context.read<FavoritesBloc>().add(RemoveProduct(
+          favoritesItem: ListViewItem(
+              product: widget.product,
+              userId: userId,
+              priceTag: _selectedPriceTag)));
+    } else {
+      context.read<FavoritesBloc>().add(AddProduct(
+          favoritesItem: ListViewItem(
+              product: widget.product,
+              userId: userId,
+              priceTag: _selectedPriceTag)));
+    }
+    _startLoadingTimer();
   }
 
   @override
   void initState() {
+    setState(() {
+      userId = (context.read<UserBloc>().state.props.first as UserModel).id;
+    });
+    if (userId == widget.product.ownerId) {
+      setState(() {
+        isOwner = true;
+      });
+    }
+    final favoritesState = context.read<FavoritesBloc>().state.favorites;
+    for (var element in favoritesState) {
+      if (element.product.id == widget.product.id) {
+        setState(() {
+          isFavorite = true;
+        });
+        break;
+      }
+    }
     _loadingTimer = null;
     _selectedPriceTag = widget.product.priceTags.first;
     super.initState();
@@ -149,13 +145,6 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
 
   @override
   Widget build(BuildContext context) {
-    final favoritesState = context.read<FavoritesBloc>().state.favorites;
-    for (var element in favoritesState) {
-      if (element.product.id == widget.product.id) {
-        isFavorite = true;
-        break;
-      }
-    }
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -227,7 +216,8 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                           return Hero(
                             tag: widget.product.id,
                             child: CachedNetworkImage(
-                              imageUrl: image.isEmpty ? noImagePlaceholder : image,
+                              imageUrl:
+                                  image.isEmpty ? noImagePlaceholder : image,
                               imageBuilder: (context, imageProvider) =>
                                   Container(
                                 decoration: BoxDecoration(
@@ -324,11 +314,8 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                 ),
               ],
             ),
-            const Spacer(),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                editButton(),
                 isOwner
                     ? Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -350,7 +337,42 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                 // Display loading spinner when isLoading is true
                 favoritesButtonLoading(),
                 // Display IconButton when not loading
-                favoritesButton(),
+                BlocBuilder<UserBloc, UserState>(
+                  builder: (context, state) {
+                    if (state is UserLogged) {
+                      return !isLoading
+                          ? IconButton(
+                              onPressed: () {
+                                addToFavorites();
+                              },
+                              icon: Icon(
+                                isFavorite
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color: Colors.white,
+                                size: 36,
+                              ),
+                            )
+                          : Container();
+                    } else {
+                      return IconButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return const UnauthorisedAddFavoritesAlert();
+                            },
+                          );
+                        },
+                        icon: Icon(
+                          isFavorite ? Icons.favorite : Icons.favorite_border,
+                          color: Colors.white,
+                          size: 36,
+                        ),
+                      );
+                    }
+                  },
+                ),
               ],
             ),
           ],

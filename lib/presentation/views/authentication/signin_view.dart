@@ -1,3 +1,4 @@
+import 'package:trudor/core/constant/messages.dart';
 import 'package:trudor/core/error/failures.dart';
 import 'package:trudor/data/repositories/auth/google_auth_repository.dart';
 import 'package:trudor/domain/auth/google_auth.dart';
@@ -33,7 +34,7 @@ class _SignInViewState extends State<SignInView> {
       listener: (context, state) {
         EasyLoading.dismiss();
         if (state is UserLoading) {
-          EasyLoading.show(status: 'Loading...');
+          EasyLoading.show(status: loadingTitle);
         } else if (state is UserLogged) {
           context.read<FavoritesBloc>().add(const GetFavorites());
           Navigator.of(context).pushNamedAndRemoveUntil(

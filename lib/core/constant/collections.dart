@@ -1,2 +1,3 @@
 const productType = ['New', 'Used'];
-const publicationType = ["Active", "Inactive"];
+
+enum ProductStatus { active, inactive, draft }

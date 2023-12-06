@@ -128,7 +128,7 @@ class _ImageUploadFormState extends State<ImageUploadForm> {
                       : () async => {
                             await pickAndUploadImages(),
                           },
-                  child: const Text('Add more'),
+                  child: const Text('Add more', style: TextStyle(decoration: TextDecoration.underline)),
                 ),
               ),
           ],

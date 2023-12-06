@@ -1,3 +1,4 @@
+import 'package:trudor/core/constant/collections.dart';
 import 'package:trudor/data/models/favorites/favorites_item_model.dart';
 import 'package:trudor/data/models/category/category_model.dart';
 import 'package:trudor/data/models/order/order_details_model.dart';
@@ -26,6 +27,7 @@ final tProductModel = ProductModel(
   updatedAt: DateTime(2000),
   ownerId: '1',
   isNew: true,
+  status: ProductStatus.active,
 );
 
 final tProductModelList = [tProductModel, tProductModel];

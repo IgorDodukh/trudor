@@ -87,7 +87,7 @@ class _AddProductFormState extends State<AddProductForm> {
       return showDialog(
         context: context,
         builder: (context) {
-          return const AdaptiveDialog();
+          return const DiscardChangesAlert();
         },
       );
     }
@@ -243,6 +243,7 @@ class _AddProductFormState extends State<AddProductForm> {
                               name: name.text,
                               description: description.text,
                               isNew: isNew!,
+                              status: ProductStatus.active,
                               priceTags: [
                                 PriceTagModel(
                                     id: '1',

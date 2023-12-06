@@ -1,3 +1,5 @@
+import 'package:trudor/core/constant/collections.dart';
+
 import '../../../domain/entities/product/product.dart';
 import '../category/category_model.dart';
 import 'price_tag_model.dart';
@@ -7,6 +9,7 @@ class ProductModel extends Product {
     required String id,
     required String? ownerId,
     required bool? isNew,
+    required ProductStatus? status,
     required String name,
     required String description,
     required List<PriceTagModel> priceTags,
@@ -19,6 +22,7 @@ class ProductModel extends Product {
           id: id,
           ownerId: ownerId,
           isNew: isNew,
+          status: status,
           name: name,
           description: description,
           priceTags: priceTags,
@@ -33,6 +37,7 @@ class ProductModel extends Product {
         id: json["_id"],
         ownerId: json["ownerId"],
         isNew: json["isNew"],
+        status: ProductStatus.values.firstWhere((e) => e.toString() == 'ProductStatus.${json["status"]}'),
         name: json["name"],
         description: json["description"],
         priceTags: List<PriceTagModel>.from(
@@ -49,6 +54,7 @@ class ProductModel extends Product {
         "_id": id,
         "ownerId": ownerId,
         "isNew": isNew,
+        "status": status!.name.toString(),
         "name": name,
         "description": description,
         "priceTags": List<dynamic>.from(
@@ -65,6 +71,7 @@ class ProductModel extends Product {
         id: entity.id,
         ownerId: entity.ownerId,
         isNew: entity.isNew,
+        status: entity.status,
         name: entity.name,
         description: entity.description,
         priceTags: entity.priceTags

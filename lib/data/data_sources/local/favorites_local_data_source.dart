@@ -54,7 +54,9 @@ class FavoritesLocalDataSourceImpl implements FavoritesLocalDataSource {
     if (jsonString != null) {
       return Future.value(favoritesItemModelListFromLocalJson(jsonString));
     } else {
-      throw CacheFailure();
+      return Future.value([]);
+      // leave this throw for future error handling
+      // throw CacheFailure();
     }
   }
 

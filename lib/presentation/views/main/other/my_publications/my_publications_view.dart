@@ -1,3 +1,4 @@
+import 'package:basic_utils/basic_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
@@ -79,7 +80,9 @@ class _MyPublicationsViewState extends State<MyPublicationsView> {
                   inactiveBgColor: Colors.black12,
                   initialLabelIndex: 0,
                   totalSwitches: 2,
-                  labels: publicationType,
+                  labels: ProductStatus.values
+                      .map((e) => StringUtils.capitalize(e.toString().split('.').last) )
+                      .toList(),
                   radiusStyle: true,
                   onToggle: (index) {
                     print("Switch to publications screen #$index");

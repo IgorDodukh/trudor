@@ -127,17 +127,39 @@ class _PopupCardState extends State<PopupCard> {
     });
   }
 
-  Future<dynamic>? onPopupClose() {
-    if (title.text.isNotEmpty ||
+  bool isExistingProductUpdated() {
+    return title.text != widget.existingProduct!.name ||
+        description.text != widget.existingProduct!.description ||
+        isNew != widget.existingProduct!.isNew ||
+        images != widget.existingProduct!.images ||
+        selectedCategory != widget.existingProduct!.categories.first ||
+        priceTags.text != widget.existingProduct!.priceTags.first.price.toString();
+  }
+
+  bool isProductInfoUpdated() {
+    return title.text.isNotEmpty ||
         description.text.isNotEmpty ||
         isNew != null ||
         images.isNotEmpty ||
         selectedCategory != null ||
-        priceTags.text.isNotEmpty) {
+        priceTags.text.isNotEmpty;
+  }
+
+  Future<dynamic>? onPopupClose() {
+    if (widget.existingProduct != null) {
+      if (isExistingProductUpdated()) {
+        return showDialog(
+          context: context,
+          builder: (context) {
+            return const DiscardChangesAlert();
+          },
+        );
+      }
+    } else if (isProductInfoUpdated()) {
       return showDialog(
         context: context,
         builder: (context) {
-          return const AdaptiveDialog();
+          return const DiscardChangesAlert();
         },
       );
     }
@@ -209,6 +231,7 @@ class _PopupCardState extends State<PopupCard> {
               name: title.text,
               description: description.text,
               isNew: isNew!,
+              status: ProductStatus.active,
               priceTags: [
                 PriceTagModel(
                     id: '1',
@@ -242,6 +265,7 @@ class _PopupCardState extends State<PopupCard> {
               name: title.text,
               description: description.text,
               isNew: isNew!,
+              status: ProductStatus.active,
               priceTags: [
                 PriceTagModel(
                     id: '1',

@@ -90,73 +90,87 @@ class OtherView extends StatelessWidget {
               },
             ),
           ),
-          const SizedBox(height: 30),
-          BlocBuilder<UserBloc, UserState>(
-            builder: (context, state) {
-              return OtherItemCard(
-                onClick: () {
-                  if (state is UserLogged) {
-                    Navigator.of(context).pushNamed(
-                      AppRouter.userProfile,
-                      arguments: state.user,
-                    );
-                  } else {
-                    Navigator.of(context).pushNamed(AppRouter.signIn);
-                  }
-                },
-                title: "Profile",
-              );
-            },
-          ),
-          const SizedBox(height: 6),
-          BlocBuilder<UserBloc, UserState>(
-            builder: (context, state) {
-              return OtherItemCard(
-                onClick: () {
-                  if (state is UserLogged) {
-                    Navigator.of(context).pushNamed(
-                      AppRouter.myPublications,
-                      arguments: state.user,
-                    );
-                  } else {
-                    Navigator.of(context).pushNamed(AppRouter.signIn);
-                  }
-                },
-                title: "My publications",
-              );
-            },
-          ),
           BlocBuilder<UserBloc, UserState>(
             builder: (context, state) {
               if (state is UserLogged) {
-                return Padding(
-                  padding: const EdgeInsets.only(top: 6),
-                  child: OtherItemCard(
+                return Column(children: [
+                  const SizedBox(height: 30),
+                  BlocBuilder<UserBloc, UserState>(
+                    builder: (context, state) {
+                      return OtherItemCard(
+                        onClick: () {
+                          if (state is UserLogged) {
+                            Navigator.of(context).pushNamed(
+                              AppRouter.userProfile,
+                              arguments: state.user,
+                            );
+                          } else {
+                            Navigator.of(context)
+                                .pushNamed(AppRouter.signIn);
+                          }
+                        },
+                        title: "Profile",
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 6),
+                  BlocBuilder<UserBloc, UserState>(
+                    builder: (context, state) {
+                      return OtherItemCard(
+                        onClick: () {
+                          if (state is UserLogged) {
+                            Navigator.of(context).pushNamed(
+                              AppRouter.myPublications,
+                              arguments: state.user,
+                            );
+                          } else {
+                            Navigator.of(context)
+                                .pushNamed(AppRouter.signIn);
+                          }
+                        },
+                        title: "My publications",
+                      );
+                    },
+                  ),
+                  BlocBuilder<UserBloc, UserState>(
+                    builder: (context, state) {
+                      if (state is UserLogged) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 6),
+                          child: OtherItemCard(
+                            onClick: () {
+                              Navigator.of(context)
+                                  .pushNamed(AppRouter.deliveryDetails);
+                            },
+                            title: "Delivery Info",
+                          ),
+                        );
+                      } else {
+                        return const SizedBox();
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 6),
+                  OtherItemCard(
+                    onClick: () {
+                      Navigator.of(context).pushNamed(AppRouter.settings);
+                    },
+                    title: "Settings",
+                  ),
+                  const SizedBox(height: 6),
+                  OtherItemCard(
                     onClick: () {
                       Navigator.of(context)
-                          .pushNamed(AppRouter.deliveryDetails);
+                          .pushNamed(AppRouter.notifications);
                     },
-                    title: "Delivery Info",
+                    title: "Notifications",
                   ),
-                );
+
+                ]);
               } else {
                 return const SizedBox();
               }
             },
-          ),
-          const SizedBox(height: 6),
-          OtherItemCard(
-            onClick: () {
-              Navigator.of(context).pushNamed(AppRouter.settings);
-            },
-            title: "Settings",
-          ),
-          const SizedBox(height: 6),
-          OtherItemCard(
-            onClick: () {
-              Navigator.of(context).pushNamed(AppRouter.notifications);
-            },
-            title: "Notifications",
           ),
           const SizedBox(height: 6),
           OtherItemCard(
@@ -170,19 +184,21 @@ class OtherView extends StatelessWidget {
             onClick: () {
               context.read<FavoritesBloc>().add(const ClearFavorites());
             },
-            title: "Clear Favorites",
+            title: "--- Clear Favorites ---",
           ),
           const SizedBox(height: 6),
           BlocBuilder<UserBloc, UserState>(
             builder: (context, state) {
               if (state is UserLogged) {
-                return OtherItemCard(
-                  onClick: () {
-                    context.read<UserBloc>().add(SignOutUser());
-                    context.read<FavoritesBloc>().add(const ClearFavorites());
-                  },
-                  title: "Sign Out",
-                );
+                return Column(children: [
+                  OtherItemCard(
+                    onClick: () {
+                      context.read<UserBloc>().add(SignOutUser());
+                      context.read<FavoritesBloc>().add(const ClearFavorites());
+                    },
+                    title: "Sign Out",
+                  )
+                ]);
               } else {
                 return const SizedBox();
               }

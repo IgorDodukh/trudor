@@ -62,6 +62,7 @@ dependencies:
   flutter_dotenv: ^5.0.2
   custom_timer: ^0.1.2
   uuid: ^4.2.1
+  basic_utils: ^5.7.0
 
   #ui
   oktoast: ^3.3.1

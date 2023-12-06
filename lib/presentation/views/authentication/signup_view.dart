@@ -1,3 +1,4 @@
+import 'package:trudor/core/constant/messages.dart';
 import 'package:trudor/domain/usecases/user/sign_up_usecase.dart';
 import 'package:trudor/presentation/blocs/user/user_bloc.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       listener: (context, state) {
         EasyLoading.dismiss();
         if (state is UserLoading) {
-          EasyLoading.show(status: 'Loading...');
+          EasyLoading.show(status: loadingTitle);
         } else if (state is UserLogged) {
           context.read<FavoritesBloc>().add(const GetFavorites());
           Navigator.of(context).pushNamedAndRemoveUntil(
