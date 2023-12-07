@@ -50,14 +50,14 @@ class AdaptiveDialog extends StatelessWidget {
           },
           child: Text(
             noButtonTitle,
-            style: const TextStyle(color: Colors.red),
           ),
         ),
         TextButton(
           onPressed: () {
             onClickYes!();
           },
-          child: Text(yesButtonTitle),
+          child:
+              Text(yesButtonTitle, style: const TextStyle(color: Colors.red)),
         ),
       ],
     );
