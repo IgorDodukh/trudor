@@ -24,8 +24,11 @@ class PriceTagModel extends PriceTag {
       };
 
   factory PriceTagModel.fromEntity(PriceTag entity) => PriceTagModel(
-    id: entity.id,
-    name: entity.name,
-    price: entity.price,
-  );
+        id: entity.id,
+        name: entity.name,
+        price: entity.price,
+      );
+
+  factory PriceTagModel.fromPriceTag(PriceTag priceTag) => PriceTagModel(
+      id: priceTag.id, name: priceTag.name, price: priceTag.price);
 }

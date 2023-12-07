@@ -22,7 +22,7 @@ class ProductLocalDataSourceImpl implements ProductLocalDataSource {
     if (jsonString != null) {
       return Future.value(productResponseModelFromJson(jsonDecode(jsonString)));
     } else {
-      throw CacheException();
+      throw const CacheException("No cached products found");
     }
   }
 

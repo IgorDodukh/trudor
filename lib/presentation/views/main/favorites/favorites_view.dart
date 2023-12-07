@@ -19,6 +19,7 @@ class FavoritesView extends StatefulWidget {
 
 class _FavoritesViewState extends State<FavoritesView> {
   List<ListViewItem> selectedFavoritesItems = [];
+  // TODO: ISSUE!!! Favorites list shows updated products with old values. Probably from local storage
 
   @override
   Widget build(BuildContext context) {

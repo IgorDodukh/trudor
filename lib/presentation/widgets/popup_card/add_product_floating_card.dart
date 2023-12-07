@@ -6,14 +6,15 @@ import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:trudor/core/constant/collections.dart';
 import 'package:trudor/core/constant/colors.dart';
+import 'package:trudor/core/constant/messages.dart';
 import 'package:trudor/core/constant/strings.dart';
-import 'package:trudor/core/util/firstore_folder_methods.dart';
 import 'package:trudor/data/models/category/category_model.dart';
 import 'package:trudor/data/models/product/price_tag_model.dart';
 import 'package:trudor/data/models/product/product_model.dart';
 import 'package:trudor/data/models/user/user_model.dart';
 import 'package:trudor/domain/entities/category/category.dart';
 import 'package:trudor/domain/entities/product/product.dart';
+import 'package:trudor/presentation/blocs/product/product_bloc.dart';
 import 'package:trudor/presentation/blocs/user/user_bloc.dart';
 import 'package:trudor/presentation/widgets/adaptive_alert_dialog.dart';
 import 'package:trudor/presentation/widgets/input_dropdown_menu.dart';
@@ -224,8 +225,7 @@ class _PopupCardState extends State<PopupCard> {
         if (_formKey.currentState!.validate() && isNew != null) {
           final userId = (context.read<UserBloc>().state.props.first as UserModel).id;
           var uuid = const Uuid();
-          FirestoreService firestoreService = FirestoreService();
-          await firestoreService.createProduct(ProductModel(
+          final updatedModel = ProductModel(
               id: uuid.v1(),
               ownerId: userId,
               name: title.text,
@@ -244,8 +244,9 @@ class _PopupCardState extends State<PopupCard> {
               category: selectedCategory!.name,
               images: images.isEmpty ? [] : images,
               createdAt: DateTime.now(),
-              updatedAt: DateTime.now()));
-          EasyLoading.showSuccess("Product was published successfully");
+              updatedAt: DateTime.now());
+          context.read<ProductBloc>().add(UpdateProduct(updatedModel));
+          EasyLoading.showSuccess(productPublishedSuccessfully);
           Navigator.of(context).pop();
         }
       },
@@ -258,28 +259,28 @@ class _PopupCardState extends State<PopupCard> {
       onPressed: () async {
         _setIsPublishPressed();
         if (_formKey.currentState!.validate() && isNew != null) {
-          FirestoreService firestoreService = FirestoreService();
-          await firestoreService.updateProduct(ProductModel(
-              id: widget.existingProduct!.id,
-              ownerId: widget.existingProduct!.ownerId,
-              name: title.text,
-              description: description.text,
-              isNew: isNew!,
-              status: ProductStatus.active,
-              priceTags: [
-                PriceTagModel(
-                    id: '1',
-                    name: "base",
-                    price: int.parse(priceTags.text))
-              ],
-              categories: [
-                CategoryModel.fromEntity(selectedCategory!)
-              ],
-              category: selectedCategory!.name,
-              images: images.isEmpty ? [noImagePlaceholder] : images,
-              createdAt: widget.existingProduct!.createdAt,
-              updatedAt: DateTime.now()));
-          EasyLoading.showSuccess("Updated successfully.\nChanges will appear soon.");
+          final updatedModel = ProductModel(
+                  id: widget.existingProduct!.id,
+                  ownerId: widget.existingProduct!.ownerId,
+                  name: title.text,
+                  description: description.text,
+                  isNew: isNew!,
+                  status: ProductStatus.active,
+                  priceTags: [
+                    PriceTagModel(
+                        id: '1',
+                        name: "base",
+                        price: int.parse(priceTags.text))
+                  ],
+                  categories: [
+                    CategoryModel.fromEntity(selectedCategory!)
+                  ],
+                  category: selectedCategory!.name,
+                  images: images.isEmpty ? [noImagePlaceholder] : images,
+                  createdAt: widget.existingProduct!.createdAt,
+                  updatedAt: DateTime.now());
+          context.read<ProductBloc>().add(UpdateProduct(updatedModel));
+          EasyLoading.showSuccess(productUpdatedSuccessfully);
           Navigator.of(context).pop();
         }
       },

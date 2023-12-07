@@ -1,14 +1,20 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:trudor/core/constant/messages.dart';
-import 'package:trudor/core/constant/strings.dart';
-import 'package:trudor/data/models/user/user_model.dart';
-import 'package:trudor/domain/entities/favorites/favorites_item.dart';
-import 'package:trudor/presentation/blocs/favorites/favorites_bloc.dart';
-import 'package:trudor/presentation/blocs/user/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:trudor/core/constant/collections.dart';
+import 'package:trudor/core/constant/messages.dart';
+import 'package:trudor/core/constant/strings.dart';
+import 'package:trudor/data/models/category/category_model.dart';
+import 'package:trudor/data/models/product/price_tag_model.dart';
+import 'package:trudor/data/models/product/product_model.dart';
+import 'package:trudor/data/models/user/user_model.dart';
+import 'package:trudor/domain/entities/favorites/favorites_item.dart';
+import 'package:trudor/presentation/blocs/favorites/favorites_bloc.dart' as fav;
+import 'package:trudor/presentation/blocs/product/product_bloc.dart' as prod;
+import 'package:trudor/presentation/blocs/user/user_bloc.dart';
+import 'package:trudor/presentation/widgets/adaptive_alert_dialog.dart';
 import 'package:trudor/presentation/widgets/popup_card/add_product_floating_card.dart';
 import 'package:trudor/presentation/widgets/popup_card/hero_dialog_route.dart';
 
@@ -48,12 +54,91 @@ class ListViewItemCard extends StatelessWidget {
     );
   }
 
+  Widget renewProductButton(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.restore_outlined, color: Colors.black, size: 36),
+      onPressed: () async {
+        return showDialog(
+          context: context,
+          builder: (context) {
+            return RenewProductAlert(
+              onRenewProduct: () async {
+                final updatedModel = ProductModel(
+                    id: listViewItem!.product.id,
+                    ownerId: listViewItem!.product.ownerId,
+                    name: listViewItem!.product.name,
+                    description: listViewItem!.product.description,
+                    isNew: listViewItem!.product.isNew,
+                    status: ProductStatus.active,
+                    priceTags: [
+                      PriceTagModel(
+                          id: '1',
+                          name: "base",
+                          price: int.parse(listViewItem!
+                              .product.priceTags.first.price
+                              .toString()))
+                    ],
+                    categories: [
+                      CategoryModel.fromEntity(
+                          listViewItem!.product.categories.first)
+                    ],
+                    category: listViewItem!.product.category,
+                    images: listViewItem!.product.images,
+                    createdAt: listViewItem!.product.createdAt,
+                    updatedAt: DateTime.now());
+                context
+                    .read<prod.ProductBloc>()
+                    .add(prod.UpdateProduct(updatedModel));
+                Navigator.of(context).pop();
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+
   Widget deactivateProductButton(BuildContext context) {
     return IconButton(
-      onPressed: () {
-        print("Attempt to deactivate: ${listViewItem!.product.name}");
+      icon: const Icon(Icons.close_rounded, color: Colors.black, size: 36),
+      onPressed: () async {
+        return showDialog(
+          context: context,
+          builder: (context) {
+            return DeactivateProductAlert(
+              onDeactivateProduct: () async {
+                final updatedModel = ProductModel(
+                    id: listViewItem!.product.id,
+                    ownerId: listViewItem!.product.ownerId,
+                    name: listViewItem!.product.name,
+                    description: listViewItem!.product.description,
+                    isNew: listViewItem!.product.isNew,
+                    status: ProductStatus.inactive,
+                    priceTags: [
+                      PriceTagModel(
+                          id: '1',
+                          name: "base",
+                          price: int.parse(listViewItem!
+                              .product.priceTags.first.price
+                              .toString()))
+                    ],
+                    categories: [
+                      CategoryModel.fromEntity(
+                          listViewItem!.product.categories.first)
+                    ],
+                    category: listViewItem!.product.category,
+                    images: listViewItem!.product.images,
+                    createdAt: listViewItem!.product.createdAt,
+                    updatedAt: DateTime.now());
+                context
+                    .read<prod.ProductBloc>()
+                    .add(prod.UpdateProduct(updatedModel));
+              },
+            );
+          },
+        );
       },
-      icon: const Icon(Icons.close),
     );
   }
 
@@ -75,7 +160,7 @@ class ListViewItemCard extends StatelessWidget {
       onPressed: () {
         final userId =
             (context.read<UserBloc>().state.props.first as UserModel).id;
-        context.read<FavoritesBloc>().add(RemoveProduct(
+        context.read<fav.FavoritesBloc>().add(fav.RemoveProduct(
             favoritesItem: ListViewItem(
                 product: listViewItem!.product,
                 userId: userId,
@@ -212,7 +297,7 @@ class ListViewItemCard extends StatelessWidget {
                   ? Row(
                       children: [
                         editProductButton(context),
-                        deactivateProductButton(context),
+                        listViewItem != null && listViewItem!.product.status == ProductStatus.active ? deactivateProductButton(context) : renewProductButton(context),
                       ],
                     )
                   : isFavorite
@@ -225,11 +310,12 @@ class ListViewItemCard extends StatelessWidget {
                                     .props
                                     .first as UserModel)
                                 .id;
-                            context.read<FavoritesBloc>().add(AddProduct(
-                                favoritesItem: ListViewItem(
-                                    product: listViewItem!.product,
-                                    userId: userId,
-                                    priceTag: listViewItem!.priceTag)));
+                            context.read<fav.FavoritesBloc>().add(
+                                fav.AddProduct(
+                                    favoritesItem: ListViewItem(
+                                        product: listViewItem!.product,
+                                        userId: userId,
+                                        priceTag: listViewItem!.priceTag)));
                           },
                           icon: const Icon(Icons.favorite_border),
                         )),

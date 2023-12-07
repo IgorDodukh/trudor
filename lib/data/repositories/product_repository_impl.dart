@@ -37,6 +37,17 @@ class ProductRepositoryImpl implements ProductRepository {
   }
 
   @override
+  Future<Either<Failure, ProductResponse>> updateProduct(Product params) async {
+    try {
+      return await _updateProduct(() {
+        return firebaseDataSource.updateProduct(params);
+      });
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+  @override
   Future<Either<Failure, ProductResponse>> addProduct(Product params) async {
     return await _addProduct(() {
       return remoteDataSource.addProduct(params);
@@ -44,6 +55,27 @@ class ProductRepositoryImpl implements ProductRepository {
   }
 
   Future<Either<Failure, ProductResponse>> _getProduct(
+    _ConcreteOrProductChooser getConcreteOrProducts,
+  ) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteProducts = await getConcreteOrProducts();
+        localDataSource.saveProducts(remoteProducts as ProductResponseModel);
+        return Right(remoteProducts);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      try {
+        final localProducts = await localDataSource.getLastProducts();
+        return Right(localProducts);
+      } on CacheException {
+        return Left(CacheFailure());
+      }
+    }
+  }
+
+  Future<Either<Failure, ProductResponse>> _updateProduct(
     _ConcreteOrProductChooser getConcreteOrProducts,
   ) async {
     if (await networkInfo.isConnected) {

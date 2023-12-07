@@ -13,6 +13,7 @@ import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trudor/domain/usecases/product/update_product_usecase.dart';
 
 import '../../data/data_sources/local/favorites_local_data_source.dart';
 import '../../data/data_sources/local/category_local_data_source.dart';
@@ -69,10 +70,11 @@ Future<void> init() async {
   //Features - Product
   // Bloc
   sl.registerFactory(
-    () => ProductBloc(sl(), sl()),
+    () => ProductBloc(sl(), sl(), sl()),
   );
   // Use cases
   sl.registerLazySingleton(() => GetProductUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateProductUseCase(sl()));
   sl.registerLazySingleton(() => AddProductUseCase(sl()));
   // Repository
   sl.registerLazySingleton<ProductRepository>(

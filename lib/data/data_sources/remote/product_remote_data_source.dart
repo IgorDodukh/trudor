@@ -31,7 +31,7 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
     if (response.statusCode == 200) {
       return productResponseModelFromJson(response.body);
     } else {
-      throw ServerException();
+      throw ServerException("Authentication Failed: ${response.statusCode}\n${response.body}");
     }
   }
 

@@ -23,6 +23,7 @@ class MyPublicationsView extends StatefulWidget {
 
 class _MyPublicationsViewState extends State<MyPublicationsView> {
   final ScrollController scrollController = ScrollController();
+  String userId = "";
 
   void _scrollListener() {
     double maxScroll = scrollController.position.maxScrollExtent;
@@ -35,27 +36,31 @@ class _MyPublicationsViewState extends State<MyPublicationsView> {
     }
   }
 
-  void getOwnedProducts() {
-    final userId = (context.read<UserBloc>().state.props.first as UserModel).id;
+  void getOwnedActiveProducts() {
     context.read<ProductBloc>().add(GetProducts(FilterProductParams(
             keyword: userId,
-            searchField: "ownerId"))
+            searchField: "ownerId",
+            status: ProductStatus.active.name.toString()
+    ))
+    );
+  }
+
+  void getOwnedInactiveProducts() {
+    context.read<ProductBloc>().add(GetProducts(FilterProductParams(
+            keyword: userId,
+            searchField: "ownerId",
+            status: ProductStatus.inactive.name.toString() ))
     );
   }
 
   @override
   void initState() {
-    super.initState();
-    _loadProducts();
+    setState(() {
+      userId = (context.read<UserBloc>().state.props.first as UserModel).id;
+    });
+    getOwnedActiveProducts();
     scrollController.addListener(_scrollListener);
-  }
-
-  void _loadProducts() {
-    final userId = (context.read<UserBloc>().state.props.first as UserModel).id;
-    context.read<ProductBloc>().add(GetProducts(FilterProductParams(
-          keyword: userId,
-          searchField: "ownerId",
-        )));
+    super.initState();
   }
 
   @override
@@ -85,8 +90,11 @@ class _MyPublicationsViewState extends State<MyPublicationsView> {
                       .toList(),
                   radiusStyle: true,
                   onToggle: (index) {
-                    print("Switch to publications screen #$index");
-                    setState(() {});
+                    if (index == 0) {
+                      getOwnedActiveProducts();
+                    } else {
+                      getOwnedInactiveProducts();
+                    }
                   },
                 ),
                 Expanded(
@@ -128,7 +136,7 @@ class _MyPublicationsViewState extends State<MyPublicationsView> {
                           }
                           return RefreshIndicator(
                             onRefresh: () async {
-                              getOwnedProducts();
+                              getOwnedActiveProducts();
                             },
                             child: ListView.builder(
                               itemCount: state.products.length +

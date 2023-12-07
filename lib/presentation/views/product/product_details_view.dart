@@ -6,8 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:trudor/core/constant/collections.dart';
 import 'package:trudor/core/constant/messages.dart';
 import 'package:trudor/core/constant/strings.dart';
+import 'package:trudor/data/models/category/category_model.dart';
+import 'package:trudor/data/models/product/price_tag_model.dart';
+import 'package:trudor/data/models/product/product_model.dart';
 import 'package:trudor/data/models/user/user_model.dart';
 import 'package:trudor/presentation/blocs/user/user_bloc.dart';
 import 'package:trudor/presentation/widgets/adaptive_alert_dialog.dart';
@@ -17,7 +21,8 @@ import 'package:trudor/presentation/widgets/popup_card/hero_dialog_route.dart';
 import '../../../../../domain/entities/favorites/favorites_item.dart';
 import '../../../../../domain/entities/product/price_tag.dart';
 import '../../../../../domain/entities/product/product.dart';
-import '../../blocs/favorites/favorites_bloc.dart';
+import '../../blocs/favorites/favorites_bloc.dart' as fav;
+import '../../blocs/product/product_bloc.dart' as prod;
 
 class ProductDetailsView extends StatefulWidget {
   final Product product;
@@ -104,19 +109,103 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
   void addToFavorites() {
     setIsLoading();
     if (isFavorite) {
-      context.read<FavoritesBloc>().add(RemoveProduct(
+      context.read<fav.FavoritesBloc>().add(fav.RemoveProduct(
           favoritesItem: ListViewItem(
               product: widget.product,
               userId: userId,
               priceTag: _selectedPriceTag)));
     } else {
-      context.read<FavoritesBloc>().add(AddProduct(
+      context.read<fav.FavoritesBloc>().add(fav.AddProduct(
           favoritesItem: ListViewItem(
               product: widget.product,
               userId: userId,
               priceTag: _selectedPriceTag)));
     }
     _startLoadingTimer();
+  }
+
+  Widget renewProductButton() {
+    return IconButton(
+      icon: const Icon(Icons.restore_outlined, color: Colors.white, size: 36),
+      onPressed: () async {
+        return showDialog(
+          context: context,
+          builder: (context) {
+            return RenewProductAlert(
+              onRenewProduct: () async {
+                final updatedModel = ProductModel(
+                    id: widget.product.id,
+                    ownerId: widget.product.ownerId,
+                    name: widget.product.name,
+                    description: widget.product.description,
+                    isNew: widget.product.isNew,
+                    status: ProductStatus.active,
+                    priceTags: [
+                      PriceTagModel(
+                          id: '1',
+                          name: "base",
+                          price: int.parse(widget.product.priceTags.first.price
+                              .toString()))
+                    ],
+                    categories: [
+                      CategoryModel.fromEntity(
+                          widget.product.categories.first)
+                    ],
+                    category: widget.product.category,
+                    images: widget.product.images,
+                    createdAt: widget.product.createdAt,
+                    updatedAt: DateTime.now());
+                context
+                    .read<prod.ProductBloc>()
+                    .add(prod.UpdateProduct(updatedModel));
+                Navigator.of(context).pop();
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget deactivateProductButton() {
+    return IconButton(
+      icon: const Icon(Icons.close_rounded, color: Colors.white, size: 36),
+      onPressed: () async {
+        return showDialog(
+          context: context,
+          builder: (context) {
+            return DeactivateProductAlert(
+              onDeactivateProduct: () async {
+                final updatedModel = ProductModel(
+                    id: widget.product.id,
+                    ownerId: widget.product.ownerId,
+                    name: widget.product.name,
+                    description: widget.product.description,
+                    isNew: widget.product.isNew,
+                    status: ProductStatus.inactive,
+                    priceTags: [
+                      PriceTagModel(
+                          id: '1',
+                          name: "base",
+                          price: int.parse(
+                              widget.product.priceTags.first.price.toString()))
+                    ],
+                    categories: [
+                      CategoryModel.fromEntity(widget.product.categories.first)
+                    ],
+                    category: widget.product.category,
+                    images: widget.product.images,
+                    createdAt: widget.product.createdAt,
+                    updatedAt: DateTime.now());
+                context.read<prod.ProductBloc>().add(prod.UpdateProduct(updatedModel));
+                Navigator.of(context).pop();
+              },
+            );
+          },
+        );
+
+      },
+    );
   }
 
   @override
@@ -129,7 +218,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
         isOwner = true;
       });
     }
-    final favoritesState = context.read<FavoritesBloc>().state.favorites;
+    final favoritesState = context.read<fav.FavoritesBloc>().state.favorites;
     for (var element in favoritesState) {
       if (element.product.id == widget.product.id) {
         setState(() {
@@ -320,6 +409,16 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                     ? Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          widget.product.status == ProductStatus.active ? deactivateProductButton() : renewProductButton(),
+                          // deactivateProductButton(),
+                        ],
+                      )
+                    : Container(),
+                const SizedBox(width: 16),
+                isOwner
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
                           IconButton(
                             icon: const Icon(Icons.edit,
                                 color: Colors.white, size: 36),
@@ -336,6 +435,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                     : Container(),
                 // Display loading spinner when isLoading is true
                 favoritesButtonLoading(),
+                const SizedBox(width: 16),
                 // Display IconButton when not loading
                 BlocBuilder<UserBloc, UserState>(
                   builder: (context, state) {

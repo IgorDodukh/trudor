@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:trudor/domain/usecases/product/add_product_usecase.dart';
+import 'package:trudor/domain/usecases/product/update_product_usecase.dart';
 
 import '../../../core/error/failures.dart';
 import '../../../domain/entities/product/pagination_meta_data.dart';
@@ -13,9 +14,10 @@ part 'product_state.dart';
 
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
   final GetProductUseCase _getProductUseCase;
+  final UpdateProductUseCase _updateProductUseCase;
   final AddProductUseCase _addProductUseCase;
 
-  ProductBloc(this._getProductUseCase, this._addProductUseCase)
+  ProductBloc(this._getProductUseCase, this._addProductUseCase, this._updateProductUseCase)
       : super(ProductInitial(
             products: const [],
             params: const FilterProductParams(),
@@ -26,6 +28,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
             ))) {
     on<GetProducts>(_onLoadProducts);
     on<AddProduct>(_onAddProduct);
+    on<UpdateProduct>(_onUpdateProduct);
     on<GetMoreProducts>(_onLoadMoreProducts);
   }
 
@@ -57,6 +60,38 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         metaData: state.metaData,
         failure: ExceptionFailure(),
         params: event.params,
+      ));
+    }
+  }
+
+  void _onUpdateProduct(UpdateProduct event, Emitter<ProductState> emit) async {
+    try {
+      emit(ProductLoading(
+        products: const [],
+        metaData: state.metaData,
+        params: const FilterProductParams(),
+      ));
+      final result = await _updateProductUseCase(event.params);
+      result.fold(
+        (failure) => emit(ProductError(
+          products: state.products,
+          metaData: state.metaData,
+          failure: failure,
+          params: const FilterProductParams(),
+        )),
+        (productResponse) => emit(ProductLoaded(
+          metaData: productResponse.paginationMetaData,
+          products: productResponse.products,
+          params: const FilterProductParams(),
+        )),
+      );
+    } catch (e) {
+      EasyLoading.showError("Failed to update Product: $e");
+      emit(ProductError(
+        products: state.products,
+        metaData: state.metaData,
+        failure: ExceptionFailure(),
+        params: const FilterProductParams(),
       ));
     }
   }

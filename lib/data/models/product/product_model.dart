@@ -33,6 +33,25 @@ class ProductModel extends Product {
           updatedAt: updatedAt,
         );
 
+  factory ProductModel.fromProduct(Product product) => ProductModel(
+        id: product.id,
+        ownerId: product.ownerId,
+        isNew: product.isNew,
+        status: product.status,
+        name: product.name,
+        description: product.description,
+        priceTags: product.priceTags
+            .map((priceTag) => PriceTagModel.fromPriceTag(priceTag))
+            .toList(),
+        categories: product.categories
+            .map((category) => CategoryModel.fromCategory(category))
+            .toList(),
+        category: product.category,
+        images: product.images,
+        createdAt: product.createdAt,
+        updatedAt: product.updatedAt,
+  );
+
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
         id: json["_id"],
         ownerId: json["ownerId"],

@@ -34,7 +34,7 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
     if (token != null) {
       return Future.value(token);
     } else {
-      throw CacheException();
+      throw const CacheException("No cached token found");
     }
   }
 
@@ -53,7 +53,7 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
     if (jsonString != null) {
       return Future.value(userModelFromJson(jsonString));
     } else {
-      throw CacheException();
+      throw const CacheException("No cached user found");
     }
   }
 

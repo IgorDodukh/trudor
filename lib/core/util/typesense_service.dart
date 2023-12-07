@@ -10,7 +10,7 @@ class TypesenseService {
   TypesenseService(){
     final host = dotenv.env["TYPESENSE_URL"], protocol = Protocol.https;
     final config = Configuration(
-      'fop3IbKjSyiXuwGD6yEXllogVEZxZvJo',
+      dotenv.env["TYPESENSE_API_KEY"]!,
       nodes: {
         Node(
           protocol,
@@ -54,7 +54,7 @@ class TypesenseService {
     await client.collection(_collectionName).documents.create(productData);
   }
 
-  Future<void> updateDocument(Map<String, dynamic> productData) async {
+  Future<Map<String, dynamic>> updateDocument(Map<String, dynamic> productData) async {
     final searchParameters = {
       'q': productData['_id'],
       'query_by': '_id',
@@ -62,12 +62,13 @@ class TypesenseService {
     final querySnapshot = await client.collection(_collectionName).documents.search(searchParameters);
     final document = querySnapshot['hits'][0]['document'];
 
-    await client.collection(_collectionName).document(document['id']).update(productData);
+    return await client.collection(_collectionName).document(document['id']).update(productData);
   }
 
   Future<Map<String, dynamic>> searchProducts(FilterProductParams params) async {
     final searchName = params.keyword;
     final searchCategory = params.categories.isEmpty ? [] : params.categories.map((category) => category.name).toList();
+    final searchStatus = params.status!.isEmpty ? "" : params.status;
 
     final searchParameters = {
       'q': searchName,
@@ -80,6 +81,9 @@ class TypesenseService {
     };
     if (searchCategory.isNotEmpty) {
       searchParameters.addAll({'filter_by': 'category:[${searchCategory.join(",")}]'});
+    }
+    if (searchStatus!.isNotEmpty) {
+      searchParameters.addAll({'filter_by': 'status:$searchStatus'});
     }
 
     print("Search params: $searchParameters");

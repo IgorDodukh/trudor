@@ -41,4 +41,7 @@ class CategoryModel extends Category {
         name: entity.name,
         image: entity.image,
       );
+
+  factory CategoryModel.fromCategory(Category category) => CategoryModel(
+      id: category.id, name: category.name, image: category.image);
 }

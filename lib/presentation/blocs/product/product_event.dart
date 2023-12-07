@@ -20,6 +20,14 @@ class AddProduct extends ProductEvent {
   List<Object> get props => [];
 }
 
+class UpdateProduct extends ProductEvent {
+  final Product params;
+  const UpdateProduct(this.params);
+
+  @override
+  List<Object> get props => [];
+}
+
 class GetMoreProducts extends ProductEvent {
   const GetMoreProducts();
   @override

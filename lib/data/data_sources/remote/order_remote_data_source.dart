@@ -27,7 +27,7 @@ class OrderRemoteDataSourceSourceImpl implements OrderRemoteDataSource {
     if (response.statusCode == 200) {
       return orderDetailsModelFromJson(response.body);
     } else {
-      throw ServerException();
+      throw ServerException("Authentication Failed: ${response.statusCode}\n${response.body}");
     }
   }
 
