@@ -1,6 +1,7 @@
 import 'package:spoto/presentation/views/main/home/filter/filter_view.dart';
 import 'package:flutter/material.dart';
 import 'package:spoto/presentation/views/main/other/my_publications/my_publications_view.dart';
+import 'package:spoto/presentation/widgets/splash_screen.dart';
 
 import '../../domain/entities/favorites/favorites_item.dart';
 import '../../domain/entities/product/product.dart';
@@ -21,6 +22,7 @@ import '../error/exceptions.dart';
 class AppRouter {
   //main menu
   static const String home = '/';
+  static const String splash = '/splash';
   //authentication
   static const String signIn = '/sign-in';
   static const String signUp = '/sign-up';
@@ -41,6 +43,8 @@ class AppRouter {
     switch (routeSettings.name) {
       case home:
         return MaterialPageRoute(builder: (_) => const MainView());
+      case splash:
+        return MaterialPageRoute(builder: (_) => const SplashScreen());
       case signIn:
         return MaterialPageRoute(builder: (_) => const SignInView());
       case signUp:
