@@ -1,4 +1,4 @@
-import 'package:trudor/core/constant/collections.dart';
+import 'package:spoto/core/constant/collections.dart';
 
 import '../../../domain/entities/product/product.dart';
 import '../category/category_model.dart';

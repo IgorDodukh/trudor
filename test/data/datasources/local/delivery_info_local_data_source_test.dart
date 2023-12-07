@@ -1,6 +1,6 @@
-import 'package:trudor/core/error/failures.dart';
-import 'package:trudor/data/data_sources/local/delivery_info_local_data_source.dart';
-import 'package:trudor/data/models/user/delivery_info_model.dart';
+import 'package:spoto/core/error/failures.dart';
+import 'package:spoto/data/data_sources/local/delivery_info_local_data_source.dart';
+import 'package:spoto/data/models/user/delivery_info_model.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_test/flutter_test.dart';

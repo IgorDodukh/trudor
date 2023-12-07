@@ -1,12 +1,12 @@
 import 'package:dartz/dartz.dart';
-import 'package:trudor/core/error/exceptions.dart';
-import 'package:trudor/core/error/failures.dart';
-import 'package:trudor/core/network/network_info.dart';
-import 'package:trudor/data/data_sources/local/product_local_data_source.dart';
-import 'package:trudor/data/data_sources/remote/product_firebase_data_source.dart';
-import 'package:trudor/data/data_sources/remote/product_remote_data_source.dart';
-import 'package:trudor/data/repositories/product_repository_impl.dart';
-import 'package:trudor/domain/usecases/product/get_product_usecase.dart';
+import 'package:spoto/core/error/exceptions.dart';
+import 'package:spoto/core/error/failures.dart';
+import 'package:spoto/core/network/network_info.dart';
+import 'package:spoto/data/data_sources/local/product_local_data_source.dart';
+import 'package:spoto/data/data_sources/remote/product_firebase_data_source.dart';
+import 'package:spoto/data/data_sources/remote/product_remote_data_source.dart';
+import 'package:spoto/data/repositories/product_repository_impl.dart';
+import 'package:spoto/domain/usecases/product/get_product_usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

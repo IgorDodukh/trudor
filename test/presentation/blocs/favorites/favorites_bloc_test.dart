@@ -1,13 +1,13 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
-import 'package:trudor/core/error/failures.dart';
-import 'package:trudor/core/usecases/usecase.dart';
-import 'package:trudor/domain/usecases/favorites/add_favorites_item_usecase.dart';
-import 'package:trudor/domain/usecases/favorites/clear_favorites_usecase.dart';
-import 'package:trudor/domain/usecases/favorites/get_cached_favorites_usecase.dart';
-import 'package:trudor/domain/usecases/favorites/remove_favorites_item_usecase.dart';
-import 'package:trudor/domain/usecases/favorites/sync_favorites_usecase.dart';
-import 'package:trudor/presentation/blocs/favorites/favorites_bloc.dart';
+import 'package:spoto/core/error/failures.dart';
+import 'package:spoto/core/usecases/usecase.dart';
+import 'package:spoto/domain/usecases/favorites/add_favorites_item_usecase.dart';
+import 'package:spoto/domain/usecases/favorites/clear_favorites_usecase.dart';
+import 'package:spoto/domain/usecases/favorites/get_cached_favorites_usecase.dart';
+import 'package:spoto/domain/usecases/favorites/remove_favorites_item_usecase.dart';
+import 'package:spoto/domain/usecases/favorites/sync_favorites_usecase.dart';
+import 'package:spoto/presentation/blocs/favorites/favorites_bloc.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
 

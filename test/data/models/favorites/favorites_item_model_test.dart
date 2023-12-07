@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:trudor/data/models/favorites/favorites_item_model.dart';
-import 'package:trudor/domain/entities/favorites/favorites_item.dart';
+import 'package:spoto/data/models/favorites/favorites_item_model.dart';
+import 'package:spoto/domain/entities/favorites/favorites_item.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../fixtures/constant_objects.dart';

@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:toggle_switch/toggle_switch.dart';
-import 'package:trudor/core/constant/collections.dart';
-import 'package:trudor/core/constant/images.dart';
-import 'package:trudor/core/error/failures.dart';
-import 'package:trudor/core/util/mappings.dart';
-import 'package:trudor/data/models/user/user_model.dart';
-import 'package:trudor/domain/usecases/product/get_product_usecase.dart';
-import 'package:trudor/presentation/blocs/product/product_bloc.dart';
-import 'package:trudor/presentation/blocs/user/user_bloc.dart';
-import 'package:trudor/presentation/widgets/alert_card.dart';
-import 'package:trudor/presentation/widgets/list_view_item_card.dart';
+import 'package:spoto/core/constant/collections.dart';
+import 'package:spoto/core/constant/images.dart';
+import 'package:spoto/core/error/failures.dart';
+import 'package:spoto/core/util/mappings.dart';
+import 'package:spoto/data/models/user/user_model.dart';
+import 'package:spoto/domain/usecases/product/get_product_usecase.dart';
+import 'package:spoto/presentation/blocs/product/product_bloc.dart';
+import 'package:spoto/presentation/blocs/user/user_bloc.dart';
+import 'package:spoto/presentation/widgets/alert_card.dart';
+import 'package:spoto/presentation/widgets/list_view_item_card.dart';
 
 class MyPublicationsView extends StatefulWidget {
   const MyPublicationsView({Key? key}) : super(key: key);

@@ -1,4 +1,4 @@
-import 'package:trudor/core/extension/string_extension.dart';
+import 'package:spoto/core/extension/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';

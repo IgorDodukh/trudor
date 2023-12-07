@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:trudor/core/constant/messages.dart';
-import 'package:trudor/core/extension/string_extension.dart';
-import 'package:trudor/presentation/blocs/favorites/favorites_bloc.dart';
-import 'package:trudor/presentation/blocs/home/navbar_cubit.dart';
+import 'package:spoto/core/constant/messages.dart';
+import 'package:spoto/core/extension/string_extension.dart';
+import 'package:spoto/presentation/blocs/favorites/favorites_bloc.dart';
+import 'package:spoto/presentation/blocs/home/navbar_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';

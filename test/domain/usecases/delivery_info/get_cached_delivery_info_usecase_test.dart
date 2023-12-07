@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:trudor/core/error/failures.dart';
-import 'package:trudor/core/usecases/usecase.dart';
-import 'package:trudor/domain/repositories/delivery_info_repository.dart';
-import 'package:trudor/domain/usecases/delivery_info/get_cached_delivery_info_usecase.dart';
+import 'package:spoto/core/error/failures.dart';
+import 'package:spoto/core/usecases/usecase.dart';
+import 'package:spoto/domain/repositories/delivery_info_repository.dart';
+import 'package:spoto/domain/usecases/delivery_info/get_cached_delivery_info_usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

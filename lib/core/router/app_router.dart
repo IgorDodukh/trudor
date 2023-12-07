@@ -1,6 +1,6 @@
-import 'package:trudor/presentation/views/main/home/filter/filter_view.dart';
+import 'package:spoto/presentation/views/main/home/filter/filter_view.dart';
 import 'package:flutter/material.dart';
-import 'package:trudor/presentation/views/main/other/my_publications/my_publications_view.dart';
+import 'package:spoto/presentation/views/main/other/my_publications/my_publications_view.dart';
 
 import '../../domain/entities/favorites/favorites_item.dart';
 import '../../domain/entities/product/product.dart';

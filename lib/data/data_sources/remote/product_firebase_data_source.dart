@@ -1,8 +1,8 @@
-import 'package:trudor/core/util/firstore_folder_methods.dart';
-import 'package:trudor/data/models/product/product_model.dart';
-import 'package:trudor/data/models/product/product_response_model.dart';
-import 'package:trudor/domain/entities/product/product.dart';
-import 'package:trudor/domain/usecases/product/get_product_usecase.dart';
+import 'package:spoto/core/util/firstore_folder_methods.dart';
+import 'package:spoto/data/models/product/product_model.dart';
+import 'package:spoto/data/models/product/product_response_model.dart';
+import 'package:spoto/domain/entities/product/product.dart';
+import 'package:spoto/domain/usecases/product/get_product_usecase.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 abstract class ProductFirebaseDataSource {

@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:trudor/core/constant/messages.dart';
-import 'package:trudor/core/router/app_router.dart';
+import 'package:spoto/core/constant/messages.dart';
+import 'package:spoto/core/router/app_router.dart';
 
 class AdaptiveDialog extends StatelessWidget {
   final String title;
@@ -48,7 +48,10 @@ class AdaptiveDialog extends StatelessWidget {
           onPressed: () {
             onClickNo!();
           },
-          child: Text(noButtonTitle),
+          child: Text(
+            noButtonTitle,
+            style: const TextStyle(color: Colors.red),
+          ),
         ),
         TextButton(
           onPressed: () {

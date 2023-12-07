@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:trudor/domain/usecases/auth/google_auth_usecase.dart';
-import 'package:trudor/domain/usecases/user/sign_out_usecase.dart';
-import 'package:trudor/domain/usecases/user/sign_up_usecase.dart';
+import 'package:spoto/domain/usecases/auth/google_auth_usecase.dart';
+import 'package:spoto/domain/usecases/user/sign_out_usecase.dart';
+import 'package:spoto/domain/usecases/user/sign_up_usecase.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../../core/error/failures.dart';

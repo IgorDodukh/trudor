@@ -1,9 +1,9 @@
-import 'package:trudor/core/error/failures.dart';
-import 'package:trudor/core/network/network_info.dart';
-import 'package:trudor/data/data_sources/local/delivery_info_local_data_source.dart';
-import 'package:trudor/data/data_sources/local/user_local_data_source.dart';
-import 'package:trudor/data/data_sources/remote/delivery_info_firebase_data_source.dart';
-import 'package:trudor/data/repositories/delivery_info_impl.dart';
+import 'package:spoto/core/error/failures.dart';
+import 'package:spoto/core/network/network_info.dart';
+import 'package:spoto/data/data_sources/local/delivery_info_local_data_source.dart';
+import 'package:spoto/data/data_sources/local/user_local_data_source.dart';
+import 'package:spoto/data/data_sources/remote/delivery_info_firebase_data_source.dart';
+import 'package:spoto/data/repositories/delivery_info_impl.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

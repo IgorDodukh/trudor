@@ -1,4 +1,4 @@
-import 'package:trudor/core/constant/images.dart';
+import 'package:spoto/core/constant/images.dart';
 import 'package:flutter/material.dart';
 
 class InputFormButton extends StatelessWidget {

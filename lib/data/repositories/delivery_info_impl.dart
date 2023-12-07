@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:trudor/data/data_sources/remote/delivery_info_firebase_data_source.dart';
+import 'package:spoto/data/data_sources/remote/delivery_info_firebase_data_source.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../core/network/network_info.dart';

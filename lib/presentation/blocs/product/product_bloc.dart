@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:trudor/domain/usecases/product/add_product_usecase.dart';
-import 'package:trudor/domain/usecases/product/update_product_usecase.dart';
+import 'package:spoto/domain/usecases/product/add_product_usecase.dart';
+import 'package:spoto/domain/usecases/product/update_product_usecase.dart';
 
 import '../../../core/error/failures.dart';
 import '../../../domain/entities/product/pagination_meta_data.dart';

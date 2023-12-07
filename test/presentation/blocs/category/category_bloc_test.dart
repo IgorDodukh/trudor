@@ -1,11 +1,11 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
-import 'package:trudor/core/error/failures.dart';
-import 'package:trudor/core/usecases/usecase.dart';
-import 'package:trudor/domain/usecases/category/filter_category_usecase.dart';
-import 'package:trudor/domain/usecases/category/get_cached_category_usecase.dart';
-import 'package:trudor/domain/usecases/category/get_remote_category_usecase.dart';
-import 'package:trudor/presentation/blocs/category/category_bloc.dart';
+import 'package:spoto/core/error/failures.dart';
+import 'package:spoto/core/usecases/usecase.dart';
+import 'package:spoto/domain/usecases/category/filter_category_usecase.dart';
+import 'package:spoto/domain/usecases/category/get_cached_category_usecase.dart';
+import 'package:spoto/domain/usecases/category/get_remote_category_usecase.dart';
+import 'package:spoto/presentation/blocs/category/category_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

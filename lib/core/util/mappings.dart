@@ -1,5 +1,5 @@
-import 'package:trudor/domain/entities/favorites/favorites_item.dart';
-import 'package:trudor/domain/entities/product/product.dart';
+import 'package:spoto/domain/entities/favorites/favorites_item.dart';
+import 'package:spoto/domain/entities/product/product.dart';
 
 class ProductMapping {
 

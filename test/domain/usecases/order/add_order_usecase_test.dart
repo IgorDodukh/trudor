@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:trudor/core/error/failures.dart';
-import 'package:trudor/domain/repositories/order_repository.dart';
-import 'package:trudor/domain/usecases/order/add_order_usecase.dart';
+import 'package:spoto/core/error/failures.dart';
+import 'package:spoto/domain/repositories/order_repository.dart';
+import 'package:spoto/domain/usecases/order/add_order_usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

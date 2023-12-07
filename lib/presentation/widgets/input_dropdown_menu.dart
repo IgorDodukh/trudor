@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:trudor/core/util/firstore_folder_methods.dart';
-import 'package:trudor/data/models/category/category_model.dart';
-import 'package:trudor/domain/entities/category/category.dart';
+import 'package:spoto/core/util/firstore_folder_methods.dart';
+import 'package:spoto/data/models/category/category_model.dart';
+import 'package:spoto/domain/entities/category/category.dart';
 
 class CategoriesDropdownMenu extends StatefulWidget {
   final ValueChanged<CategoryModel> onCategorySelected;

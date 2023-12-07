@@ -4,8 +4,8 @@ import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.da
 import 'package:image_picker/image_picker.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
-import 'package:trudor/core/constant/images.dart';
-import 'package:trudor/core/util/firstore_folder_methods.dart';
+import 'package:spoto/core/constant/images.dart';
+import 'package:spoto/core/util/firstore_folder_methods.dart';
 
 class ImageUploadForm extends StatefulWidget {
   // TODO: https://medium.flutterdevs.com/multiimage-picker-in-flutter-69bd9f6cedfb

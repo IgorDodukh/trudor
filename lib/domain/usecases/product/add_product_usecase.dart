@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:trudor/domain/entities/product/product.dart';
+import 'package:spoto/domain/entities/product/product.dart';
 
 import '../../../../../core/error/failures.dart';
 import '../../../../../core/usecases/usecase.dart';

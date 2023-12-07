@@ -1,4 +1,4 @@
-import 'package:trudor/domain/usecases/product/get_product_usecase.dart';
+import 'package:spoto/domain/usecases/product/get_product_usecase.dart';
 import 'package:typesense/typesense.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 

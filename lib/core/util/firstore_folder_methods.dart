@@ -4,15 +4,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:trudor/core/error/exceptions.dart';
-import 'package:trudor/core/util/typesense_service.dart';
-import 'package:trudor/data/models/category/category_model.dart';
-import 'package:trudor/data/models/favorites/favorites_item_model.dart';
-import 'package:trudor/data/models/product/product_model.dart';
-import 'package:trudor/data/models/product/product_response_model.dart';
-import 'package:trudor/data/models/user/delivery_info_model.dart';
-import 'package:trudor/domain/entities/product/product.dart';
-import 'package:trudor/domain/usecases/product/get_product_usecase.dart';
+import 'package:spoto/core/error/exceptions.dart';
+import 'package:spoto/core/util/typesense_service.dart';
+import 'package:spoto/data/models/category/category_model.dart';
+import 'package:spoto/data/models/favorites/favorites_item_model.dart';
+import 'package:spoto/data/models/product/product_model.dart';
+import 'package:spoto/data/models/product/product_response_model.dart';
+import 'package:spoto/data/models/user/delivery_info_model.dart';
+import 'package:spoto/domain/entities/product/product.dart';
+import 'package:spoto/domain/usecases/product/get_product_usecase.dart';
 
 class FirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

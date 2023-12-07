@@ -1,6 +1,6 @@
 
-import 'package:trudor/core/util/firstore_folder_methods.dart';
-import 'package:trudor/data/models/user/delivery_info_model.dart';
+import 'package:spoto/core/util/firstore_folder_methods.dart';
+import 'package:spoto/data/models/user/delivery_info_model.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 

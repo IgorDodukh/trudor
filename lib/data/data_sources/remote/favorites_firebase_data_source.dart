@@ -1,5 +1,5 @@
 
-import 'package:trudor/core/util/firstore_folder_methods.dart';
+import 'package:spoto/core/util/firstore_folder_methods.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 import '../../models/favorites/favorites_item_model.dart';

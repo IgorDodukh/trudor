@@ -1,5 +1,5 @@
-import 'package:trudor/core/error/failures.dart';
-import 'package:trudor/data/data_sources/local/favorites_local_data_source.dart';
+import 'package:spoto/core/error/failures.dart';
+import 'package:spoto/data/data_sources/local/favorites_local_data_source.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_test/flutter_test.dart';

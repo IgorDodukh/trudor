@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:trudor/core/constant/collections.dart';
+import 'package:spoto/core/constant/collections.dart';
 
 import '../category/category.dart';
 import 'price_tag.dart';

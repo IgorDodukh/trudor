@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:trudor/domain/usecases/favorites/remove_favorites_item_usecase.dart';
+import 'package:spoto/domain/usecases/favorites/remove_favorites_item_usecase.dart';
 
 import '../../../core/error/failures.dart';
 import '../../../core/usecases/usecase.dart';

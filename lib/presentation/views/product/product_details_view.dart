@@ -6,17 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:trudor/core/constant/collections.dart';
-import 'package:trudor/core/constant/messages.dart';
-import 'package:trudor/core/constant/strings.dart';
-import 'package:trudor/data/models/category/category_model.dart';
-import 'package:trudor/data/models/product/price_tag_model.dart';
-import 'package:trudor/data/models/product/product_model.dart';
-import 'package:trudor/data/models/user/user_model.dart';
-import 'package:trudor/presentation/blocs/user/user_bloc.dart';
-import 'package:trudor/presentation/widgets/adaptive_alert_dialog.dart';
-import 'package:trudor/presentation/widgets/popup_card/add_product_floating_card.dart';
-import 'package:trudor/presentation/widgets/popup_card/hero_dialog_route.dart';
+import 'package:spoto/core/constant/collections.dart';
+import 'package:spoto/core/constant/messages.dart';
+import 'package:spoto/core/constant/strings.dart';
+import 'package:spoto/data/models/category/category_model.dart';
+import 'package:spoto/data/models/product/price_tag_model.dart';
+import 'package:spoto/data/models/product/product_model.dart';
+import 'package:spoto/data/models/user/user_model.dart';
+import 'package:spoto/presentation/blocs/user/user_bloc.dart';
+import 'package:spoto/presentation/widgets/adaptive_alert_dialog.dart';
+import 'package:spoto/presentation/widgets/popup_card/add_product_floating_card.dart';
+import 'package:spoto/presentation/widgets/popup_card/hero_dialog_route.dart';
 
 import '../../../../../domain/entities/favorites/favorites_item.dart';
 import '../../../../../domain/entities/product/price_tag.dart';
@@ -98,12 +98,6 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
             )),
           )
         : Container();
-  }
-
-  void getOwnedProducts() {
-    setState(() {
-      isOwner = userId == widget.product.ownerId;
-    });
   }
 
   void addToFavorites() {
@@ -210,9 +204,11 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
 
   @override
   void initState() {
-    setState(() {
-      userId = (context.read<UserBloc>().state.props.first as UserModel).id;
-    });
+    if (context.read<UserBloc>().state is UserLogged) {
+      setState(() {
+        userId = (context.read<UserBloc>().state.props.first as UserModel).id;
+      });
+    }
     if (userId == widget.product.ownerId) {
       setState(() {
         isOwner = true;
