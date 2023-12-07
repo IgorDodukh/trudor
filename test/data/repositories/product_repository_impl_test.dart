@@ -131,7 +131,7 @@ void main() {
           /// Arrange
           when(() =>
                   mockRemoteDataSource.getProducts(const FilterProductParams()))
-              .thenThrow(ServerException());
+              .thenThrow(const ServerException(""));
 
           /// Act
           final result =
@@ -170,7 +170,7 @@ void main() {
         () async {
           /// Arrange
           when(() => mockLocalDataSource.getLastProducts())
-              .thenThrow(CacheException());
+              .thenThrow(const CacheException(""));
 
           /// Act
           final result =

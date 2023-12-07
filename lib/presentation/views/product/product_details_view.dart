@@ -439,38 +439,43 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                 // Display IconButton when not loading
                 BlocBuilder<UserBloc, UserState>(
                   builder: (context, state) {
-                    if (state is UserLogged) {
-                      return !isLoading
-                          ? IconButton(
-                              onPressed: () {
-                                addToFavorites();
+                    if (widget.product.status == ProductStatus.active) {
+                      if (state is UserLogged) {
+                        return !isLoading
+                            ? IconButton(
+                          onPressed: () {
+                            addToFavorites();
+                          },
+                          icon: Icon(
+                            isFavorite
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            color: Colors.white,
+                            size: 36,
+                          ),
+                        )
+                            : Container();
+                      } else {
+                        return IconButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return const UnauthorisedAddFavoritesAlert();
                               },
-                              icon: Icon(
-                                isFavorite
-                                    ? Icons.favorite
-                                    : Icons.favorite_border,
-                                color: Colors.white,
-                                size: 36,
-                              ),
-                            )
-                          : Container();
+                            );
+                          },
+                          icon: Icon(
+                            isFavorite ? Icons.favorite : Icons.favorite_border,
+                            color: Colors.white,
+                            size: 36,
+                          ),
+                        );
+                      }
                     } else {
-                      return IconButton(
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return const UnauthorisedAddFavoritesAlert();
-                            },
-                          );
-                        },
-                        icon: Icon(
-                          isFavorite ? Icons.favorite : Icons.favorite_border,
-                          color: Colors.white,
-                          size: 36,
-                        ),
-                      );
+                      return Container();
                     }
+
                   },
                 ),
               ],

@@ -4,6 +4,7 @@ import 'package:trudor/core/error/failures.dart';
 import 'package:trudor/domain/entities/product/pagination_meta_data.dart';
 import 'package:trudor/domain/usecases/product/add_product_usecase.dart';
 import 'package:trudor/domain/usecases/product/get_product_usecase.dart';
+import 'package:trudor/domain/usecases/product/update_product_usecase.dart';
 import 'package:trudor/presentation/blocs/product/product_bloc.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,18 +12,24 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../../fixtures/constant_objects.dart';
 
 class MockGetProductUseCase extends Mock implements GetProductUseCase {}
+
 class MockAddProductUseCase extends Mock implements AddProductUseCase {}
+
+class MockUpdateProductUseCase extends Mock implements UpdateProductUseCase {}
 
 void main() {
   group('ProductBloc', () {
     late ProductBloc productBloc;
     late MockGetProductUseCase mockGetProductUseCase;
     late MockAddProductUseCase mockAddProductUseCase;
+    late MockUpdateProductUseCase mockUpdateProductUseCase;
 
     setUp(() {
       mockGetProductUseCase = MockGetProductUseCase();
       mockAddProductUseCase = MockAddProductUseCase();
-      productBloc = ProductBloc(mockGetProductUseCase, mockAddProductUseCase);
+      mockUpdateProductUseCase = MockUpdateProductUseCase();
+      productBloc = ProductBloc(mockGetProductUseCase, mockAddProductUseCase,
+          mockUpdateProductUseCase);
     });
 
     test('initial state should be ProductInitial', () {

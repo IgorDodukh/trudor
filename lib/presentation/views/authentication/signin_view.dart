@@ -45,7 +45,7 @@ class _SignInViewState extends State<SignInView> {
           if (state.failure is CredentialFailure) {
             EasyLoading.showError("Username/Password Wrong!");
           } else {
-            EasyLoading.showError("Error ${state}");
+            EasyLoading.showError("Error $state");
           }
         }
       },

@@ -77,15 +77,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: SafeArea(
-          child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        child: InputFormButton(
-          onClick: () {},
-          titleText: "Update",
-          color: Colors.black87,
-        ),
-      )),
+      // bottomNavigationBar: SafeArea(
+      //     child: Padding(
+      //   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      //   child: InputFormButton(
+      //     onClick: () {},
+      //     titleText: "Update",
+      //     color: Colors.black87,
+      //   ),
+      // )),
     );
   }
 }

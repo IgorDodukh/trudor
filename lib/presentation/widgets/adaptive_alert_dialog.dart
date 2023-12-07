@@ -117,7 +117,7 @@ class DeactivateProductAlert extends StatelessWidget {
       noButtonTitle: deactivateProductNo,
       onClickYes: () {
         onDeactivateProduct();
-        EasyLoading.showSuccess("Deactivated successfully.");
+        EasyLoading.showSuccess(deactivatedSuccessfully);
         Navigator.of(context).pop();
       },
       onClickNo: () {

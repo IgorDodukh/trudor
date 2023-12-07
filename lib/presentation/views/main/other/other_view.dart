@@ -150,21 +150,21 @@ class OtherView extends StatelessWidget {
                       }
                     },
                   ),
-                  const SizedBox(height: 6),
-                  OtherItemCard(
-                    onClick: () {
-                      Navigator.of(context).pushNamed(AppRouter.settings);
-                    },
-                    title: "Settings",
-                  ),
-                  const SizedBox(height: 6),
-                  OtherItemCard(
-                    onClick: () {
-                      Navigator.of(context)
-                          .pushNamed(AppRouter.notifications);
-                    },
-                    title: "Notifications",
-                  ),
+                  // const SizedBox(height: 6),
+                  // OtherItemCard(
+                  //   onClick: () {
+                  //     Navigator.of(context).pushNamed(AppRouter.settings);
+                  //   },
+                  //   title: "Settings",
+                  // ),
+                  // const SizedBox(height: 6),
+                  // OtherItemCard(
+                  //   onClick: () {
+                  //     Navigator.of(context)
+                  //         .pushNamed(AppRouter.notifications);
+                  //   },
+                  //   title: "Notifications",
+                  // ),
 
                 ]);
               } else {
@@ -179,13 +179,13 @@ class OtherView extends StatelessWidget {
             },
             title: "About",
           ),
-          const SizedBox(height: 6),
-          OtherItemCard(
-            onClick: () {
-              context.read<FavoritesBloc>().add(const ClearFavorites());
-            },
-            title: "--- Clear Favorites ---",
-          ),
+          // const SizedBox(height: 6),
+          // OtherItemCard(
+          //   onClick: () {
+          //     context.read<FavoritesBloc>().add(const ClearFavorites());
+          //   },
+          //   title: "--- Clear Favorites ---",
+          // ),
           const SizedBox(height: 6),
           BlocBuilder<UserBloc, UserState>(
             builder: (context, state) {
