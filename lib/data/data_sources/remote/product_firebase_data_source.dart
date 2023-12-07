@@ -7,7 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 abstract class ProductFirebaseDataSource {
   Future<ProductResponseModel> getProducts(FilterProductParams params);
-  Future<void> addProduct(ProductModel product);
+  Future<ProductResponseModel> addProduct(Product product);
   Future<ProductResponseModel> updateProduct(Product product);
 }
 
@@ -23,9 +23,9 @@ class ProductFirebaseDataSourceSourceImpl implements ProductFirebaseDataSource {
   }
 
   @override
-  Future<void> addProduct(ProductModel product) async {
+  Future<ProductResponseModel> addProduct(Product product) async {
     FirestoreService firestoreService = FirestoreService();
-    firestoreService.createProduct(product);
+    return await firestoreService.createProduct(product);
   }
 
   @override

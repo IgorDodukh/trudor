@@ -104,12 +104,12 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
               products: state.products,
               metaData: state.metaData,
               failure: failure,
-              params: event.params as FilterProductParams,
+              params: const FilterProductParams(),
             )),
             (productResponse) => emit(ProductAdded(
               metaData: productResponse.paginationMetaData,
               products: productResponse.products,
-              params: event.params as FilterProductParams,
+              params: const FilterProductParams(),
             )),
       );
     } catch (e) {
@@ -118,7 +118,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         products: state.products,
         metaData: state.metaData,
         failure: ExceptionFailure(),
-        params: event.params as FilterProductParams,
+        params: const FilterProductParams(),
       ));
     }
   }

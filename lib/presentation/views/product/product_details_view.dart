@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:spoto/core/constant/collections.dart';
+import 'package:spoto/core/constant/images.dart';
 import 'package:spoto/core/constant/messages.dart';
 import 'package:spoto/core/constant/strings.dart';
 import 'package:spoto/data/models/category/category_model.dart';
@@ -138,12 +139,11 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                       PriceTagModel(
                           id: '1',
                           name: "base",
-                          price: int.parse(widget.product.priceTags.first.price
-                              .toString()))
+                          price: int.parse(
+                              widget.product.priceTags.first.price.toString()))
                     ],
                     categories: [
-                      CategoryModel.fromEntity(
-                          widget.product.categories.first)
+                      CategoryModel.fromEntity(widget.product.categories.first)
                     ],
                     category: widget.product.category,
                     images: widget.product.images,
@@ -191,13 +191,14 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                     images: widget.product.images,
                     createdAt: widget.product.createdAt,
                     updatedAt: DateTime.now());
-                context.read<prod.ProductBloc>().add(prod.UpdateProduct(updatedModel));
+                context
+                    .read<prod.ProductBloc>()
+                    .add(prod.UpdateProduct(updatedModel));
                 Navigator.of(context).pop();
               },
             );
           },
         );
-
       },
     );
   }
@@ -320,12 +321,8 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                                   color: Colors.grey.shade100,
                                 ),
                               ),
-                              errorWidget: (context, url, error) =>
-                                  const Center(
-                                child: Icon(
-                                  Icons.error_outline,
-                                  color: Colors.grey,
-                                ),
+                              errorWidget: (context, url, error) => Center(
+                                child: Image.asset(kNoImageAvailable),
                               ),
                             ),
                           );
@@ -405,7 +402,9 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                     ? Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          widget.product.status == ProductStatus.active ? deactivateProductButton() : renewProductButton(),
+                          widget.product.status == ProductStatus.active
+                              ? deactivateProductButton()
+                              : renewProductButton(),
                           // deactivateProductButton(),
                         ],
                       )
@@ -439,17 +438,17 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                       if (state is UserLogged) {
                         return !isLoading
                             ? IconButton(
-                          onPressed: () {
-                            addToFavorites();
-                          },
-                          icon: Icon(
-                            isFavorite
-                                ? Icons.favorite
-                                : Icons.favorite_border,
-                            color: Colors.white,
-                            size: 36,
-                          ),
-                        )
+                                onPressed: () {
+                                  addToFavorites();
+                                },
+                                icon: Icon(
+                                  isFavorite
+                                      ? Icons.favorite
+                                      : Icons.favorite_border,
+                                  color: Colors.white,
+                                  size: 36,
+                                ),
+                              )
                             : Container();
                       } else {
                         return IconButton(
@@ -471,7 +470,6 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                     } else {
                       return Container();
                     }
-
                   },
                 ),
               ],

@@ -103,7 +103,7 @@ class _MyPublicationsViewState extends State<MyPublicationsView> {
                     child: BlocListener<ProductBloc, ProductState>(
                       listener: (context, state) {
                         if (state is ProductError) {
-                          print("state is ProductError in Home View");
+                          print("state is ProductError in My Publications View");
                         }
                       },
                       child: BlocBuilder<ProductBloc, ProductState>(

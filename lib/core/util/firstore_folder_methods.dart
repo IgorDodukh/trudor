@@ -18,17 +18,23 @@ class FirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   TypesenseService typesenseService = TypesenseService();
 
-  Future<void> createProduct(ProductModel product) async {
+  Future<ProductResponseModel> createProduct(Product product) async {
     try {
-      final productData = product.toJson();
+      final productData = ProductModel.fromProduct(product).toJson();
       await typesenseService.createCollection();
       await typesenseService.createDocument(productData);
 
       DocumentReference productRef =
           _firestore.collection('products').doc(productData['_id']);
       await productRef.set(productData);
+
+      Map<String, dynamic> updatedProducts =
+      await typesenseService.searchProducts(
+          const FilterProductParams(keyword: "", searchField: "name"));
+      return productResponseModelFromTypesense(updatedProducts);
     } catch (e) {
       EasyLoading.showError("Failed to add product: $e");
+      throw ServerException(e.toString());
     }
   }
 

@@ -50,7 +50,7 @@ class ProductRepositoryImpl implements ProductRepository {
   @override
   Future<Either<Failure, ProductResponse>> addProduct(Product params) async {
     return await _addProduct(() {
-      return remoteDataSource.addProduct(params);
+      return firebaseDataSource.addProduct(params);
     });
   }
 

@@ -245,7 +245,7 @@ class _PopupCardState extends State<PopupCard> {
               images: images.isEmpty ? [] : images,
               createdAt: DateTime.now(),
               updatedAt: DateTime.now());
-          context.read<ProductBloc>().add(UpdateProduct(updatedModel));
+          context.read<ProductBloc>().add(AddProduct(updatedModel));
           EasyLoading.showSuccess(productPublishedSuccessfully);
           Navigator.of(context).pop();
         }
