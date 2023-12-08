@@ -15,10 +15,10 @@ import 'package:spoto/presentation/blocs/favorites/favorites_bloc.dart' as fav;
 import 'package:spoto/presentation/blocs/product/product_bloc.dart' as prod;
 import 'package:spoto/presentation/blocs/user/user_bloc.dart';
 import 'package:spoto/presentation/widgets/adaptive_alert_dialog.dart';
-import 'package:spoto/presentation/widgets/popup_card/add_product_floating_card.dart';
 import 'package:spoto/presentation/widgets/popup_card/hero_dialog_route.dart';
 
 import '../../core/router/app_router.dart';
+import '../views/product/add_product_form.dart';
 
 class ListViewItemCard extends StatelessWidget {
   final ListViewItem? listViewItem;
@@ -98,7 +98,6 @@ class ListViewItemCard extends StatelessWidget {
     );
   }
 
-
   Widget deactivateProductButton(BuildContext context) {
     return IconButton(
       icon: const Icon(Icons.close_rounded, color: Colors.black, size: 36),
@@ -146,7 +145,7 @@ class ListViewItemCard extends StatelessWidget {
     return IconButton(
       onPressed: () {
         Navigator.of(context).push(HeroDialogRoute(builder: (context) {
-          return PopupCard(existingProduct: listViewItem!.product);
+          return AddProductForm(productInfo: listViewItem!.product);
         }));
         // Navigator.of(context).pushNamed(AppRouter.editProduct,
         //     arguments: listViewItem!.product);
@@ -218,10 +217,9 @@ class ListViewItemCard extends StatelessWidget {
                             padding: const EdgeInsets.all(0.0),
                             child: CachedNetworkImage(
                               fit: BoxFit.cover,
-                              imageUrl:
-                                  listViewItem!.product.images.isNotEmpty
-                                      ? listViewItem!.product.images.first
-                                      : noImagePlaceholder,
+                              imageUrl: listViewItem!.product.images.isNotEmpty
+                                  ? listViewItem!.product.images.first
+                                  : noImagePlaceholder,
                               placeholder: (context, url) => const Center(
                                   child: CircularProgressIndicator()),
                               errorWidget: (context, url, error) =>
@@ -297,7 +295,11 @@ class ListViewItemCard extends StatelessWidget {
                   ? Row(
                       children: [
                         editProductButton(context),
-                        listViewItem != null && listViewItem!.product.status == ProductStatus.active ? deactivateProductButton(context) : renewProductButton(context),
+                        listViewItem != null &&
+                                listViewItem!.product.status ==
+                                    ProductStatus.active
+                            ? deactivateProductButton(context)
+                            : renewProductButton(context),
                       ],
                     )
                   : isFavorite

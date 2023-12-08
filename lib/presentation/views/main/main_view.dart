@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
-import 'package:spoto/presentation/views/main/add/add_product.dart';
-import 'package:spoto/presentation/widgets/popup_card/add_product_floating_card.dart';
+import 'package:spoto/presentation/views/product/add_product_form.dart';
 
 import '../../blocs/home/navbar_cubit.dart';
 import 'category/category_view.dart';
@@ -113,11 +112,11 @@ class _MainViewState extends State<MainView> {
               ),
             ),
           ),
-
           Positioned(
-            bottom: 1.0,
-            left: MediaQuery.of(context).size.width / 2 - 45,
-            right: MediaQuery.of(context).size.width / 2 - 45,
+            bottom: -25.0,
+            top: MediaQuery.of(context).size.height - 165,
+            left: MediaQuery.of(context).size.width / 2 - 50,
+            right: MediaQuery.of(context).size.width / 2 - 50,
             child: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -132,16 +131,16 @@ class _MainViewState extends State<MainView> {
                       builder: (BuildContext context) {
                         return Padding(
                             padding: EdgeInsets.only(
-                                bottom: MediaQuery.of(context).viewInsets.bottom,
-                                top: 50),
-                            child: const PopupCard());
+                                bottom:
+                                    MediaQuery.of(context).viewInsets.bottom),
+                            child: const AddProductForm());
                       },
                     );
                   },
                   tooltip: 'Increment',
                   child: const Icon(
                     Icons.add_circle,
-                    size: 50,
+                    size: 65,
                     color: Colors.white,
                   ),
                 ),

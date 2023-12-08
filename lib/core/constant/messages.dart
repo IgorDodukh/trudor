@@ -6,6 +6,8 @@ const String removedFromFavoritesTitle = "Successfully removed from Favorites";
 const String addDeliveryInfoSuccess = "Delivery info successfully added!";
 const String updateDeliveryInfoSuccess = "Delivery info successfully updated!";
 const String deliveryDetailsTitle = "Delivery Details";
+const String addDeliveryDetails = "Add Delivery Details";
+const String updateDeliveryDetails = "Update Delivery Details";
 
 // product dialog
 const String productUpdatedSuccessfully = "Updated successfully.\nChanges will appear soon.";
@@ -47,3 +49,8 @@ const String signOutSuccess = "Signed out successfully";
 
 // loading
 const String loadingTitle = "Loading...";
+
+// add publication form
+const String fieldCantBeEmpty = "This field can't be empty";
+const String addPublication = "Add Publication";
+const String updatePublication = "Update Publication";

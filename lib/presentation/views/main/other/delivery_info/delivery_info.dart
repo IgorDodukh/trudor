@@ -1,9 +1,9 @@
-import 'package:spoto/core/constant/messages.dart';
-import 'package:spoto/data/models/user/user_model.dart';
-import 'package:spoto/presentation/blocs/user/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:spoto/core/constant/messages.dart';
+import 'package:spoto/data/models/user/user_model.dart';
+import 'package:spoto/presentation/blocs/user/user_bloc.dart';
 
 import '../../../../../data/models/user/delivery_info_model.dart';
 import '../../../../../domain/entities/user/delivery_info.dart';
@@ -74,8 +74,7 @@ class _DeliveryInfoViewState extends State<DeliveryInfoView> {
                   builder: (BuildContext context) {
                     return Padding(
                         padding: EdgeInsets.only(
-                            bottom: MediaQuery.of(context).viewInsets.bottom,
-                            top: 50),
+                            bottom: MediaQuery.of(context).viewInsets.bottom),
                         child: const DeliveryInfoForm());
                   },
                 );
@@ -95,6 +94,7 @@ class _DeliveryInfoViewState extends State<DeliveryInfoView> {
 
 class DeliveryInfoForm extends StatefulWidget {
   final DeliveryInfo? deliveryInfo;
+
   const DeliveryInfoForm({
     super.key,
     this.deliveryInfo,
@@ -153,7 +153,14 @@ class _DeliveryInfoFormState extends State<DeliveryInfoForm> {
           EasyLoading.showError("Error");
         }
       },
-      child: SizedBox(
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(24),
+            topRight: Radius.circular(24),
+          ),
+        ),
         height: MediaQuery.of(context).size.height * 0.7,
         child: Center(
           child: Padding(
@@ -163,6 +170,17 @@ class _DeliveryInfoFormState extends State<DeliveryInfoForm> {
               child: ListView(
                 physics: const BouncingScrollPhysics(),
                 children: <Widget>[
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  Center(
+                    child: Text(
+                      widget.deliveryInfo == null
+                          ? addDeliveryDetails
+                          : updateDeliveryDetails,
+                      style: const TextStyle(fontSize: 26),
+                    ),
+                  ),
                   const SizedBox(
                     height: 24,
                   ),

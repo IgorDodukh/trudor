@@ -15,9 +15,8 @@ import 'package:spoto/data/models/product/price_tag_model.dart';
 import 'package:spoto/data/models/product/product_model.dart';
 import 'package:spoto/data/models/user/user_model.dart';
 import 'package:spoto/presentation/blocs/user/user_bloc.dart';
+import 'package:spoto/presentation/views/product/add_product_form.dart';
 import 'package:spoto/presentation/widgets/adaptive_alert_dialog.dart';
-import 'package:spoto/presentation/widgets/popup_card/add_product_floating_card.dart';
-import 'package:spoto/presentation/widgets/popup_card/hero_dialog_route.dart';
 
 import '../../../../../domain/entities/favorites/favorites_item.dart';
 import '../../../../../domain/entities/product/price_tag.dart';
@@ -418,11 +417,22 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                             icon: const Icon(Icons.edit,
                                 color: Colors.white, size: 36),
                             onPressed: () {
-                              Navigator.of(context)
-                                  .push(HeroDialogRoute(builder: (context) {
-                                return PopupCard(
-                                    existingProduct: widget.product);
-                              }));
+                              showModalBottomSheet<void>(
+                                context: context,
+                                isScrollControlled: true,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(24.0),
+                                ),
+                                builder: (BuildContext context) {
+                                  return Padding(
+                                      padding: EdgeInsets.only(
+                                          bottom: MediaQuery.of(context)
+                                              .viewInsets
+                                              .bottom),
+                                      child: AddProductForm(
+                                          productInfo: widget.product));
+                                },
+                              );
                             },
                           ),
                         ],
