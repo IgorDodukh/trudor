@@ -113,11 +113,40 @@ class _MainViewState extends State<MainView> {
               ),
             ),
           ),
-          const Positioned(
-            bottom: 20.0,
-            left: 105,
-            right: 105,
-            child: AddProductFloatingCard(),
+
+          Positioned(
+            bottom: 1.0,
+            left: MediaQuery.of(context).size.width / 2 - 45,
+            right: MediaQuery.of(context).size.width / 2 - 45,
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: FloatingActionButton(
+                  onPressed: () {
+                    showModalBottomSheet<void>(
+                      context: context,
+                      isScrollControlled: true,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24.0),
+                      ),
+                      builder: (BuildContext context) {
+                        return Padding(
+                            padding: EdgeInsets.only(
+                                bottom: MediaQuery.of(context).viewInsets.bottom,
+                                top: 50),
+                            child: const PopupCard());
+                      },
+                    );
+                  },
+                  tooltip: 'Increment',
+                  child: const Icon(
+                    Icons.add_circle,
+                    size: 50,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
           ),
         ],
       ),

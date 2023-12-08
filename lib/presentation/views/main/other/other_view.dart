@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spoto/presentation/widgets/adaptive_alert_dialog.dart';
 
 import '../../../../core/constant/images.dart';
 import '../../../../core/router/app_router.dart';
@@ -193,8 +194,20 @@ class OtherView extends StatelessWidget {
                 return Column(children: [
                   OtherItemCard(
                     onClick: () {
-                      context.read<UserBloc>().add(SignOutUser());
-                      context.read<FavoritesBloc>().add(const ClearFavorites());
+                      showDialog(
+                        context: context,
+                        builder: (context)
+                      {
+                        return SignOutConfirmationAlert(
+                          onSignOut: () {
+                            context.read<UserBloc>().add(SignOutUser());
+                            context
+                                .read<FavoritesBloc>()
+                                .add(const ClearFavorites());
+                          },
+                        );
+                      },
+                      );
                     },
                     title: "Sign Out",
                   )

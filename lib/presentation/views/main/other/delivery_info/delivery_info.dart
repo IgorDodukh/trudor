@@ -33,7 +33,7 @@ class _DeliveryInfoViewState extends State<DeliveryInfoView> {
               .read<DeliveryInfoFetchCubit>()
               .selectDeliveryInfo(state.deliveryInfo);
         } else if (state is DeliveryInfoActionFail) {
-          EasyLoading.showError("Error");
+          EasyLoading.showError("Error in delivery info action");
         }
       },
       child: Scaffold(
@@ -72,7 +72,11 @@ class _DeliveryInfoViewState extends State<DeliveryInfoView> {
                     borderRadius: BorderRadius.circular(24.0),
                   ),
                   builder: (BuildContext context) {
-                    return const DeliveryInfoForm();
+                    return Padding(
+                        padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom,
+                            top: 50),
+                        child: const DeliveryInfoForm());
                   },
                 );
               },
@@ -263,7 +267,9 @@ class _DeliveryInfoFormState extends State<DeliveryInfoForm> {
                   InputFormButton(
                     color: Colors.black87,
                     onClick: () {
-                      final userId = (context.read<UserBloc>().state.props.first as UserModel).id;
+                      final userId = (context.read<UserBloc>().state.props.first
+                              as UserModel)
+                          .id;
                       if (_formKey.currentState!.validate()) {
                         if (widget.deliveryInfo == null) {
                           context

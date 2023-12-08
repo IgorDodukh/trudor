@@ -9,7 +9,7 @@ const String deliveryDetailsTitle = "Delivery Details";
 
 // product dialog
 const String productUpdatedSuccessfully = "Updated successfully.\nChanges will appear soon.";
-const String productPublishedSuccessfully = "Publication was activated successfully.";
+const String productPublishedSuccessfully = "Published successfully.";
 
 const String addFavoritesWithoutLogin = "Please login to use Favorites";
 
@@ -34,9 +34,16 @@ const String deactivatedSuccessfully = "Deactivated successfully.";
 
 // activate product alert
 const String activateProductTitle = "Activate publication?";
-const String activateProductContent = "By activating this publication, it will be visible to other users.";
+const String activateProductContent = "By activating this publication, it will become visible to other users.";
 const String activateProductNo = "Back";
 const String activateProductYes = "Activate";
+
+// sign out confirmation alert
+const String signOutConfirmTitle = "Sign out";
+const String signOutConfirmContent = "Are you sure you want to sign out?";
+const String signOutConfirmNo = "Back";
+const String signOutConfirmYes = "Sign out";
+const String signOutSuccess = "Signed out successfully";
 
 // loading
 const String loadingTitle = "Loading...";

@@ -1,5 +1,5 @@
 
-Welcome to the Trudor App repository!
+Welcome to the Spoto App repository!
 
 ## Getting Started
 

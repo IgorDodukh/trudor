@@ -219,7 +219,7 @@ class ListViewItemCard extends StatelessWidget {
                             child: CachedNetworkImage(
                               fit: BoxFit.cover,
                               imageUrl:
-                                  listViewItem!.product.images.first.isNotEmpty
+                                  listViewItem!.product.images.isNotEmpty
                                       ? listViewItem!.product.images.first
                                       : noImagePlaceholder,
                               placeholder: (context, url) => const Center(

@@ -7,8 +7,8 @@ import 'package:spoto/core/router/app_router.dart';
 class AdaptiveDialog extends StatelessWidget {
   final String title;
   final String content;
-  final String yesButtonTitle;
-  final String noButtonTitle;
+  final String yes;
+  final String no;
   final Function()? onClickYes;
   final Function()? onClickNo;
 
@@ -18,8 +18,8 @@ class AdaptiveDialog extends StatelessWidget {
       this.onClickNo,
       required this.title,
       required this.content,
-      required this.yesButtonTitle,
-      required this.noButtonTitle});
+      required this.yes,
+      required this.no});
 
   Widget adaptiveAction(
       {required BuildContext context,
@@ -49,7 +49,7 @@ class AdaptiveDialog extends StatelessWidget {
             onClickNo!();
           },
           child: Text(
-            noButtonTitle,
+            no,
           ),
         ),
         TextButton(
@@ -57,7 +57,7 @@ class AdaptiveDialog extends StatelessWidget {
             onClickYes!();
           },
           child:
-              Text(yesButtonTitle, style: const TextStyle(color: Colors.red)),
+              Text(yes, style: const TextStyle(color: Colors.red)),
         ),
       ],
     );
@@ -72,8 +72,8 @@ class DiscardChangesAlert extends StatelessWidget {
     return AdaptiveDialog(
       title: discardChangesTitle,
       content: discardChangesContent,
-      yesButtonTitle: discardChangesYes,
-      noButtonTitle: discardChangesNo,
+      yes: discardChangesYes,
+      no: discardChangesNo,
       onClickYes: () {
         Navigator.of(context).pop();
         Navigator.of(context).pop();
@@ -93,8 +93,8 @@ class UnauthorisedAddFavoritesAlert extends StatelessWidget {
     return AdaptiveDialog(
       title: addFavoritesTitle,
       content: addFavoritesContent,
-      yesButtonTitle: addFavoritesYes,
-      noButtonTitle: addFavoritesNo,
+      yes: addFavoritesYes,
+      no: addFavoritesNo,
       onClickYes: () {
         Navigator.of(context).pop();
         Navigator.of(context).pushNamed(AppRouter.signIn);
@@ -116,8 +116,8 @@ class DeactivateProductAlert extends StatelessWidget {
     return AdaptiveDialog(
       title: deactivateProductTitle,
       content: deactivateProductContent,
-      yesButtonTitle: deactivateProductYes,
-      noButtonTitle: deactivateProductNo,
+      yes: deactivateProductYes,
+      no: deactivateProductNo,
       onClickYes: () {
         onDeactivateProduct();
         EasyLoading.showSuccess(deactivatedSuccessfully);
@@ -140,11 +140,35 @@ class RenewProductAlert extends StatelessWidget {
     return AdaptiveDialog(
       title: activateProductTitle,
       content: activateProductContent,
-      yesButtonTitle: activateProductYes,
-      noButtonTitle: activateProductNo,
+      yes: activateProductYes,
+      no: activateProductNo,
       onClickYes: () {
         onRenewProduct();
         EasyLoading.showSuccess(productPublishedSuccessfully);
+        Navigator.of(context).pop();
+      },
+      onClickNo: () {
+        Navigator.of(context).pop();
+      },
+    );
+  }
+}
+
+class SignOutConfirmationAlert extends StatelessWidget {
+  final Function() onSignOut;
+
+  const SignOutConfirmationAlert({super.key, required this.onSignOut});
+
+  @override
+  Widget build(BuildContext context) {
+    return AdaptiveDialog(
+      title: signOutConfirmTitle,
+      content: signOutConfirmContent,
+      yes: signOutConfirmYes,
+      no: signOutConfirmNo,
+      onClickYes: () {
+        onSignOut();
+        EasyLoading.showSuccess(signOutSuccess);
         Navigator.of(context).pop();
       },
       onClickNo: () {

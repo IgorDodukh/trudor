@@ -58,7 +58,7 @@ class OrderCheckoutView extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 8),
                       child: OutlineLabelCard(
-                        title: 'Delivery Details',
+                        title: deliveryDetailsTitle,
                         child: BlocBuilder<DeliveryInfoFetchCubit,
                             DeliveryInfoFetchState>(
                           builder: (context, state) {
