@@ -10,6 +10,7 @@ import 'package:spoto/data/models/product/product_model.dart';
 import 'package:spoto/data/models/user/user_model.dart';
 import 'package:spoto/domain/entities/category/category.dart';
 import 'package:spoto/domain/entities/product/product.dart';
+import 'package:spoto/presentation/blocs/home/navbar_cubit.dart';
 import 'package:spoto/presentation/blocs/product/product_bloc.dart';
 import 'package:spoto/presentation/blocs/user/user_bloc.dart';
 import 'package:spoto/presentation/widgets/adaptive_alert_dialog.dart';
@@ -122,7 +123,7 @@ class _AddProductFormState extends State<AddProductForm> {
           },
         ),
         if (isNew == null && isPublishPressed)
-          const Text('Type selection is required',
+          const Text(typeValidation,
               style: TextStyle(color: Colors.red)),
       ],
     );
@@ -131,11 +132,11 @@ class _AddProductFormState extends State<AddProductForm> {
   Widget titleField() {
     return InputTextFormField(
       controller: name,
-      hint: 'Name',
+      hint: nameHint,
       contentPadding: const EdgeInsets.symmetric(horizontal: 12),
       validation: (String? val) {
         if (val == null || val.isEmpty) {
-          return fieldCantBeEmpty;
+          return nameValidation;
         }
         return null;
       },
@@ -151,12 +152,12 @@ class _AddProductFormState extends State<AddProductForm> {
   Widget descriptionField() {
     return InputTextFormField(
       controller: description,
-      hint: 'Description',
+      hint: descriptionHint,
       maxLines: 6,
       contentPadding: const EdgeInsets.symmetric(horizontal: 12),
       validation: (String? val) {
         if (val == null || val.isEmpty) {
-          return fieldCantBeEmpty;
+          return descriptionValidation;
         }
         return null;
       },
@@ -166,11 +167,13 @@ class _AddProductFormState extends State<AddProductForm> {
   Widget priceField() {
     return InputTextFormField(
       controller: priceTags,
-      hint: 'Price',
+      hint: priceHint,
+      maxCharacters: 20121,
+      textInputType: const TextInputType.numberWithOptions(decimal: true),
       contentPadding: const EdgeInsets.symmetric(horizontal: 12),
       validation: (String? val) {
         if (val == null || val.isEmpty) {
-          return fieldCantBeEmpty;
+          return priceValidation;
         }
         return null;
       },
@@ -207,7 +210,7 @@ class _AddProductFormState extends State<AddProductForm> {
           Navigator.of(context).pop();
         }
       },
-      titleText: 'Publish',
+      titleText: publishTitle,
     );
   }
 
@@ -238,7 +241,7 @@ class _AddProductFormState extends State<AddProductForm> {
           Navigator.of(context).pop();
         }
       },
-      titleText: 'Update',
+      titleText: updateTitle,
     );
   }
 
@@ -282,6 +285,29 @@ class _AddProductFormState extends State<AddProductForm> {
     return Future(() => null);
   }
 
+  Widget saveDraftButton(){
+    return InputFormButton(
+      color: Colors.black26,
+      onClick: () {
+        context.read<NavbarCubit>().controller.animateToPage(0,
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.linear);
+        context.read<NavbarCubit>().update(0);
+      },
+      titleText: saveDraftTitle,
+    );
+  }
+
+  Widget cancelButton(){
+    return InputFormButton(
+      color: Colors.black87,
+      onClick: () {
+        onPopupClose();
+      },
+      titleText: cancelTitle,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -294,84 +320,74 @@ class _AddProductFormState extends State<AddProductForm> {
       ),
       height: MediaQuery.of(context).size.height * 0.8,
       child: Center(
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            physics: const BouncingScrollPhysics(),
-            children: <Widget>[
-              const SizedBox(
-                height: 24,
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 24,
+            ),
+            Center(
+              child: Text(
+                widget.productInfo == null
+                    ? addPublication
+                    : updatePublication,
+                style: const TextStyle(fontSize: 26),
               ),
-              Center(
-                child: Text(
-                  widget.productInfo == null
-                      ? addPublication
-                      : updatePublication,
-                  style: const TextStyle(fontSize: 26),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 0),
-                child: Column(
-                  children: [
-                    const SizedBox(
-                      height: 5,
+            ),
+            SizedBox(
+              height: MediaQuery.of(context)
+                  .viewInsets
+                  .bottom > 0 ? MediaQuery.of(context).size.height * 0.586 : MediaQuery.of(context).size.height * 0.728,
+              child: Form(
+                key: _formKey,
+                child: ListView(
+                  physics: const BouncingScrollPhysics(),
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 0),
+                      child: Column(
+                        children: [
+                          ImageUploadForm(
+                              onImagesUploaded: _handleImageUpload,
+                              existingImages: images),
+                        ],
+                      ),
                     ),
-                    ImageUploadForm(
-                        onImagesUploaded: _handleImageUpload,
-                        existingImages: images),
+                    Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Column(children: [
+                          formDivider(),
+                          titleField(),
+                          formDivider(),
+                          descriptionField(),
+                          formDivider(),
+                          productTypeToggle(),
+                          formDivider(),
+                          priceField(),
+                          formDivider(),
+                          CategoriesDropdownMenu(
+                            onCategorySelected: _handleCategorySelection,
+                            existingCategory: selectedCategory,
+                          ),
+                          formDivider(),
+                          // formDivider(),
+                          widget.productInfo == null
+                              ? addProductButton()
+                              : updateProductButton(),
+                          formDivider(),
+                          // saveDraftButton(),
+                          // formDivider(),
+                          cancelButton(),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                        ])),
                   ],
                 ),
               ),
-              Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Column(children: [
-                    formDivider(),
-                    titleField(),
-                    formDivider(),
-                    descriptionField(),
-                    formDivider(),
-                    productTypeToggle(),
-                    formDivider(),
-                    priceField(),
-                    formDivider(),
-                    CategoriesDropdownMenu(
-                      onCategorySelected: _handleCategorySelection,
-                      existingCategory: selectedCategory,
-                    ),
-                    formDivider(),
-                    // formDivider(),
-                    widget.productInfo == null
-                        ? addProductButton()
-                        : updateProductButton(),
-                    formDivider(),
-                    // InputFormButton(
-                    //   color: Colors.black26,
-                    //   onClick: () {
-                    //     context.read<NavbarCubit>().controller.animateToPage(0,
-                    //         duration: const Duration(milliseconds: 400),
-                    //         curve: Curves.linear);
-                    //     context.read<NavbarCubit>().update(0);
-                    //   },
-                    //   titleText: 'Save draft',
-                    // ),
-                    // const SizedBox(
-                    //   height: 10,
-                    // ),
-                    InputFormButton(
-                      color: Colors.black87,
-                      onClick: () {
-                        onPopupClose();
-                      },
-                      titleText: 'Cancel',
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                  ])),
-            ],
-          ),
-        ),
+            ),
+
+          ],
+        )
       ),
     );
   }

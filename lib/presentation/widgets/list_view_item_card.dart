@@ -15,7 +15,6 @@ import 'package:spoto/presentation/blocs/favorites/favorites_bloc.dart' as fav;
 import 'package:spoto/presentation/blocs/product/product_bloc.dart' as prod;
 import 'package:spoto/presentation/blocs/user/user_bloc.dart';
 import 'package:spoto/presentation/widgets/adaptive_alert_dialog.dart';
-import 'package:spoto/presentation/widgets/popup_card/hero_dialog_route.dart';
 
 import '../../core/router/app_router.dart';
 import '../views/product/add_product_form.dart';
@@ -144,11 +143,20 @@ class ListViewItemCard extends StatelessWidget {
   Widget editProductButton(BuildContext context) {
     return IconButton(
       onPressed: () {
-        Navigator.of(context).push(HeroDialogRoute(builder: (context) {
-          return AddProductForm(productInfo: listViewItem!.product);
-        }));
-        // Navigator.of(context).pushNamed(AppRouter.editProduct,
-        //     arguments: listViewItem!.product);
+        showModalBottomSheet<void>(
+          isDismissible: false,
+          context: context,
+          isScrollControlled: true,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24.0),
+          ),
+          builder: (BuildContext context) {
+            return Padding(
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom),
+                child: AddProductForm(productInfo: listViewItem!.product));
+          },
+        );
       },
       icon: const Icon(Icons.edit),
     );

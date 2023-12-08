@@ -418,6 +418,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                                 color: Colors.white, size: 36),
                             onPressed: () {
                               showModalBottomSheet<void>(
+                                isDismissible: false,
                                 context: context,
                                 isScrollControlled: true,
                                 shape: RoundedRectangleBorder(
@@ -439,8 +440,9 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                       )
                     : Container(),
                 // Display loading spinner when isLoading is true
+                isLoading ? const SizedBox(width: 16) : Container(),
                 favoritesButtonLoading(),
-                const SizedBox(width: 16),
+                !isLoading ? const SizedBox(width: 16) : Container(),
                 // Display IconButton when not loading
                 BlocBuilder<UserBloc, UserState>(
                   builder: (context, state) {

@@ -29,14 +29,14 @@ const String addFavoritesYes = "Open Login";
 
 // deactivate product alert
 const String deactivateProductTitle = "Deactivate publication?";
-const String deactivateProductContent = "By deactivating this publication, it will no longer be visible to other users.";
+const String deactivateProductContent = "It won't be visible to other users anymore.";
 const String deactivateProductNo = "Back";
 const String deactivateProductYes = "Deactivate";
 const String deactivatedSuccessfully = "Deactivated successfully.";
 
 // activate product alert
 const String activateProductTitle = "Activate publication?";
-const String activateProductContent = "By activating this publication, it will become visible to other users.";
+const String activateProductContent = "It will become visible to other users.";
 const String activateProductNo = "Back";
 const String activateProductYes = "Activate";
 
@@ -50,7 +50,23 @@ const String signOutSuccess = "Signed out successfully";
 // loading
 const String loadingTitle = "Loading...";
 
+// buttons
+const String publishTitle = "Publish";
+const String updateTitle = "Update";
+const String saveDraftTitle = "Save draft";
+const String cancelTitle = "Cancel";
+
 // add publication form
 const String fieldCantBeEmpty = "This field can't be empty";
 const String addPublication = "Add Publication";
 const String updatePublication = "Update Publication";
+
+// add publication form - title
+const String nameHint = "Name";
+const String nameValidation = "Please enter a name";
+const String descriptionHint = "Description";
+const String descriptionValidation = "Please enter a description";
+const String priceHint = "Price";
+const String priceValidation = "Please enter a price";
+const String typeValidation = "Please select a type";
+const String categoryValidation = "Please select a category";

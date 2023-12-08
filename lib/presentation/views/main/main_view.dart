@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
+import 'package:spoto/core/constant/colors.dart';
 import 'package:spoto/presentation/views/product/add_product_form.dart';
 
 import '../../blocs/home/navbar_cubit.dart';
@@ -113,16 +114,19 @@ class _MainViewState extends State<MainView> {
             ),
           ),
           Positioned(
-            bottom: -25.0,
-            top: MediaQuery.of(context).size.height - 165,
+            bottom: -40.0,
+            top: MediaQuery.of(context).size.height - 175,
             left: MediaQuery.of(context).size.width / 2 - 50,
             right: MediaQuery.of(context).size.width / 2 - 50,
             child: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: FloatingActionButton(
+                  elevation: 0,
+                  backgroundColor: Colors.transparent,
                   onPressed: () {
                     showModalBottomSheet<void>(
+                      isDismissible: false,
                       context: context,
                       isScrollControlled: true,
                       shape: RoundedRectangleBorder(
@@ -137,11 +141,10 @@ class _MainViewState extends State<MainView> {
                       },
                     );
                   },
-                  tooltip: 'Increment',
-                  child: const Icon(
+                  child: Icon(
                     Icons.add_circle,
                     size: 65,
-                    color: Colors.white,
+                    color: kButtonAccentColor,
                   ),
                 ),
               ),
