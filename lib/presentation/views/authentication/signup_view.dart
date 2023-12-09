@@ -1,4 +1,5 @@
 import 'package:spoto/core/constant/messages.dart';
+import 'package:spoto/data/models/user/user_model.dart';
 import 'package:spoto/domain/usecases/user/sign_up_usecase.dart';
 import 'package:spoto/presentation/blocs/user/user_bloc.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         if (state is UserLoading) {
           EasyLoading.show(status: loadingTitle);
         } else if (state is UserLogged) {
-          context.read<FavoritesBloc>().add(const GetFavorites());
+          final userId = (context.read<UserBloc>().state.props.first as UserModel).id;
+          context.read<FavoritesBloc>().add(GetFavorites(userId: userId));
           Navigator.of(context).pushNamedAndRemoveUntil(
             AppRouter.home,
             ModalRoute.withName(''),

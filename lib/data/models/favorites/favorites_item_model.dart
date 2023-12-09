@@ -36,6 +36,15 @@ class FavoritesItemModel extends ListViewItem {
     );
   }
 
+  factory FavoritesItemModel.fromFirestoreJson(Map<String, dynamic> json) {
+    return FavoritesItemModel(
+      id: json["_id"],
+      product: ProductModel.fromJson(json),
+      priceTag: PriceTagModel.fromJson(json["priceTags"][0]),
+      userId: json["ownerId"],
+    );
+  }
+
   Map<String, dynamic> toJson() => {
         "_id": id,
         "product": (product as ProductModel).toJson(),

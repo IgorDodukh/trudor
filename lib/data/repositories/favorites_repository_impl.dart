@@ -25,8 +25,8 @@ class FavoritesRepositoryImpl implements FavoritesRepository {
 
   @override
   Future<Either<Failure, ListViewItem>> addToFavorites(ListViewItem params) async {
-    // TODO: Implement a method to add a product to the when user is logged in
     if (await userLocalDataSource.isTokenAvailable()) {
+      print("add to favorites repo impl: ${params.userId}");
       await localDataSource.saveFavoritesItem(FavoritesItemModel.fromParent(params));
       final remoteProduct = await firebaseDataSource.addToFavorites(FavoritesItemModel.fromParent(params));
       return Right(remoteProduct);
@@ -66,6 +66,7 @@ class FavoritesRepositoryImpl implements FavoritesRepository {
   Future<Either<Failure, List<ListViewItem>>> syncFavorites() async {
     if (await networkInfo.isConnected) {
       if (await userLocalDataSource.isTokenAvailable()) {
+        String userId = await userLocalDataSource.getUser().then((value) => value.id);
         List<FavoritesItemModel> localFavoritesItems = [];
         try {
           localFavoritesItems = await localDataSource.getFavorites();
@@ -73,6 +74,7 @@ class FavoritesRepositoryImpl implements FavoritesRepository {
         try {
           final syncedResult = await firebaseDataSource.syncFavorites(
             localFavoritesItems,
+            userId
           );
           await localDataSource.saveFavorites(syncedResult);
           return Right(syncedResult);

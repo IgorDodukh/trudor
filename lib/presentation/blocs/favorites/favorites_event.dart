@@ -5,7 +5,8 @@ abstract class FavoritesEvent extends Equatable {
 }
 
 class GetFavorites extends FavoritesEvent {
-  const GetFavorites();
+  final String? userId;
+  const GetFavorites({this.userId});
 
   @override
   List<Object> get props => [];

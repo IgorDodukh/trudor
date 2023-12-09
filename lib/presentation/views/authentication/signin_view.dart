@@ -1,5 +1,6 @@
 import 'package:spoto/core/constant/messages.dart';
 import 'package:spoto/core/error/failures.dart';
+import 'package:spoto/data/models/user/user_model.dart';
 import 'package:spoto/data/repositories/auth/google_auth_repository.dart';
 import 'package:spoto/domain/auth/google_auth.dart';
 import 'package:spoto/domain/usecases/auth/google_auth_usecase.dart';
@@ -36,7 +37,8 @@ class _SignInViewState extends State<SignInView> {
         if (state is UserLoading) {
           EasyLoading.show(status: loadingTitle);
         } else if (state is UserLogged) {
-          context.read<FavoritesBloc>().add(const GetFavorites());
+          final userId = (context.read<UserBloc>().state.props.first as UserModel).id;
+          context.read<FavoritesBloc>().add(GetFavorites(userId: userId));
           Navigator.of(context).pushNamedAndRemoveUntil(
             AppRouter.home,
             ModalRoute.withName(''),

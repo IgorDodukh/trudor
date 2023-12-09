@@ -3,6 +3,8 @@
 import 'package:spoto/core/util/price_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spoto/data/models/user/user_model.dart';
+import 'package:spoto/presentation/blocs/user/user_bloc.dart';
 
 import '../../../../core/constant/images.dart';
 import '../../../../core/error/failures.dart';
@@ -57,9 +59,10 @@ class _FavoritesViewState extends State<FavoritesView> {
                               ),
                               IconButton(
                                   onPressed: () {
+                                    final userId = (context.read<UserBloc>().state.props.first as UserModel).id;
                                     context
                                         .read<FavoritesBloc>()
-                                        .add(const GetFavorites());
+                                        .add(GetFavorites(userId: userId));
                                   },
                                   icon: const Icon(Icons.refresh)),
                             ],

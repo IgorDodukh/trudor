@@ -31,7 +31,7 @@ class FirestoreService {
       Map<String, dynamic> updatedProducts =
       await typesenseService.searchProducts(
           const FilterProductParams(keyword: "", searchField: "name"));
-      return productResponseModelFromTypesense(updatedProducts);
+      return productResponseModelFromMap(updatedProducts);
     } catch (e) {
       EasyLoading.showError("Failed to add product: $e");
       throw ServerException(e.toString());
@@ -49,9 +49,26 @@ class FirestoreService {
       Map<String, dynamic> updatedProducts =
           await typesenseService.searchProducts(
               const FilterProductParams(keyword: "", searchField: "name"));
-      return productResponseModelFromTypesense(updatedProducts);
+      return productResponseModelFromMap(updatedProducts);
     } catch (e) {
       EasyLoading.showError("Failed to update product: $e");
+      throw ServerException(e.toString());
+    }
+  }
+
+  Future<List<FavoritesItemModel>> getProductsFromFavorites(List<FavoritesItemModel> favorites, String userId) async {
+    try {
+      final querySnapshot = await _firestore.collection('favorites').doc(userId).get();
+      final favoritesQuery = querySnapshot.data() as Map<String, dynamic>;
+      List<FavoritesItemModel> productsList = [];
+      for (String productId in favoritesQuery.keys) {
+        await getProduct(productId).then((value) => {
+          productsList.add(FavoritesItemModel.fromFirestoreJson(value)),
+        });
+        }
+      return productsList;
+    } catch (e) {
+      EasyLoading.showError("Failed to get products: $e");
       throw ServerException(e.toString());
     }
   }
@@ -130,17 +147,18 @@ class FirestoreService {
     }
   }
 
-  Future<void> getProduct(String productId) async {
+  Future<Map<String, dynamic>> getProduct(String productId) async {
     try {
       final doc = await _firestore.collection('products').doc(productId).get();
       if (doc.exists) {
         final data = doc.data() as Map<String, dynamic>;
-        print('Product: ${data['name']}, ${data['description']}');
+        return data;
       } else {
-        print('Product not found');
+        throw Exception("Product not found by id $productId");
       }
     } catch (e) {
       EasyLoading.showError("Failed to get product details: $e");
+      throw ServerException(e.toString());
     }
   }
 
@@ -149,7 +167,7 @@ class FirestoreService {
     try {
       final foundProducts = typesenseService
           .searchProducts(params)
-          .then((value) => productResponseModelFromTypesense(value));
+          .then((value) => productResponseModelFromMap(value));
       return foundProducts;
     } catch (e) {
       EasyLoading.showError("Failed to get products: $e");

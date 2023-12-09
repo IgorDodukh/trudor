@@ -13,7 +13,7 @@ ProductResponseModel productResponseModelFromJson(String str) =>
 ProductResponseModel productResponseModelFromFirestore(QuerySnapshot querySnapshot) =>
     ProductResponseModel.fromFirebase(querySnapshot);
 
-ProductResponseModel productResponseModelFromTypesense(Map<String, dynamic> result) =>
+ProductResponseModel productResponseModelFromMap(Map<String, dynamic> result) =>
     ProductResponseModel.fromTypesense(result);
 
 String productResponseModelToJson(ProductResponseModel data) =>
