@@ -137,7 +137,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                               style: const TextStyle(fontSize: 16),
                             ),
                             Text(
-                              '\$${state.favorites.fold(0.00, (previousValue, element) => NumberHandler.roundDouble(element.priceTag.price + previousValue, 2))}',
+                              '${NumberHandler.formatPrice(state.favorites.fold(0.00, (previousValue, element) => (element.priceTag.price + previousValue)))} €',
                               style: const TextStyle(
                                   fontSize: 18, fontWeight: FontWeight.w500),
                             ),

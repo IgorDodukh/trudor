@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:spoto/core/constant/collections.dart';
 import 'package:spoto/core/constant/messages.dart';
-import 'package:spoto/core/constant/strings.dart';
+import 'package:spoto/core/util/price_handler.dart';
 import 'package:spoto/data/models/category/category_model.dart';
 import 'package:spoto/data/models/product/price_tag_model.dart';
 import 'package:spoto/data/models/product/product_model.dart';
@@ -54,13 +54,13 @@ class _AddProductFormState extends State<AddProductForm> {
       id = widget.productInfo!.id;
       name.text = existingProduct?.name ?? "";
       description.text = existingProduct?.description ?? "";
-      priceTags.text = existingProduct?.priceTags.first.price.toString() ?? "";
       images = existingProduct?.images ?? [];
       setState(() {
         isNew = existingProduct?.isNew;
         initialLabelIndex = isNew != null ? (isNew! ? 0 : 1) : null;
         selectedCategory = existingProduct?.categories.first;
       });
+      priceTags.text = NumberHandler.formatPrice(existingProduct!.priceTags.first.price);
     }
     super.initState();
   }
@@ -123,8 +123,7 @@ class _AddProductFormState extends State<AddProductForm> {
           },
         ),
         if (isNew == null && isPublishPressed)
-          const Text(typeValidation,
-              style: TextStyle(color: Colors.red)),
+          const Text(typeValidation, style: TextStyle(color: Colors.red)),
       ],
     );
   }
@@ -168,7 +167,7 @@ class _AddProductFormState extends State<AddProductForm> {
     return InputTextFormField(
       controller: priceTags,
       hint: priceHint,
-      maxCharacters: 20121,
+      maxCharacters: 13,
       textInputType: const TextInputType.numberWithOptions(decimal: true),
       contentPadding: const EdgeInsets.symmetric(horizontal: 12),
       validation: (String? val) {
@@ -198,7 +197,9 @@ class _AddProductFormState extends State<AddProductForm> {
               status: ProductStatus.active,
               priceTags: [
                 PriceTagModel(
-                    id: '1', name: "base", price: int.parse(priceTags.text))
+                    id: '1',
+                    name: "base",
+                    price: double.parse(priceTags.text.replaceAll(",", ".")))
               ],
               categories: [CategoryModel.fromEntity(selectedCategory!)],
               category: selectedCategory!.name,
@@ -229,11 +230,13 @@ class _AddProductFormState extends State<AddProductForm> {
               status: ProductStatus.active,
               priceTags: [
                 PriceTagModel(
-                    id: '1', name: "base", price: int.parse(priceTags.text))
+                    id: '1',
+                    name: "base",
+                    price: double.parse(priceTags.text.replaceAll(",", ".")))
               ],
               categories: [CategoryModel.fromEntity(selectedCategory!)],
               category: selectedCategory!.name,
-              images: images.isEmpty ? [noImagePlaceholder] : images,
+              images: images.isEmpty ? [] : images,
               createdAt: widget.productInfo!.createdAt,
               updatedAt: DateTime.now());
           context.read<ProductBloc>().add(UpdateProduct(updatedModel));
@@ -285,20 +288,19 @@ class _AddProductFormState extends State<AddProductForm> {
     return Future(() => null);
   }
 
-  Widget saveDraftButton(){
+  Widget saveDraftButton() {
     return InputFormButton(
       color: Colors.black26,
       onClick: () {
         context.read<NavbarCubit>().controller.animateToPage(0,
-            duration: const Duration(milliseconds: 400),
-            curve: Curves.linear);
+            duration: const Duration(milliseconds: 400), curve: Curves.linear);
         context.read<NavbarCubit>().update(0);
       },
       titleText: saveDraftTitle,
     );
   }
 
-  Widget cancelButton(){
+  Widget cancelButton() {
     return InputFormButton(
       color: Colors.black87,
       onClick: () {
@@ -320,75 +322,71 @@ class _AddProductFormState extends State<AddProductForm> {
       ),
       height: MediaQuery.of(context).size.height * 0.8,
       child: Center(
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 24,
+          child: Column(
+        children: [
+          const SizedBox(
+            height: 24,
+          ),
+          Center(
+            child: Text(
+              widget.productInfo == null ? addPublication : updatePublication,
+              style: const TextStyle(fontSize: 26),
             ),
-            Center(
-              child: Text(
-                widget.productInfo == null
-                    ? addPublication
-                    : updatePublication,
-                style: const TextStyle(fontSize: 26),
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context)
-                  .viewInsets
-                  .bottom > 0 ? MediaQuery.of(context).size.height * 0.586 : MediaQuery.of(context).size.height * 0.728,
-              child: Form(
-                key: _formKey,
-                child: ListView(
-                  physics: const BouncingScrollPhysics(),
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 0),
-                      child: Column(
-                        children: [
-                          ImageUploadForm(
-                              onImagesUploaded: _handleImageUpload,
-                              existingImages: images),
-                        ],
-                      ),
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).viewInsets.bottom > 0
+                ? MediaQuery.of(context).size.height * 0.586
+                : MediaQuery.of(context).size.height * 0.728,
+            child: Form(
+              key: _formKey,
+              child: ListView(
+                physics: const BouncingScrollPhysics(),
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 0),
+                    child: Column(
+                      children: [
+                        ImageUploadForm(
+                            onImagesUploaded: _handleImageUpload,
+                            existingImages: images),
+                      ],
                     ),
-                    Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Column(children: [
-                          formDivider(),
-                          titleField(),
-                          formDivider(),
-                          descriptionField(),
-                          formDivider(),
-                          productTypeToggle(),
-                          formDivider(),
-                          priceField(),
-                          formDivider(),
-                          CategoriesDropdownMenu(
-                            onCategorySelected: _handleCategorySelection,
-                            existingCategory: selectedCategory,
-                          ),
-                          formDivider(),
-                          // formDivider(),
-                          widget.productInfo == null
-                              ? addProductButton()
-                              : updateProductButton(),
-                          formDivider(),
-                          // saveDraftButton(),
-                          // formDivider(),
-                          cancelButton(),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                        ])),
-                  ],
-                ),
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Column(children: [
+                        formDivider(),
+                        titleField(),
+                        formDivider(),
+                        descriptionField(),
+                        formDivider(),
+                        productTypeToggle(),
+                        formDivider(),
+                        priceField(),
+                        formDivider(),
+                        CategoriesDropdownMenu(
+                          onCategorySelected: _handleCategorySelection,
+                          existingCategory: selectedCategory,
+                        ),
+                        formDivider(),
+                        // formDivider(),
+                        widget.productInfo == null
+                            ? addProductButton()
+                            : updateProductButton(),
+                        formDivider(),
+                        // saveDraftButton(),
+                        // formDivider(),
+                        cancelButton(),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                      ])),
+                ],
               ),
             ),
-
-          ],
-        )
-      ),
+          ),
+        ],
+      )),
     );
   }
 }

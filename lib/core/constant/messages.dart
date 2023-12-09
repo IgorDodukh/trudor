@@ -70,3 +70,6 @@ const String priceHint = "Price";
 const String priceValidation = "Please enter a price";
 const String typeValidation = "Please select a type";
 const String categoryValidation = "Please select a category";
+
+// home view
+const String searchProductHint = "Search Product";

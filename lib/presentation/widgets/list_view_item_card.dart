@@ -6,6 +6,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:spoto/core/constant/collections.dart';
 import 'package:spoto/core/constant/messages.dart';
 import 'package:spoto/core/constant/strings.dart';
+import 'package:spoto/core/util/price_handler.dart';
 import 'package:spoto/data/models/category/category_model.dart';
 import 'package:spoto/data/models/product/price_tag_model.dart';
 import 'package:spoto/data/models/product/product_model.dart';
@@ -73,9 +74,7 @@ class ListViewItemCard extends StatelessWidget {
                       PriceTagModel(
                           id: '1',
                           name: "base",
-                          price: int.parse(listViewItem!
-                              .product.priceTags.first.price
-                              .toString()))
+                          price: listViewItem!.product.priceTags.first.price)
                     ],
                     categories: [
                       CategoryModel.fromEntity(
@@ -117,9 +116,7 @@ class ListViewItemCard extends StatelessWidget {
                       PriceTagModel(
                           id: '1',
                           name: "base",
-                          price: int.parse(listViewItem!
-                              .product.priceTags.first.price
-                              .toString()))
+                          price: listViewItem!.product.priceTags.first.price)
                     ],
                     categories: [
                       CategoryModel.fromEntity(
@@ -280,8 +277,7 @@ class ListViewItemCard extends StatelessWidget {
                                     ),
                                   )
                                 : Text(
-                                    r'$' +
-                                        listViewItem!.priceTag.price.toString(),
+                                    '${NumberHandler.formatPrice(listViewItem!.priceTag.price)} €',
                                     style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,

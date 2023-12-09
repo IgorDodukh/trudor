@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:spoto/core/constant/messages.dart';
 
 import '../../../../core/constant/images.dart';
 import '../../../../core/error/failures.dart';
@@ -189,12 +190,14 @@ class _HomeViewState extends State<HomeView> {
                                           context
                                               .read<FilterCubit>()
                                               .update(keyword: '');
+                                          context.read<ProductBloc>().add(
+                                              const GetProducts(FilterProductParams()));
                                         },
                                         icon: const Icon(Icons.clear)),
                                   )
                                 : null,
                             border: const OutlineInputBorder(),
-                            hintText: "Search Product",
+                            hintText: searchProductHint,
                             fillColor: Colors.grey.shade100,
                             filled: true,
                             focusedBorder: OutlineInputBorder(

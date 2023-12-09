@@ -10,6 +10,7 @@ import 'package:spoto/core/constant/collections.dart';
 import 'package:spoto/core/constant/images.dart';
 import 'package:spoto/core/constant/messages.dart';
 import 'package:spoto/core/constant/strings.dart';
+import 'package:spoto/core/util/price_handler.dart';
 import 'package:spoto/data/models/category/category_model.dart';
 import 'package:spoto/data/models/product/price_tag_model.dart';
 import 'package:spoto/data/models/product/product_model.dart';
@@ -386,8 +387,9 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+
                 Text(
-                  '${_selectedPriceTag.price} €',
+                  '${NumberHandler.formatPrice(_selectedPriceTag.price)} €',
                   style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18,

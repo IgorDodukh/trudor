@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:spoto/core/constant/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:spoto/core/util/price_handler.dart';
 
 import '../../core/router/app_router.dart';
 import '../../domain/entities/product/product.dart';
@@ -127,7 +128,7 @@ class ProductCard extends StatelessWidget {
                           ),
                         )
                       : Text(
-                          r'$' + product!.priceTags.first.price.toString(),
+                          '${NumberHandler.formatPrice(product!.priceTags.first.price)} €',
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
