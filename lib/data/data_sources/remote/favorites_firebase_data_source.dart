@@ -7,7 +7,7 @@ import '../../models/favorites/favorites_item_model.dart';
 abstract class FavoritesFirebaseDataSource {
   Future<FavoritesItemModel> addToFavorites(FavoritesItemModel favoritesItem);
   Future<FavoritesItemModel> removeFromFavorites(FavoritesItemModel favoritesItem);
-  Future<List<FavoritesItemModel>> syncFavorites(List<FavoritesItemModel> favorites, String userId);
+  Future<List<FavoritesItemModel>> syncFavorites(String userId);
 }
 
 class FavoritesFirebaseDataSourceSourceImpl implements FavoritesFirebaseDataSource {
@@ -30,8 +30,8 @@ class FavoritesFirebaseDataSourceSourceImpl implements FavoritesFirebaseDataSour
   }
 
   @override
-  Future<List<FavoritesItemModel>> syncFavorites(List<FavoritesItemModel> favorites, String userId) async {
+  Future<List<FavoritesItemModel>> syncFavorites(String userId) async {
     FirestoreService firestoreService = FirestoreService();
-    return firestoreService.getProductsFromFavorites(favorites, userId);
+    return firestoreService.getProductsFromFavorites(userId);
   }
 }

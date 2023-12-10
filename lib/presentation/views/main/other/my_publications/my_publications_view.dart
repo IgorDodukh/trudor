@@ -2,6 +2,7 @@ import 'package:basic_utils/basic_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:spoto/core/constant/messages.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:spoto/core/constant/collections.dart';
 import 'package:spoto/core/constant/images.dart';
@@ -69,7 +70,7 @@ class _MyPublicationsViewState extends State<MyPublicationsView> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         surfaceTintColor: Theme.of(context).scaffoldBackgroundColor,
-        title: const Text('My publications'),
+        title: const Text(publicationsTitle),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),

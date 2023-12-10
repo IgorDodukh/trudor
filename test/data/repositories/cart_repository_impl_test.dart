@@ -67,7 +67,7 @@ void main() {
             .thenAnswer((invocation) => Future.value(true));
         when(() => mockUserLocalDataSource.getToken())
             .thenAnswer((invocation) => Future.value('token'));
-        when(() => mockRemoteDataSource.syncFavorites([tFavoritesItemModel]))
+        when(() => mockRemoteDataSource.syncFavorites("id"))
             .thenAnswer((_) async => [tFavoritesItemModel]);
         when(() => mockLocalDataSource.getFavorites())
             .thenAnswer((_) async => [tFavoritesItemModel]);
@@ -93,7 +93,7 @@ void main() {
               .thenAnswer((invocation) => Future.value(true));
           when(() => mockUserLocalDataSource.getToken())
               .thenAnswer((invocation) => Future.value('token'));
-          when(() => mockRemoteDataSource.syncFavorites([tFavoritesItemModel]))
+          when(() => mockRemoteDataSource.syncFavorites("id"))
               .thenAnswer((_) async => [tFavoritesItemModel]);
           when(() => mockLocalDataSource.getFavorites())
               .thenAnswer((_) async => [tFavoritesItemModel]);
@@ -119,7 +119,7 @@ void main() {
               .thenAnswer((invocation) => Future.value(true));
           when(() => mockUserLocalDataSource.getToken())
               .thenAnswer((invocation) => Future.value('token'));
-          when(() => mockRemoteDataSource.syncFavorites([tFavoritesItemModel]))
+          when(() => mockRemoteDataSource.syncFavorites("id"))
               .thenAnswer((_) async => [tFavoritesItemModel]);
           when(() => mockLocalDataSource.getFavorites())
               .thenAnswer((_) async => [tFavoritesItemModel]);
@@ -142,7 +142,7 @@ void main() {
               .thenAnswer((invocation) => Future.value(true));
           when(() => mockUserLocalDataSource.getToken())
               .thenAnswer((invocation) => Future.value('token'));
-          when(() => mockRemoteDataSource.syncFavorites([tFavoritesItemModel]))
+          when(() => mockRemoteDataSource.syncFavorites("id"))
               .thenThrow(ServerFailure());
           when(() => mockLocalDataSource.getFavorites())
               .thenAnswer((_) async => [tFavoritesItemModel]);
@@ -168,7 +168,7 @@ void main() {
               .thenAnswer((invocation) => Future.value(true));
           when(() => mockUserLocalDataSource.getToken())
               .thenAnswer((invocation) => Future.value('token'));
-          when(() => mockRemoteDataSource.syncFavorites([]))
+          when(() => mockRemoteDataSource.syncFavorites(""))
               .thenAnswer((_) async => [tFavoritesItemModel]);
           when(() => mockLocalDataSource.getFavorites()).thenThrow(CacheFailure());
           when(() => mockLocalDataSource.saveFavorites([tFavoritesItemModel]))

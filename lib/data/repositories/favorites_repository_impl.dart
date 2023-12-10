@@ -67,13 +67,14 @@ class FavoritesRepositoryImpl implements FavoritesRepository {
     if (await networkInfo.isConnected) {
       if (await userLocalDataSource.isTokenAvailable()) {
         String userId = await userLocalDataSource.getUser().then((value) => value.id);
-        List<FavoritesItemModel> localFavoritesItems = [];
-        try {
-          localFavoritesItems = await localDataSource.getFavorites();
-        } on Failure catch (_) {}
+        // temporary commented storing favorites locally
+        // List<FavoritesItemModel> localFavoritesItems = [];
+        // try {
+        //   localFavoritesItems = await localDataSource.getFavorites();
+        // } on Failure catch (_) {}
         try {
           final syncedResult = await firebaseDataSource.syncFavorites(
-            localFavoritesItems,
+            // localFavoritesItems,
             userId
           );
           await localDataSource.saveFavorites(syncedResult);

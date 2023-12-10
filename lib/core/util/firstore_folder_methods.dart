@@ -29,8 +29,8 @@ class FirestoreService {
       await productRef.set(productData);
 
       Map<String, dynamic> updatedProducts =
-      await typesenseService.searchProducts(
-          const FilterProductParams(keyword: "", searchField: "name"));
+          await typesenseService.searchProducts(
+              const FilterProductParams(keyword: "", searchField: "name"));
       return productResponseModelFromMap(updatedProducts);
     } catch (e) {
       EasyLoading.showError("Failed to add product: $e");
@@ -56,16 +56,20 @@ class FirestoreService {
     }
   }
 
-  Future<List<FavoritesItemModel>> getProductsFromFavorites(List<FavoritesItemModel> favorites, String userId) async {
+  Future<List<FavoritesItemModel>> getProductsFromFavorites(
+      String userId) async {
     try {
-      final querySnapshot = await _firestore.collection('favorites').doc(userId).get();
+      final querySnapshot =
+          await _firestore.collection('favorites').doc(userId).get();
       final favoritesQuery = querySnapshot.data() as Map<String, dynamic>;
       List<FavoritesItemModel> productsList = [];
       for (String productId in favoritesQuery.keys) {
-        await getProduct(productId).then((value) => {
-          productsList.add(FavoritesItemModel.fromFirestoreJson(value)),
-        });
+        if (favoritesQuery[productId] == true) {
+          await getProduct(productId).then((value) => {
+                productsList.add(FavoritesItemModel.fromFirestoreJson(value)),
+              });
         }
+      }
       return productsList;
     } catch (e) {
       EasyLoading.showError("Failed to get products: $e");

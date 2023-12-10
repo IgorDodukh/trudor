@@ -1,11 +1,11 @@
 // favorites
 const String addedToFavoritesTitle = "Successfully added to Favorites";
 const String removedFromFavoritesTitle = "Successfully removed from Favorites";
+const String noFavoritesYet = "You don't have Favorites yet!";
 
 // delivery info
 const String addDeliveryInfoSuccess = "Delivery info successfully added!";
 const String updateDeliveryInfoSuccess = "Delivery info successfully updated!";
-const String deliveryDetailsTitle = "Delivery Details";
 const String addDeliveryDetails = "Add Delivery Details";
 const String updateDeliveryDetails = "Update Delivery Details";
 
@@ -58,8 +58,6 @@ const String cancelTitle = "Cancel";
 
 // add publication form
 const String fieldCantBeEmpty = "This field can't be empty";
-const String addPublication = "Add Publication";
-const String updatePublication = "Update Publication";
 
 // add publication form - title
 const String nameHint = "Name";
@@ -73,3 +71,11 @@ const String categoryValidation = "Please select a category";
 
 // home view
 const String searchProductHint = "Search Product";
+
+// page titles
+const String profileTitle = "Profile";
+const String favoritesTitle = "Favorites";
+const String publicationsTitle = "Publications";
+const String addPublication = "Add Publication";
+const String updatePublication = "Update Publication";
+const String deliveryDetailsTitle = "Delivery Details";

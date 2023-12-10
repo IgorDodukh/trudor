@@ -8,20 +8,19 @@ import '../../../core/usecases/usecase.dart';
 import '../../../domain/entities/favorites/favorites_item.dart';
 import '../../../domain/usecases/favorites/add_favorites_item_usecase.dart';
 import '../../../domain/usecases/favorites/clear_favorites_usecase.dart';
-import '../../../domain/usecases/favorites/get_cached_favorites_usecase.dart';
 import '../../../domain/usecases/favorites/sync_favorites_usecase.dart';
 
 part 'favorites_event.dart';
 part 'favorites_state.dart';
 
 class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
-  final GetCachedFavoritesUseCase _getCachedFavoritesUseCase;
+  // final GetCachedFavoritesUseCase _getCachedFavoritesUseCase;
   final AddFavoritesUseCase _addFavoritesUseCase;
   final SyncFavoritesUseCase _syncFavoritesUseCase;
   final ClearFavoritesUseCase _clearFavoritesUseCase;
   final RemoveFavoritesItemUseCase _removeFavoritesItemUseCase;
   FavoritesBloc(
-    this._getCachedFavoritesUseCase,
+    // this._getCachedFavoritesUseCase,
     this._addFavoritesUseCase,
     this._syncFavoritesUseCase,
     this._clearFavoritesUseCase,
@@ -36,11 +35,12 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
   void _onGetFavorites(GetFavorites event, Emitter<FavoritesState> emit) async {
     emit(FavoritesLoading(favorites: state.favorites));
     try {
-      final result = await _getCachedFavoritesUseCase(NoParams());
-      result.fold(
-        (failure) => emit(FavoritesError(favorites: state.favorites, failure: failure)),
-        (favorites) => emit(FavoritesLoaded(favorites: favorites)),
-      );
+      // temporary comment work with cached favorites
+      // final result = await _getCachedFavoritesUseCase(NoParams());
+      // result.fold(
+      //   (failure) => emit(FavoritesError(favorites: state.favorites, failure: failure)),
+      //   (favorites) => emit(FavoritesLoaded(favorites: favorites)),
+      // );
       final syncResult = await _syncFavoritesUseCase(NoParams());
       emit(FavoritesLoading(favorites: state.favorites));
       syncResult.fold(

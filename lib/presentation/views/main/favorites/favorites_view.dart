@@ -1,5 +1,6 @@
 // import 'dart:js_interop';
 
+import 'package:spoto/core/constant/messages.dart';
 import 'package:spoto/core/util/price_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,7 +9,6 @@ import 'package:spoto/presentation/blocs/user/user_bloc.dart';
 
 import '../../../../core/constant/images.dart';
 import '../../../../core/error/failures.dart';
-import '../../../../domain/entities/favorites/favorites_item.dart';
 import '../../../blocs/favorites/favorites_bloc.dart';
 import '../../../widgets/list_view_item_card.dart';
 
@@ -20,8 +20,30 @@ class FavoritesView extends StatefulWidget {
 }
 
 class _FavoritesViewState extends State<FavoritesView> {
-  List<ListViewItem> selectedFavoritesItems = [];
-  // TODO: ISSUE!!! Favorites list shows updated products with old values. Probably from local storage
+
+  final ScrollController scrollController = ScrollController();
+
+  void _scrollListener() {
+    double maxScroll = scrollController.position.maxScrollExtent;
+    double currentScroll = scrollController.position.pixels;
+    double scrollPercentage = 0.7;
+    if (currentScroll > (maxScroll * scrollPercentage)) {
+      if (context.read<FavoritesBloc>().state is FavoritesLoaded) {
+        context.read<FavoritesBloc>().add(const GetFavorites());
+      }
+    }
+  }
+
+  void _loadProducts() {
+    context.read<FavoritesBloc>().add(const GetFavorites());
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProducts();
+    scrollController.addListener(_scrollListener);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +54,10 @@ class _FavoritesViewState extends State<FavoritesView> {
           children: [
             Column(
               children: [
-                // SizedBox(
-                //   height: (MediaQuery.of(context).padding.top + 10),
-                // ),
+                SizedBox(
+                  height: (MediaQuery.of(context).padding.top + 10),
+                ),
+                const Text(favoritesTitle, style: TextStyle(fontSize: 24)),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -52,7 +75,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                               if (state.failure is ExceptionFailure)
                                 Image.asset(kInternalServerError),
                               Text(state.failure.toString()),
-                              const Text("You don't have Favorites yet!"),
+                              const Text(noFavoritesYet),
                               SizedBox(
                                 height:
                                     MediaQuery.of(context).size.height * 0.1,
@@ -73,7 +96,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Image.asset(kEmptyFavorites),
-                              const Text("You don't have Favorites yet!"),
+                              const Text(noFavoritesYet),
                               SizedBox(
                                 height:
                                     MediaQuery.of(context).size.height * 0.1,
@@ -82,13 +105,10 @@ class _FavoritesViewState extends State<FavoritesView> {
                           );
                         }
                         return ListView.builder(
-                          itemCount: (state is FavoritesLoading &&
-                                  state.favorites.isEmpty)
-                              ? 10
-                              : (state.favorites.length +
-                                  ((state is FavoritesLoading) ? 10 : 0)),
+                          itemCount: state.favorites.length < 11 ? state.favorites.length : state.favorites.length +
+                              ((state is FavoritesLoading) ? 10 : 0),
                           padding: EdgeInsets.only(
-                              top: (MediaQuery.of(context).padding.top + 20),
+                              top: (MediaQuery.of(context).padding.top - 30),
                               bottom:
                                   MediaQuery.of(context).padding.bottom + 200),
                           physics: const BouncingScrollPhysics(),
