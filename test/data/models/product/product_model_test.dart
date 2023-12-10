@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:trudor/data/models/product/product_model.dart';
-import 'package:trudor/domain/entities/product/product.dart';
+import 'package:spoto/data/models/product/product_model.dart';
+import 'package:spoto/domain/entities/product/product.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../fixtures/constant_objects.dart';

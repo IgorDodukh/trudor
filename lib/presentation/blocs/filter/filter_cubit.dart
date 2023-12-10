@@ -10,6 +10,7 @@ class FilterCubit extends Cubit<FilterProductParams> {
 
   void update({
     String? keyword,
+    String? searchField,
     List<Category>? categories,
     Category? category,
   }) {
@@ -23,6 +24,7 @@ class FilterCubit extends Cubit<FilterProductParams> {
     }
     emit(FilterProductParams(
       keyword: keyword ?? state.keyword,
+      searchField: searchField ?? state.searchField,
       categories: updatedCategories,
     ));
   }

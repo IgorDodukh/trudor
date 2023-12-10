@@ -1,16 +1,19 @@
-import 'package:trudor/core/error/failures.dart';
-import 'package:trudor/data/repositories/auth/google_auth_repository.dart';
-import 'package:trudor/domain/auth/google_auth.dart';
-import 'package:trudor/domain/usecases/auth/google_auth_usecase.dart';
+import 'package:spoto/core/constant/messages.dart';
+import 'package:spoto/core/error/failures.dart';
+import 'package:spoto/data/models/user/user_model.dart';
+import 'package:spoto/data/repositories/auth/google_auth_repository.dart';
+import 'package:spoto/domain/auth/google_auth.dart';
+import 'package:spoto/domain/usecases/auth/google_auth_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:sign_in_button/sign_in_button.dart';
+import 'package:spoto/presentation/blocs/home/navbar_cubit.dart';
 
 import '../../../core/constant/images.dart';
 import '../../../core/router/app_router.dart';
 import '../../../domain/usecases/user/sign_in_usecase.dart';
-import '../../blocs/cart/cart_bloc.dart';
+import '../../blocs/favorites/favorites_bloc.dart';
 import '../../blocs/user/user_bloc.dart';
 import '../../widgets/input_form_button.dart';
 import '../../widgets/input_text_form_field.dart';
@@ -33,19 +36,19 @@ class _SignInViewState extends State<SignInView> {
       listener: (context, state) {
         EasyLoading.dismiss();
         if (state is UserLoading) {
-          EasyLoading.show(status: 'Loading...');
+          EasyLoading.show(status: loadingTitle);
         } else if (state is UserLogged) {
-          context.read<CartBloc>().add(const GetCart());
+          final userId = (context.read<UserBloc>().state.props.first as UserModel).id;
+          context.read<FavoritesBloc>().add(GetFavorites(userId: userId));
           Navigator.of(context).pushNamedAndRemoveUntil(
             AppRouter.home,
             ModalRoute.withName(''),
           );
         } else if (state is UserLoggedFail) {
-          print(state.failure);
           if (state.failure is CredentialFailure) {
             EasyLoading.showError("Username/Password Wrong!");
           } else {
-            EasyLoading.showError("Error ${state}");
+            EasyLoading.showError("Error $state");
           }
         }
       },
@@ -87,7 +90,7 @@ class _SignInViewState extends State<SignInView> {
                     hint: 'Email',
                     validation: (String? val) {
                       if (val == null || val.isEmpty) {
-                        return 'This field can\'t be empty';
+                        return fieldCantBeEmpty;
                       }
                       return null;
                     },
@@ -101,7 +104,7 @@ class _SignInViewState extends State<SignInView> {
                     isSecureField: true,
                     validation: (String? val) {
                       if (val == null || val.isEmpty) {
-                        return 'This field can\'t be empty';
+                        return fieldCantBeEmpty;
                       }
                       return null;
                     },
@@ -152,23 +155,26 @@ class _SignInViewState extends State<SignInView> {
                     height: 24,
                   ),
                   SizedBox(
-                    width: 300,
+                    width: double.maxFinite,
                     height: 50,
                     child: SignInButton(
                       Buttons.google,
-                      elevation: 2,
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.0)),
                       text: "Continue with Google",
                       onPressed: () async {
-                        // if (_formKey.currentState!.validate()) {
                         final GoogleAuthRepository googleAuthRepository = GoogleAuthRepository();
                         final GoogleAuth? googleSignInUser = await googleAuthRepository.signIn();
-                        context.read<UserBloc>().add(GoogleSignInUser(SignInGoogleParams(
-                            id: googleSignInUser!.id,
-                            displayName: googleSignInUser.displayName,
-                            email: googleSignInUser.email
-                        )));
-                        // }
-                        Navigator.pushNamed(context, AppRouter.home);
+                        if (googleSignInUser != null) {
+                          context.read<UserBloc>().add(GoogleSignInUser(SignInGoogleParams(
+                              id: googleSignInUser.id,
+                              displayName: googleSignInUser.displayName,
+                              email: googleSignInUser.email
+                          )));
+                          Navigator.pushNamed(context, AppRouter.home);
+                          context.read<NavbarCubit>().update(0);
+                        }
                       }
                     ),
                   ),

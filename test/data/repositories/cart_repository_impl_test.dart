@@ -1,24 +1,24 @@
-import 'package:trudor/core/error/failures.dart';
-import 'package:trudor/core/network/network_info.dart';
-import 'package:trudor/data/data_sources/local/cart_local_data_source.dart';
-import 'package:trudor/data/data_sources/local/user_local_data_source.dart';
-import 'package:trudor/data/data_sources/remote/cart_firebase_data_source.dart';
-import 'package:trudor/data/repositories/cart_repository_impl.dart';
+import 'package:spoto/core/error/failures.dart';
+import 'package:spoto/core/network/network_info.dart';
+import 'package:spoto/data/data_sources/local/favorites_local_data_source.dart';
+import 'package:spoto/data/data_sources/local/user_local_data_source.dart';
+import 'package:spoto/data/data_sources/remote/favorites_firebase_data_source.dart';
+import 'package:spoto/data/repositories/favorites_repository_impl.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../fixtures/constant_objects.dart';
 
-class MockRemoteDataSource extends Mock implements CartFirebaseDataSource {}
+class MockRemoteDataSource extends Mock implements FavoritesFirebaseDataSource {}
 
-class MockLocalDataSource extends Mock implements CartLocalDataSource {}
+class MockLocalDataSource extends Mock implements FavoritesLocalDataSource {}
 
 class MockUserLocalDataSource extends Mock implements UserLocalDataSource {}
 
 class MockNetworkInfo extends Mock implements NetworkInfo {}
 
 void main() {
-  late CartRepositoryImpl repository;
+  late FavoritesRepositoryImpl repository;
   late MockRemoteDataSource mockRemoteDataSource;
   late MockLocalDataSource mockLocalDataSource;
   late MockUserLocalDataSource mockUserLocalDataSource;
@@ -29,7 +29,7 @@ void main() {
     mockLocalDataSource = MockLocalDataSource();
     mockUserLocalDataSource = MockUserLocalDataSource();
     mockNetworkInfo = MockNetworkInfo();
-    repository = CartRepositoryImpl(
+    repository = FavoritesRepositoryImpl(
       firebaseDataSource: mockRemoteDataSource,
       localDataSource: mockLocalDataSource,
       networkInfo: mockNetworkInfo,
@@ -67,15 +67,15 @@ void main() {
             .thenAnswer((invocation) => Future.value(true));
         when(() => mockUserLocalDataSource.getToken())
             .thenAnswer((invocation) => Future.value('token'));
-        when(() => mockRemoteDataSource.syncCart([tCartItemModel]))
-            .thenAnswer((_) async => [tCartItemModel]);
-        when(() => mockLocalDataSource.getCart())
-            .thenAnswer((_) async => [tCartItemModel]);
-        when(() => mockLocalDataSource.saveCart([tCartItemModel]))
+        when(() => mockRemoteDataSource.syncFavorites("id"))
+            .thenAnswer((_) async => [tFavoritesItemModel]);
+        when(() => mockLocalDataSource.getFavorites())
+            .thenAnswer((_) async => [tFavoritesItemModel]);
+        when(() => mockLocalDataSource.saveFavorites([tFavoritesItemModel]))
             .thenAnswer((invocation) => Future<void>.value());
 
         /// Act
-        repository.syncCart();
+        repository.syncFavorites();
 
         /// Assert
         verify(() => mockNetworkInfo.isConnected);
@@ -84,29 +84,29 @@ void main() {
   });
 
   runTestsOnline(() {
-    group('syncCart', () {
+    group('syncFavorites', () {
       test(
-        'should return remote data when the call to remote sync cart data source is successful',
+        'should return remote data when the call to remote sync Favorites data source is successful',
         () async {
           /// Arrange
           when(() => mockUserLocalDataSource.isTokenAvailable())
               .thenAnswer((invocation) => Future.value(true));
           when(() => mockUserLocalDataSource.getToken())
               .thenAnswer((invocation) => Future.value('token'));
-          when(() => mockRemoteDataSource.syncCart([tCartItemModel]))
-              .thenAnswer((_) async => [tCartItemModel]);
-          when(() => mockLocalDataSource.getCart())
-              .thenAnswer((_) async => [tCartItemModel]);
-          when(() => mockLocalDataSource.saveCart([tCartItemModel]))
+          when(() => mockRemoteDataSource.syncFavorites("id"))
+              .thenAnswer((_) async => [tFavoritesItemModel]);
+          when(() => mockLocalDataSource.getFavorites())
+              .thenAnswer((_) async => [tFavoritesItemModel]);
+          when(() => mockLocalDataSource.saveFavorites([tFavoritesItemModel]))
               .thenAnswer((invocation) => Future<void>.value());
 
           /// Act
-          final actualResult = await repository.syncCart();
+          final actualResult = await repository.syncFavorites();
 
           /// Assert
           actualResult.fold(
             (left) => fail('test failed'),
-            (right) => expect(right, [tCartItemModel]),
+            (right) => expect(right, [tFavoritesItemModel]),
           );
         },
       );
@@ -119,18 +119,18 @@ void main() {
               .thenAnswer((invocation) => Future.value(true));
           when(() => mockUserLocalDataSource.getToken())
               .thenAnswer((invocation) => Future.value('token'));
-          when(() => mockRemoteDataSource.syncCart([tCartItemModel]))
-              .thenAnswer((_) async => [tCartItemModel]);
-          when(() => mockLocalDataSource.getCart())
-              .thenAnswer((_) async => [tCartItemModel]);
-          when(() => mockLocalDataSource.saveCart([tCartItemModel]))
+          when(() => mockRemoteDataSource.syncFavorites("id"))
+              .thenAnswer((_) async => [tFavoritesItemModel]);
+          when(() => mockLocalDataSource.getFavorites())
+              .thenAnswer((_) async => [tFavoritesItemModel]);
+          when(() => mockLocalDataSource.saveFavorites([tFavoritesItemModel]))
               .thenAnswer((invocation) => Future<void>.value());
 
           /// Act
-          await repository.syncCart();
+          await repository.syncFavorites();
 
           /// Assert
-          verify(() => mockLocalDataSource.saveCart([tCartItemModel]));
+          verify(() => mockLocalDataSource.saveFavorites([tFavoritesItemModel]));
         },
       );
 
@@ -142,15 +142,15 @@ void main() {
               .thenAnswer((invocation) => Future.value(true));
           when(() => mockUserLocalDataSource.getToken())
               .thenAnswer((invocation) => Future.value('token'));
-          when(() => mockRemoteDataSource.syncCart([tCartItemModel]))
+          when(() => mockRemoteDataSource.syncFavorites("id"))
               .thenThrow(ServerFailure());
-          when(() => mockLocalDataSource.getCart())
-              .thenAnswer((_) async => [tCartItemModel]);
-          when(() => mockLocalDataSource.saveCart([tCartItemModel]))
+          when(() => mockLocalDataSource.getFavorites())
+              .thenAnswer((_) async => [tFavoritesItemModel]);
+          when(() => mockLocalDataSource.saveFavorites([tFavoritesItemModel]))
               .thenAnswer((invocation) => Future<void>.value());
 
           /// Act
-          final result = await repository.syncCart();
+          final result = await repository.syncFavorites();
 
           /// Assert
           result.fold(
@@ -161,46 +161,46 @@ void main() {
       );
 
       test(
-        'should sync remote cart successfully when the call to local data source is unsuccessful',
+        'should sync remote Favorites successfully when the call to local data source is unsuccessful',
         () async {
           /// Arrange
           when(() => mockUserLocalDataSource.isTokenAvailable())
               .thenAnswer((invocation) => Future.value(true));
           when(() => mockUserLocalDataSource.getToken())
               .thenAnswer((invocation) => Future.value('token'));
-          when(() => mockRemoteDataSource.syncCart([]))
-              .thenAnswer((_) async => [tCartItemModel]);
-          when(() => mockLocalDataSource.getCart()).thenThrow(CacheFailure());
-          when(() => mockLocalDataSource.saveCart([tCartItemModel]))
+          when(() => mockRemoteDataSource.syncFavorites(""))
+              .thenAnswer((_) async => [tFavoritesItemModel]);
+          when(() => mockLocalDataSource.getFavorites()).thenThrow(CacheFailure());
+          when(() => mockLocalDataSource.saveFavorites([tFavoritesItemModel]))
               .thenAnswer((invocation) => Future<void>.value());
 
           /// Act
-          final result = await repository.syncCart();
+          final result = await repository.syncFavorites();
 
           /// Assert
           result.fold(
             (left) => fail('test failed'),
-            (right) => expect(right, [tCartItemModel]),
+            (right) => expect(right, [tFavoritesItemModel]),
           );
         },
       );
     });
 
-    group('getCachedCart', () {
+    group('getCachedFavorites', () {
       test(
-        'should return local cached cart items data when the call to local data source is successful',
+        'should return local cached Favorites items data when the call to local data source is successful',
         () async {
           /// Arrange
-          when(() => mockLocalDataSource.getCart())
-              .thenAnswer((_) async => [tCartItemModel]);
+          when(() => mockLocalDataSource.getFavorites())
+              .thenAnswer((_) async => [tFavoritesItemModel]);
 
           /// Act
-          final actualResult = await repository.getCachedCart();
+          final actualResult = await repository.getCachedFavorites();
 
           /// Assert
           actualResult.fold(
             (left) => fail('test failed'),
-            (right) => expect(right, [tCartItemModel]),
+            (right) => expect(right, [tFavoritesItemModel]),
           );
         },
       );
@@ -209,10 +209,10 @@ void main() {
         'should return [CachedFailure] when the call to local data source is fail',
         () async {
           /// Arrange
-          when(() => mockLocalDataSource.getCart()).thenThrow(CacheFailure());
+          when(() => mockLocalDataSource.getFavorites()).thenThrow(CacheFailure());
 
           /// Act
-          final actualResult = await repository.getCachedCart();
+          final actualResult = await repository.getCachedFavorites();
 
           /// Assert
           actualResult.fold(
@@ -224,25 +224,25 @@ void main() {
     });
 
     test(
-      'should return [CartItem] when the call to [addToCart] remote method is successfully',
+      'should return [FavoritesItem] when the call to [addToFavorites] remote method is successfully',
       () async {
         /// Arrange
         when(() => mockUserLocalDataSource.isTokenAvailable())
             .thenAnswer((invocation) => Future.value(true));
         when(() => mockUserLocalDataSource.getToken())
             .thenAnswer((invocation) => Future.value('token'));
-        when(() => mockRemoteDataSource.addToFavorites(tCartItemModel))
-            .thenAnswer((_) async => tCartItemModel);
-        when(() => mockLocalDataSource.saveCartItem(tCartItemModel))
+        when(() => mockRemoteDataSource.addToFavorites(tFavoritesItemModel))
+            .thenAnswer((_) async => tFavoritesItemModel);
+        when(() => mockLocalDataSource.saveFavoritesItem(tFavoritesItemModel))
             .thenAnswer((invocation) => Future<void>.value());
 
         /// Act
-        final actualResult = await repository.addToCart(tCartItemModel);
+        final actualResult = await repository.addToFavorites(tFavoritesItemModel);
 
         /// Assert
         actualResult.fold(
           (left) => fail('test failed'),
-          (right) => expect(right, tCartItemModel),
+          (right) => expect(right, tFavoritesItemModel),
         );
       },
     );
@@ -253,7 +253,7 @@ void main() {
       'should return last locally cached data when the cached data is present',
       () async {
         /// Act
-        final result = await repository.syncCart();
+        final result = await repository.syncFavorites();
 
         /// Assert
         verifyZeroInteractions(mockRemoteDataSource);
@@ -269,16 +269,16 @@ void main() {
       'should return local cached data when the call to local data source is successful',
       () async {
         /// Arrange
-        when(() => mockLocalDataSource.getCart())
-            .thenAnswer((_) async => [tCartItemModel]);
+        when(() => mockLocalDataSource.getFavorites())
+            .thenAnswer((_) async => [tFavoritesItemModel]);
 
         /// Act
-        final actualResult = await repository.getCachedCart();
+        final actualResult = await repository.getCachedFavorites();
 
         /// Assert
         actualResult.fold(
           (left) => fail('test failed'),
-          (right) => expect(right, [tCartItemModel]),
+          (right) => expect(right, [tFavoritesItemModel]),
         );
       },
     );
@@ -287,10 +287,10 @@ void main() {
       'should return [CachedFailure] when the call to local data source is fail',
       () async {
         /// Arrange
-        when(() => mockLocalDataSource.getCart()).thenThrow(CacheFailure());
+        when(() => mockLocalDataSource.getFavorites()).thenThrow(CacheFailure());
 
         /// Act
-        final actualResult = await repository.getCachedCart();
+        final actualResult = await repository.getCachedFavorites();
 
         /// Assert
         actualResult.fold(

@@ -1,24 +1,33 @@
-import 'dart:io';
+import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:trudor/core/constant/strings.dart';
-import 'package:trudor/data/models/user/user_model.dart';
-import 'package:trudor/domain/auth/google_auth.dart';
-import 'package:trudor/presentation/blocs/user/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:spoto/core/constant/collections.dart';
+import 'package:spoto/core/constant/images.dart';
+import 'package:spoto/core/constant/messages.dart';
+import 'package:spoto/core/constant/strings.dart';
+import 'package:spoto/core/util/price_handler.dart';
+import 'package:spoto/data/models/category/category_model.dart';
+import 'package:spoto/data/models/product/price_tag_model.dart';
+import 'package:spoto/data/models/product/product_model.dart';
+import 'package:spoto/data/models/user/user_model.dart';
+import 'package:spoto/presentation/blocs/user/user_bloc.dart';
+import 'package:spoto/presentation/views/product/add_product_form.dart';
+import 'package:spoto/presentation/widgets/adaptive_alert_dialog.dart';
 
-import '../../../../../domain/entities/cart/cart_item.dart';
+import '../../../../../domain/entities/favorites/favorites_item.dart';
 import '../../../../../domain/entities/product/price_tag.dart';
 import '../../../../../domain/entities/product/product.dart';
-import '../../../core/router/app_router.dart';
-import '../../blocs/cart/cart_bloc.dart';
-import '../../widgets/input_form_button.dart';
+import '../../blocs/favorites/favorites_bloc.dart' as fav;
+import '../../blocs/product/product_bloc.dart' as prod;
 
 class ProductDetailsView extends StatefulWidget {
   final Product product;
+
   const ProductDetailsView({Key? key, required this.product}) : super(key: key);
 
   @override
@@ -28,27 +37,204 @@ class ProductDetailsView extends StatefulWidget {
 class _ProductDetailsViewState extends State<ProductDetailsView> {
   int _currentIndex = 0;
   late PriceTag _selectedPriceTag;
+  bool isFavorite = false;
+  bool isLoading = false;
+  bool isOwner = false;
+  String userId = "";
+  late Timer? _loadingTimer;
+
+  void _startLoadingTimer() {
+    // Start the timer to simulate loading
+    _loadingTimer = Timer(const Duration(seconds: 1), () {
+      // Check if the widget is still mounted before calling setState
+      if (mounted) {
+        // Set loading state back to false when loading is complete
+        setIsLoading();
+        setIsFavorite();
+      }
+      final popupMessage =
+          isFavorite ? addedToFavoritesTitle : removedFromFavoritesTitle;
+      EasyLoading.showSuccess(popupMessage);
+    });
+  }
+
+  void setIsFavorite() {
+    setState(() {
+      isFavorite = !isFavorite;
+    });
+  }
+
+  void setIsLoading() {
+    setState(() {
+      isLoading = !isLoading;
+    });
+  }
+
+  void _cancelTimer() {
+    // Cancel the timer if it's active and initialised
+    if (_loadingTimer != null) {
+      if (_loadingTimer!.isActive) {
+        _loadingTimer!.cancel();
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    // Cancel the timer if the widget is disposed
+    _cancelTimer();
+  }
+
+  Widget favoritesButtonLoading() {
+    // Display loading spinner when isLoading is true
+    return isLoading
+        ? const SizedBox(
+            height: 52.0,
+            width: 52.0,
+            child: Center(
+                child: CircularProgressIndicator.adaptive(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+              backgroundColor: Colors.yellowAccent,
+            )),
+          )
+        : Container();
+  }
+
+  void addToFavorites() {
+    setIsLoading();
+    if (isFavorite) {
+      context.read<fav.FavoritesBloc>().add(fav.RemoveProduct(
+          favoritesItem: ListViewItem(
+              product: widget.product,
+              userId: userId,
+              priceTag: _selectedPriceTag)));
+    } else {
+      context.read<fav.FavoritesBloc>().add(fav.AddProduct(
+          favoritesItem: ListViewItem(
+              product: widget.product,
+              userId: userId,
+              priceTag: _selectedPriceTag)));
+    }
+    _startLoadingTimer();
+  }
+
+  Widget renewProductButton() {
+    return IconButton(
+      icon: const Icon(Icons.restore_outlined, color: Colors.white, size: 36),
+      onPressed: () async {
+        return showDialog(
+          context: context,
+          builder: (context) {
+            return RenewProductAlert(
+              onRenewProduct: () async {
+                final updatedModel = ProductModel(
+                    id: widget.product.id,
+                    ownerId: widget.product.ownerId,
+                    name: widget.product.name,
+                    description: widget.product.description,
+                    isNew: widget.product.isNew,
+                    status: ProductStatus.active,
+                    priceTags: [
+                      PriceTagModel(
+                          id: '1',
+                          name: "base",
+                          price: int.parse(
+                              widget.product.priceTags.first.price.toString()))
+                    ],
+                    categories: [
+                      CategoryModel.fromEntity(widget.product.categories.first)
+                    ],
+                    category: widget.product.category,
+                    images: widget.product.images,
+                    createdAt: widget.product.createdAt,
+                    updatedAt: DateTime.now());
+                context
+                    .read<prod.ProductBloc>()
+                    .add(prod.UpdateProduct(updatedModel));
+                Navigator.of(context).pop();
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget deactivateProductButton() {
+    return IconButton(
+      icon: const Icon(Icons.close_rounded, color: Colors.white, size: 36),
+      onPressed: () async {
+        return showDialog(
+          context: context,
+          builder: (context) {
+            return DeactivateProductAlert(
+              onDeactivateProduct: () async {
+                final updatedModel = ProductModel(
+                    id: widget.product.id,
+                    ownerId: widget.product.ownerId,
+                    name: widget.product.name,
+                    description: widget.product.description,
+                    isNew: widget.product.isNew,
+                    status: ProductStatus.inactive,
+                    priceTags: [
+                      PriceTagModel(
+                          id: '1',
+                          name: "base",
+                          price: int.parse(
+                              widget.product.priceTags.first.price.toString()))
+                    ],
+                    categories: [
+                      CategoryModel.fromEntity(widget.product.categories.first)
+                    ],
+                    category: widget.product.category,
+                    images: widget.product.images,
+                    createdAt: widget.product.createdAt,
+                    updatedAt: DateTime.now());
+                context
+                    .read<prod.ProductBloc>()
+                    .add(prod.UpdateProduct(updatedModel));
+                Navigator.of(context).pop();
+              },
+            );
+          },
+        );
+      },
+    );
+  }
 
   @override
   void initState() {
+    if (context.read<UserBloc>().state is UserLogged) {
+      setState(() {
+        userId = (context.read<UserBloc>().state.props.first as UserModel).id;
+      });
+    }
+    if (userId == widget.product.ownerId) {
+      setState(() {
+        isOwner = true;
+      });
+    }
+    final favoritesState = context.read<fav.FavoritesBloc>().state.favorites;
+    for (var element in favoritesState) {
+      if (element.product.id == widget.product.id) {
+        setState(() {
+          isFavorite = true;
+        });
+        break;
+      }
+    }
+    _loadingTimer = null;
     _selectedPriceTag = widget.product.priceTags.first;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    bool isFavorite = false;
-    // bool isLoading = false;
-    final cartState = context.read<CartBloc>().state.cart;
-    for (var element in cartState) {
-      if (element.product.id == widget.product.id) {
-        isFavorite = true;
-        break;
-      }
-    }
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        surfaceTintColor: Colors.white,
         foregroundColor: Colors.black,
         backgroundColor: Colors.white,
         actions: [
@@ -64,6 +250,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
               options: CarouselOptions(
                 height: double.infinity,
                 enlargeCenterPage: true,
+                enableInfiniteScroll: false,
                 aspectRatio: 16 / 9,
                 viewportFraction: 1,
                 onPageChanged: (index, reason) {
@@ -72,40 +259,76 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                   });
                 },
               ),
-              items: widget.product.images.map((image) {
-                return Builder(
-                  builder: (BuildContext context) {
-                    return Hero(
-                      tag: widget.product.id,
-                      child: CachedNetworkImage(
-                        imageUrl: image.isNotEmpty ? image : noImagePlaceholder,
-                        imageBuilder: (context, imageProvider) => Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.contain,
-                              colorFilter: ColorFilter.mode(
-                                  Colors.grey.shade50.withOpacity(0.25),
-                                  BlendMode.softLight),
+              items: widget.product.images.isEmpty
+                  ? [
+                      Builder(
+                        builder: (BuildContext context) {
+                          return Hero(
+                            tag: widget.product.id,
+                            child: CachedNetworkImage(
+                              imageUrl: noImagePlaceholder,
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: imageProvider,
+                                    fit: BoxFit.cover,
+                                    colorFilter: ColorFilter.mode(
+                                        Colors.grey.shade50.withOpacity(0.25),
+                                        BlendMode.softLight),
+                                  ),
+                                ),
+                              ),
+                              placeholder: (context, url) => Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade100,
+                                ),
+                              ),
+                              errorWidget: (context, url, error) =>
+                                  const Center(
+                                child: Icon(
+                                  Icons.error_outline,
+                                  color: Colors.grey,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        placeholder: (context, url) => Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade100,
-                          ),
-                        ),
-                        errorWidget: (context, url, error) => const Center(
-                          child: Icon(
-                            Icons.error_outline,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                );
-              }).toList(),
+                          );
+                        },
+                      )
+                    ]
+                  : widget.product.images.map((image) {
+                      return Builder(
+                        builder: (BuildContext context) {
+                          return Hero(
+                            tag: widget.product.id,
+                            child: CachedNetworkImage(
+                              imageUrl:
+                                  image.isEmpty ? noImagePlaceholder : image,
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: imageProvider,
+                                    fit: BoxFit.cover,
+                                    colorFilter: ColorFilter.mode(
+                                        Colors.grey.shade50.withOpacity(0.25),
+                                        BlendMode.softLight),
+                                  ),
+                                ),
+                              ),
+                              placeholder: (context, url) => Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade100,
+                                ),
+                              ),
+                              errorWidget: (context, url, error) => Center(
+                                child: Image.asset(kNoImageAvailable),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    }).toList(),
             ),
           ),
           Padding(
@@ -135,43 +358,6 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(
-              left: 20,
-              right: 20,
-            ),
-            child: Wrap(
-              children: widget.product.priceTags
-                  .map((priceTag) => GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _selectedPriceTag = priceTag;
-                          });
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              width: _selectedPriceTag.id == priceTag.id
-                                  ? 2.0
-                                  : 1.0,
-                              color: Colors.grey,
-                            ),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(5.0)),
-                          ),
-                          padding: const EdgeInsets.all(8),
-                          margin: const EdgeInsets.only(right: 4),
-                          child: Column(
-                            children: [
-                              Text(priceTag.name),
-                              Text(priceTag.price.toString()),
-                            ],
-                          ),
-                        ),
-                      ))
-                  .toList(),
-            ),
-          ),
-          Padding(
             padding: EdgeInsets.only(
                 left: 20,
                 right: 10,
@@ -197,16 +383,13 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
+            Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  "Total",
-                  style: TextStyle(color: Colors.white70, fontSize: 16),
-                ),
+
                 Text(
-                  '\$${_selectedPriceTag.price}',
+                  '${NumberHandler.formatPrice(_selectedPriceTag.price)} €',
                   style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -214,56 +397,97 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                 ),
               ],
             ),
-            const Spacer(),
-            SizedBox(
-              width: 50,
-              child: IconButton(
-                onPressed: () {
-                  final userId = (context.read<UserBloc>().state.props.first as UserModel).id;
-                  if (isFavorite) {
-                    context.read<CartBloc>().add(RemoveProduct(
-                        cartItem: CartItem(
-                            product: widget.product,
-                            userId: userId,
-                            priceTag: _selectedPriceTag)));
-
-                  } else {
-                    context.read<CartBloc>().add(AddProduct(
-                        cartItem: CartItem(
-                            product: widget.product,
-                            userId: userId,
-                            priceTag: _selectedPriceTag)));
-                  }
-
-                  setState(() {
-                    isFavorite = !isFavorite;
-                  });
-                  Navigator.pop(context);
-                },
-                icon: Icon(
-                  isFavorite ? Icons.favorite : Icons.favorite_border,
-                  color: Colors.white,
-                  size: 36),
-              ),
+            Row(
+              children: [
+                isOwner
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          widget.product.status == ProductStatus.active
+                              ? deactivateProductButton()
+                              : renewProductButton(),
+                          // deactivateProductButton(),
+                        ],
+                      )
+                    : Container(),
+                const SizedBox(width: 16),
+                isOwner
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.edit,
+                                color: Colors.white, size: 36),
+                            onPressed: () {
+                              showModalBottomSheet<void>(
+                                isDismissible: false,
+                                context: context,
+                                isScrollControlled: true,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(24.0),
+                                ),
+                                builder: (BuildContext context) {
+                                  return Padding(
+                                      padding: EdgeInsets.only(
+                                          bottom: MediaQuery.of(context)
+                                              .viewInsets
+                                              .bottom),
+                                      child: AddProductForm(
+                                          productInfo: widget.product));
+                                },
+                              );
+                            },
+                          ),
+                        ],
+                      )
+                    : Container(),
+                // Display loading spinner when isLoading is true
+                isLoading ? const SizedBox(width: 16) : Container(),
+                favoritesButtonLoading(),
+                !isLoading ? const SizedBox(width: 16) : Container(),
+                // Display IconButton when not loading
+                BlocBuilder<UserBloc, UserState>(
+                  builder: (context, state) {
+                    if (widget.product.status == ProductStatus.active) {
+                      if (state is UserLogged) {
+                        return !isLoading
+                            ? IconButton(
+                                onPressed: () {
+                                  addToFavorites();
+                                },
+                                icon: Icon(
+                                  isFavorite
+                                      ? Icons.favorite
+                                      : Icons.favorite_border,
+                                  color: Colors.white,
+                                  size: 36,
+                                ),
+                              )
+                            : Container();
+                      } else {
+                        return IconButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return const UnauthorisedAddFavoritesAlert();
+                              },
+                            );
+                          },
+                          icon: Icon(
+                            isFavorite ? Icons.favorite : Icons.favorite_border,
+                            color: Colors.white,
+                            size: 36,
+                          ),
+                        );
+                      }
+                    } else {
+                      return Container();
+                    }
+                  },
+                ),
+              ],
             ),
-            // const SizedBox(
-            //   width: 6,
-            // ),
-            // SizedBox(
-            //   width: 90,
-            //   child: InputFormButton(
-            //     onClick: () {
-            //       Navigator.of(context)
-            //           .pushNamed(AppRouter.orderCheckout, arguments: [
-            //         CartItem(
-            //           product: widget.product,
-            //           priceTag: _selectedPriceTag,
-            //         )
-            //       ]);
-            //     },
-            //     titleText: "Buy",
-            //   ),
-            // ),
           ],
         ),
       ),

@@ -1,4 +1,4 @@
-import 'package:trudor/core/constant/colors.dart';
+import 'package:spoto/core/constant/colors.dart';
 import 'package:flutter/material.dart';
 
 class AppTheme {
@@ -10,7 +10,7 @@ class AppTheme {
     visualDensity: VisualDensity.adaptivePlatformDensity,
     scaffoldBackgroundColor: kBackgroundColor,
     appBarTheme: AppBarTheme(
-      backgroundColor: Colors.white,
+      backgroundColor: kLightBackgroundColor,
       foregroundColor: kLightSecondaryColor,
       elevation: 0,
     ),
@@ -20,12 +20,13 @@ class AppTheme {
         .copyWith(background: kLightBackgroundColor),
   );
 
-  // static final darkTheme = ThemeData(
-  //     brightness: Brightness.dark,
-  //     primaryColor: darkPrimaryColor,
-  //     visualDensity: VisualDensity.adaptivePlatformDensity,
-  //     textButtonTheme: TextButtonThemeData(
-  //         style: TextButton.styleFrom(foregroundColor: darkTextColor)),
-  //     colorScheme: ColorScheme.light(secondary: lightSecondaryColor)
-  //         .copyWith(background: darkBackgroundColor));
+  static final darkTheme = ThemeData(
+      // brightness: Brightness.dark,
+      primaryColor: kDarkPrimaryColor,
+      visualDensity: VisualDensity.adaptivePlatformDensity,
+
+      textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(foregroundColor: kDarkTextColor)),
+      colorScheme: ColorScheme.dark(background: kDarkBackgroundColor)
+          .copyWith(secondary: kDarkBackgroundColor, brightness: Brightness.dark));
 }

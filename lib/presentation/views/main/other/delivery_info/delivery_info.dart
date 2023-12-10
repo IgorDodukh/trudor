@@ -1,8 +1,9 @@
-import 'package:trudor/data/models/user/user_model.dart';
-import 'package:trudor/presentation/blocs/user/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:spoto/core/constant/messages.dart';
+import 'package:spoto/data/models/user/user_model.dart';
+import 'package:spoto/presentation/blocs/user/user_bloc.dart';
 
 import '../../../../../data/models/user/delivery_info_model.dart';
 import '../../../../../domain/entities/user/delivery_info.dart';
@@ -26,18 +27,18 @@ class _DeliveryInfoViewState extends State<DeliveryInfoView> {
       listener: (context, state) {
         EasyLoading.dismiss();
         if (state is DeliveryInfoActionLoading) {
-          EasyLoading.show(status: 'Loading...');
+          EasyLoading.show(status: loadingTitle);
         } else if (state is DeliveryInfoSelectActionSuccess) {
           context
               .read<DeliveryInfoFetchCubit>()
               .selectDeliveryInfo(state.deliveryInfo);
         } else if (state is DeliveryInfoActionFail) {
-          EasyLoading.showError("Error");
+          EasyLoading.showError("Error in delivery info action");
         }
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Delivery Details"),
+          title: const Text(deliveryDetailsTitle),
         ),
         body: BlocBuilder<DeliveryInfoFetchCubit, DeliveryInfoFetchState>(
           builder: (context, state) {
@@ -71,7 +72,10 @@ class _DeliveryInfoViewState extends State<DeliveryInfoView> {
                     borderRadius: BorderRadius.circular(24.0),
                   ),
                   builder: (BuildContext context) {
-                    return const DeliveryInfoForm();
+                    return Padding(
+                        padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom),
+                        child: const DeliveryInfoForm());
                   },
                 );
               },
@@ -90,6 +94,7 @@ class _DeliveryInfoViewState extends State<DeliveryInfoView> {
 
 class DeliveryInfoForm extends StatefulWidget {
   final DeliveryInfo? deliveryInfo;
+
   const DeliveryInfoForm({
     super.key,
     this.deliveryInfo,
@@ -131,24 +136,31 @@ class _DeliveryInfoFormState extends State<DeliveryInfoForm> {
       listener: (context, state) {
         EasyLoading.dismiss();
         if (state is DeliveryInfoActionLoading) {
-          EasyLoading.show(status: 'Loading...');
+          EasyLoading.show(status: loadingTitle);
         } else if (state is DeliveryInfoAddActionSuccess) {
           Navigator.of(context).pop();
           context
               .read<DeliveryInfoFetchCubit>()
               .addDeliveryInfo(state.deliveryInfo);
-          EasyLoading.showSuccess("Delivery info successfully added!");
+          EasyLoading.showSuccess(addDeliveryInfoSuccess);
         } else if (state is DeliveryInfoEditActionSuccess) {
           Navigator.of(context).pop();
           context
               .read<DeliveryInfoFetchCubit>()
               .editDeliveryInfo(state.deliveryInfo);
-          EasyLoading.showSuccess("Delivery info successfully edited!");
+          EasyLoading.showSuccess(updateDeliveryInfoSuccess);
         } else if (state is DeliveryInfoActionFail) {
           EasyLoading.showError("Error");
         }
       },
-      child: SizedBox(
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(24),
+            topRight: Radius.circular(24),
+          ),
+        ),
         height: MediaQuery.of(context).size.height * 0.7,
         child: Center(
           child: Padding(
@@ -158,6 +170,17 @@ class _DeliveryInfoFormState extends State<DeliveryInfoForm> {
               child: ListView(
                 physics: const BouncingScrollPhysics(),
                 children: <Widget>[
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  Center(
+                    child: Text(
+                      widget.deliveryInfo == null
+                          ? addDeliveryDetails
+                          : updateDeliveryDetails,
+                      style: const TextStyle(fontSize: 26),
+                    ),
+                  ),
                   const SizedBox(
                     height: 24,
                   ),
@@ -262,7 +285,9 @@ class _DeliveryInfoFormState extends State<DeliveryInfoForm> {
                   InputFormButton(
                     color: Colors.black87,
                     onClick: () {
-                      final userId = (context.read<UserBloc>().state.props.first as UserModel).id;
+                      final userId = (context.read<UserBloc>().state.props.first
+                              as UserModel)
+                          .id;
                       if (_formKey.currentState!.validate()) {
                         if (widget.deliveryInfo == null) {
                           context

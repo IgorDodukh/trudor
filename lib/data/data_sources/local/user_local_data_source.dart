@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/error/exceptions.dart';
 import '../../models/user/user_model.dart';
-import 'cart_local_data_source.dart';
+import 'favorites_local_data_source.dart';
 
 abstract class UserLocalDataSource {
   Future<String> getToken();
@@ -34,7 +34,7 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
     if (token != null) {
       return Future.value(token);
     } else {
-      throw CacheException();
+      throw const CacheException("No cached token found");
     }
   }
 
@@ -53,7 +53,7 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
     if (jsonString != null) {
       return Future.value(userModelFromJson(jsonString));
     } else {
-      throw CacheException();
+      throw const CacheException("No cached user found");
     }
   }
 
@@ -74,7 +74,7 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
   @override
   Future<void> clearCache() async {
     await secureStorage.deleteAll();
-    await sharedPreferences.remove(cachedCart);
+    await sharedPreferences.remove(cachedFavorites);
     await sharedPreferences.remove(cachedUser);
   }
 }

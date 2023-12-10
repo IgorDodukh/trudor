@@ -1,4 +1,4 @@
-import 'package:trudor/presentation/blocs/home/navbar_cubit.dart';
+import 'package:spoto/presentation/blocs/home/navbar_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

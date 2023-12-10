@@ -1,7 +1,9 @@
-import 'package:trudor/presentation/views/main/home/filter/filter_view.dart';
+import 'package:spoto/presentation/views/main/home/filter/filter_view.dart';
 import 'package:flutter/material.dart';
+import 'package:spoto/presentation/views/main/other/my_publications/my_publications_view.dart';
+import 'package:spoto/presentation/widgets/splash_screen.dart';
 
-import '../../domain/entities/cart/cart_item.dart';
+import '../../domain/entities/favorites/favorites_item.dart';
 import '../../domain/entities/product/product.dart';
 import '../../domain/entities/user/user.dart';
 import '../../presentation/views/authentication/signin_view.dart';
@@ -20,6 +22,7 @@ import '../error/exceptions.dart';
 class AppRouter {
   //main menu
   static const String home = '/';
+  static const String splash = '/splash';
   //authentication
   static const String signIn = '/sign-in';
   static const String signUp = '/sign-up';
@@ -28,6 +31,7 @@ class AppRouter {
   //other
   static const String userProfile = '/user-profile';
   static const String orderCheckout = '/order-checkout';
+  static const String myPublications = '/my-publications';
   static const String deliveryDetails = '/delivery-details';
   static const String orders = '/orders';
   static const String settings = '/settings';
@@ -39,10 +43,13 @@ class AppRouter {
     switch (routeSettings.name) {
       case home:
         return MaterialPageRoute(builder: (_) => const MainView());
+      case splash:
+        return MaterialPageRoute(builder: (_) => const SplashScreen());
       case signIn:
         return MaterialPageRoute(builder: (_) => const SignInView());
       case signUp:
         return MaterialPageRoute(builder: (_) => const SignUpScreen());
+      case myPublications: return MaterialPageRoute(builder: (_) => const MyPublicationsView());
       case productDetails:
         Product product = routeSettings.arguments as Product;
         return MaterialPageRoute(
@@ -54,7 +61,7 @@ class AppRouter {
                   user: user,
                 ));
       case orderCheckout:
-        List<CartItem> items = routeSettings.arguments as List<CartItem>;
+        List<ListViewItem> items = routeSettings.arguments as List<ListViewItem>;
         return MaterialPageRoute(
             builder: (_) => OrderCheckoutView(
                   items: items,

@@ -1,17 +1,18 @@
-import 'package:trudor/data/models/cart/cart_item_model.dart';
-import 'package:trudor/data/models/category/category_model.dart';
-import 'package:trudor/data/models/order/order_details_model.dart';
-import 'package:trudor/data/models/order/order_item_model.dart';
-import 'package:trudor/data/models/product/pagination_data_model.dart';
-import 'package:trudor/data/models/product/price_tag_model.dart';
-import 'package:trudor/data/models/product/product_model.dart';
-import 'package:trudor/data/models/product/product_response_model.dart';
-import 'package:trudor/data/models/user/authentication_response_model.dart';
-import 'package:trudor/data/models/user/delivery_info_model.dart';
-import 'package:trudor/data/models/user/user_model.dart';
-import 'package:trudor/domain/usecases/product/get_product_usecase.dart';
-import 'package:trudor/domain/usecases/user/sign_in_usecase.dart';
-import 'package:trudor/domain/usecases/user/sign_up_usecase.dart';
+import 'package:spoto/core/constant/collections.dart';
+import 'package:spoto/data/models/favorites/favorites_item_model.dart';
+import 'package:spoto/data/models/category/category_model.dart';
+import 'package:spoto/data/models/order/order_details_model.dart';
+import 'package:spoto/data/models/order/order_item_model.dart';
+import 'package:spoto/data/models/product/pagination_data_model.dart';
+import 'package:spoto/data/models/product/price_tag_model.dart';
+import 'package:spoto/data/models/product/product_model.dart';
+import 'package:spoto/data/models/product/product_response_model.dart';
+import 'package:spoto/data/models/user/authentication_response_model.dart';
+import 'package:spoto/data/models/user/delivery_info_model.dart';
+import 'package:spoto/data/models/user/user_model.dart';
+import 'package:spoto/domain/usecases/product/get_product_usecase.dart';
+import 'package:spoto/domain/usecases/user/sign_in_usecase.dart';
+import 'package:spoto/domain/usecases/user/sign_up_usecase.dart';
 
 //products
 final tProductModel = ProductModel(
@@ -20,9 +21,13 @@ final tProductModel = ProductModel(
   description: "description",
   priceTags: [PriceTagModel(id: "1", name: "name", price: 100)],
   categories: const [CategoryModel(id: "1", name: "name", image: "image")],
+  category: "category",
   images: const ["image"],
   createdAt: DateTime(2000),
   updatedAt: DateTime(2000),
+  ownerId: '1',
+  isNew: true,
+  status: ProductStatus.active,
 );
 
 final tProductModelList = [tProductModel, tProductModel];
@@ -47,8 +52,8 @@ final tProductResponseModel = ProductResponseModel(
 //price tag
 final tPriceTagModel = PriceTagModel(id: "1", name: "name", price: 100);
 
-//cart
-final tCartItemModel = CartItemModel(
+//favorites
+final tFavoritesItemModel = FavoritesItemModel(
   id: "1",
   product: tProductModel,
   priceTag: tPriceTagModel,
@@ -70,7 +75,8 @@ const tDeliveryInfoModel = DeliveryInfoModel(
   addressLineTwo: 'addressLineTwo',
   city: 'city',
   zipCode: 'zipCode',
-  contactNumber: 'contactNumber', userId: '1',
+  contactNumber: 'contactNumber',
+  userId: '1',
 );
 
 // order details
@@ -103,4 +109,8 @@ const tAuthenticationResponseModel =
     AuthenticationResponseModel(token: 'token', user: tUserModel);
 //params
 const tSignInParams = SignInParams(username: 'username', password: 'password');
-const tSignUpParams = SignUpParams(firstName: 'firstName', lastName: 'lastName', email: 'email', password: 'password');
+const tSignUpParams = SignUpParams(
+    firstName: 'firstName',
+    lastName: 'lastName',
+    email: 'email',
+    password: 'password');

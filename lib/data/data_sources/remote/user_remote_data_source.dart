@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:trudor/core/error/failures.dart';
-import 'package:trudor/domain/usecases/auth/google_auth_usecase.dart';
+import 'package:spoto/core/error/failures.dart';
+import 'package:spoto/domain/usecases/auth/google_auth_usecase.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../../core/error/exceptions.dart';
@@ -55,7 +55,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     } else if (response.statusCode == 400 || response.statusCode == 401) {
       throw CredentialFailure();
     } else {
-      throw ServerException();
+      throw ServerException("Authentication Failed: ${response.statusCode}\n${response.body}");
     }
   }
 

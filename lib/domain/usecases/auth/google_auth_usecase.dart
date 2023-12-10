@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:trudor/core/error/failures.dart';
-import 'package:trudor/core/usecases/usecase.dart';
-import 'package:trudor/domain/entities/user/user.dart';
-import 'package:trudor/domain/repositories/user_repository.dart';
+import 'package:spoto/core/error/failures.dart';
+import 'package:spoto/core/usecases/usecase.dart';
+import 'package:spoto/domain/entities/user/user.dart';
+import 'package:spoto/domain/repositories/user_repository.dart';
 
 class GoogleAuthUseCase implements UseCase<User, SignInGoogleParams> {
 
@@ -11,7 +11,6 @@ class GoogleAuthUseCase implements UseCase<User, SignInGoogleParams> {
 
   @override
   Future<Either<Failure, User>> call(SignInGoogleParams params) async {
-    print("call in GoogleAuthUseCase");
     return await repository.googleSignIn(params);
   }
 }

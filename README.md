@@ -1,10 +1,5 @@
 
-<!-- PROJECT LOGO -->
-<p align="center">
-  <h3 align="center">Trudor App</h3>
-</p>
-
-Welcome to the Trudor App repository!
+Welcome to the Spoto App repository!
 
 ## Getting Started
 
@@ -30,6 +25,14 @@ How to work with the repo
    ```
 For help getting started with Flutter, view our online
 [documentation](https://flutter.io/).
+
+### 3rd party integrations
+
+## Firestore
+Store data, uploaded images, user info, product info
+
+## typesense
+Data is automatically mirrored from firestore database for indexing and search.
 
 <!-- LICENSE -->
 ## License

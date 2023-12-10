@@ -1,20 +1,20 @@
 import 'package:dartz/dartz.dart';
-import 'package:trudor/core/error/failures.dart';
-import 'package:trudor/domain/repositories/delivery_info_repository.dart';
-import 'package:trudor/domain/usecases/delivery_info/select_delivery_info_usecase.dart';
+import 'package:spoto/core/error/failures.dart';
+import 'package:spoto/domain/repositories/delivery_info_repository.dart';
+import 'package:spoto/domain/usecases/delivery_info/select_delivery_info_usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../fixtures/constant_objects.dart';
 
-class MockCartRepository extends Mock implements DeliveryInfoRepository {}
+class MockFavoritesRepository extends Mock implements DeliveryInfoRepository {}
 
 void main() {
   late SelectDeliveryInfoUseCase usecase;
-  late MockCartRepository mockProductRepository;
+  late MockFavoritesRepository mockProductRepository;
 
   setUp(() {
-    mockProductRepository = MockCartRepository();
+    mockProductRepository = MockFavoritesRepository();
     usecase = SelectDeliveryInfoUseCase(mockProductRepository);
   });
 
@@ -31,7 +31,7 @@ void main() {
       /// Assert
       result.fold(
             (failure) => fail('Test Fail!'),
-            (cart) => expect(cart, tDeliveryInfoModel),
+            (favorites) => expect(favorites, tDeliveryInfoModel),
       );
       verify(() => mockProductRepository.selectDeliveryInfo(tDeliveryInfoModel));
       verifyNoMoreInteractions(mockProductRepository);

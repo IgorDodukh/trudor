@@ -1,20 +1,20 @@
 import 'package:dartz/dartz.dart';
-import 'package:trudor/core/error/failures.dart';
-import 'package:trudor/domain/repositories/order_repository.dart';
-import 'package:trudor/domain/usecases/order/add_order_usecase.dart';
+import 'package:spoto/core/error/failures.dart';
+import 'package:spoto/domain/repositories/order_repository.dart';
+import 'package:spoto/domain/usecases/order/add_order_usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../fixtures/constant_objects.dart';
 
-class MockCartRepository extends Mock implements OrderRepository {}
+class MockFavoritesRepository extends Mock implements OrderRepository {}
 
 void main() {
   late AddOrderUseCase usecase;
-  late MockCartRepository mockProductRepository;
+  late MockFavoritesRepository mockProductRepository;
 
   setUp(() {
-    mockProductRepository = MockCartRepository();
+    mockProductRepository = MockFavoritesRepository();
     usecase = AddOrderUseCase(mockProductRepository);
   });
 
@@ -31,7 +31,7 @@ void main() {
       /// Assert
       result.fold(
             (failure) => fail('Test Fail!'),
-            (cart) => expect(cart, tOrderDetailsModel),
+            (favorites) => expect(favorites, tOrderDetailsModel),
       );
       verify(() => mockProductRepository.addOrder(tOrderDetailsModel));
       verifyNoMoreInteractions(mockProductRepository);

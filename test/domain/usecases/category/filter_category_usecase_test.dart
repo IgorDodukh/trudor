@@ -1,20 +1,20 @@
 import 'package:dartz/dartz.dart';
-import 'package:trudor/core/error/failures.dart';
-import 'package:trudor/domain/repositories/category_repository.dart';
-import 'package:trudor/domain/usecases/category/filter_category_usecase.dart';
+import 'package:spoto/core/error/failures.dart';
+import 'package:spoto/domain/repositories/category_repository.dart';
+import 'package:spoto/domain/usecases/category/filter_category_usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../fixtures/constant_objects.dart';
 
-class MockCartRepository extends Mock implements CategoryRepository {}
+class MockFavoritesRepository extends Mock implements CategoryRepository {}
 
 void main() {
   late FilterCategoryUseCase usecase;
-  late MockCartRepository mockProductRepository;
+  late MockFavoritesRepository mockProductRepository;
 
   setUp(() {
-    mockProductRepository = MockCartRepository();
+    mockProductRepository = MockFavoritesRepository();
     usecase = FilterCategoryUseCase(mockProductRepository);
   });
 
@@ -31,7 +31,7 @@ void main() {
       /// Assert
       result.fold(
             (failure) => fail('Test Fail!'),
-            (cart) => expect(cart, [tCategoryModel]),
+            (favorites) => expect(favorites, [tCategoryModel]),
       );
       verify(() => mockProductRepository.filterCachedCategories('search-word'));
       verifyNoMoreInteractions(mockProductRepository);

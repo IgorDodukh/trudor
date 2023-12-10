@@ -1,21 +1,21 @@
 import 'package:dartz/dartz.dart';
-import 'package:trudor/core/error/failures.dart';
-import 'package:trudor/core/usecases/usecase.dart';
-import 'package:trudor/domain/repositories/order_repository.dart';
-import 'package:trudor/domain/usecases/order/get_remote_orders_usecase.dart';
+import 'package:spoto/core/error/failures.dart';
+import 'package:spoto/core/usecases/usecase.dart';
+import 'package:spoto/domain/repositories/order_repository.dart';
+import 'package:spoto/domain/usecases/order/get_remote_orders_usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../fixtures/constant_objects.dart';
 
-class MockCartRepository extends Mock implements OrderRepository {}
+class MockFavoritesRepository extends Mock implements OrderRepository {}
 
 void main() {
   late GetRemoteOrdersUseCase usecase;
-  late MockCartRepository mockRepository;
+  late MockFavoritesRepository mockRepository;
 
   setUp(() {
-    mockRepository = MockCartRepository();
+    mockRepository = MockFavoritesRepository();
     usecase = GetRemoteOrdersUseCase(mockRepository);
   });
 
@@ -32,7 +32,7 @@ void main() {
       /// Assert
       result.fold(
             (failure) => fail('Test Fail!'),
-            (cart) => expect(cart, [tOrderDetailsModel]),
+            (favorites) => expect(favorites, [tOrderDetailsModel]),
       );
       verify(() => mockRepository.getRemoteOrders());
       verifyNoMoreInteractions(mockRepository);

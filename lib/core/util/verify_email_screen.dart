@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:custom_timer/custom_timer.dart';
-import 'package:trudor/core/util/sign_button.dart';
+import 'package:spoto/core/util/sign_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
-Future<dynamic> CustomBottomSheet(BuildContext context) {
+Future<dynamic> customButtonSheet(BuildContext context) {
   return showModalBottomSheet<dynamic>(
       isScrollControlled: true,
       enableDrag: false,
@@ -36,7 +36,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
     });
   }
 
-  checkVerification() async {
+  void checkVerification() async {
     await FirebaseAuth.instance.currentUser?.reload();
     final user = FirebaseAuth.instance.currentUser;
     if (user?.emailVerified ?? false) {
@@ -62,7 +62,6 @@ class _VerifyEmailState extends State<VerifyEmail> {
 
   void disposeScreen() {
     if (!mounted) {
-      print('disposed ---------');
       @override
       void dispose() {
         _controller.dispose();
@@ -112,7 +111,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
               'https://assets8.lottiefiles.com/packages/lf20_dd9wpbrh.json',
               height: 300,
               errorBuilder: (context, error, stackTrace) =>
-                  Icon(Icons.error_outline_outlined),
+                  const Icon(Icons.error_outline_outlined),
             ),
             Text(
               "We've sent you a verification email, Check your inbox/spam!",
@@ -123,7 +122,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
               height: 30,
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 30),
+              padding: const EdgeInsets.symmetric(horizontal: 30),
               height: 40,
               width: 200,
               child: CustomButton(
@@ -146,7 +145,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
               height: 20,
             ),
             Padding(
-              padding: EdgeInsets.only(top: 10, bottom: 20),
+              padding: const EdgeInsets.only(top: 10, bottom: 20),
               child: CustomTimer(
                 controller: _controller,
                 begin: const Duration(minutes: 2),

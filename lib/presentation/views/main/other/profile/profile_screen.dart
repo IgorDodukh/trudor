@@ -1,4 +1,4 @@
-import 'package:trudor/core/constant/images.dart';
+import 'package:spoto/core/constant/images.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../domain/entities/user/user.dart';
@@ -77,15 +77,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: SafeArea(
-          child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        child: InputFormButton(
-          onClick: () {},
-          titleText: "Update",
-          color: Colors.black87,
-        ),
-      )),
+      // bottomNavigationBar: SafeArea(
+      //     child: Padding(
+      //   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      //   child: InputFormButton(
+      //     onClick: () {},
+      //     titleText: "Update",
+      //     color: Colors.black87,
+      //   ),
+      // )),
     );
   }
 }

@@ -1,10 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spoto/core/constant/messages.dart';
+import 'package:spoto/presentation/widgets/adaptive_alert_dialog.dart';
 
 import '../../../../core/constant/images.dart';
 import '../../../../core/router/app_router.dart';
-import '../../../blocs/cart/cart_bloc.dart';
+import '../../../blocs/favorites/favorites_bloc.dart';
 import '../../../blocs/user/user_bloc.dart';
 import '../../../widgets/other_item_card.dart';
 
@@ -90,72 +92,87 @@ class OtherView extends StatelessWidget {
               },
             ),
           ),
-          const SizedBox(height: 30),
-          BlocBuilder<UserBloc, UserState>(
-            builder: (context, state) {
-              return OtherItemCard(
-                onClick: () {
-                  if (state is UserLogged) {
-                    Navigator.of(context).pushNamed(
-                      AppRouter.userProfile,
-                      arguments: state.user,
-                    );
-                  } else {
-                    Navigator.of(context).pushNamed(AppRouter.signIn);
-                  }
-                },
-                title: "Profile",
-              );
-            },
-          ),
           BlocBuilder<UserBloc, UserState>(
             builder: (context, state) {
               if (state is UserLogged) {
-                return Padding(
-                  padding: const EdgeInsets.only(top: 6),
-                  child: OtherItemCard(
-                    onClick: () {
-                      Navigator.of(context).pushNamed(AppRouter.orders);
+                return Column(children: [
+                  const SizedBox(height: 30),
+                  BlocBuilder<UserBloc, UserState>(
+                    builder: (context, state) {
+                      return OtherItemCard(
+                        onClick: () {
+                          if (state is UserLogged) {
+                            Navigator.of(context).pushNamed(
+                              AppRouter.userProfile,
+                              arguments: state.user,
+                            );
+                          } else {
+                            Navigator.of(context)
+                                .pushNamed(AppRouter.signIn);
+                          }
+                        },
+                        title: profileTitle,
+                      );
                     },
-                    title: "Orders",
                   ),
-                );
+                  const SizedBox(height: 6),
+                  BlocBuilder<UserBloc, UserState>(
+                    builder: (context, state) {
+                      return OtherItemCard(
+                        onClick: () {
+                          if (state is UserLogged) {
+                            Navigator.of(context).pushNamed(
+                              AppRouter.myPublications,
+                              arguments: state.user,
+                            );
+                          } else {
+                            Navigator.of(context)
+                                .pushNamed(AppRouter.signIn);
+                          }
+                        },
+                        title: publicationsTitle,
+                      );
+                    },
+                  ),
+                  BlocBuilder<UserBloc, UserState>(
+                    builder: (context, state) {
+                      if (state is UserLogged) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 6),
+                          child: OtherItemCard(
+                            onClick: () {
+                              Navigator.of(context)
+                                  .pushNamed(AppRouter.deliveryDetails);
+                            },
+                            title: "Delivery Info",
+                          ),
+                        );
+                      } else {
+                        return const SizedBox();
+                      }
+                    },
+                  ),
+                  // const SizedBox(height: 6),
+                  // OtherItemCard(
+                  //   onClick: () {
+                  //     Navigator.of(context).pushNamed(AppRouter.settings);
+                  //   },
+                  //   title: "Settings",
+                  // ),
+                  // const SizedBox(height: 6),
+                  // OtherItemCard(
+                  //   onClick: () {
+                  //     Navigator.of(context)
+                  //         .pushNamed(AppRouter.notifications);
+                  //   },
+                  //   title: "Notifications",
+                  // ),
+
+                ]);
               } else {
                 return const SizedBox();
               }
             },
-          ),
-          BlocBuilder<UserBloc, UserState>(
-            builder: (context, state) {
-              if (state is UserLogged) {
-                return Padding(
-                  padding: const EdgeInsets.only(top: 6),
-                  child: OtherItemCard(
-                    onClick: () {
-                      Navigator.of(context)
-                          .pushNamed(AppRouter.deliveryDetails);
-                    },
-                    title: "Delivery Info",
-                  ),
-                );
-              } else {
-                return const SizedBox();
-              }
-            },
-          ),
-          const SizedBox(height: 6),
-          OtherItemCard(
-            onClick: () {
-              Navigator.of(context).pushNamed(AppRouter.settings);
-            },
-            title: "Settings",
-          ),
-          const SizedBox(height: 6),
-          OtherItemCard(
-            onClick: () {
-              Navigator.of(context).pushNamed(AppRouter.notifications);
-            },
-            title: "Notifications",
           ),
           const SizedBox(height: 6),
           OtherItemCard(
@@ -164,32 +181,38 @@ class OtherView extends StatelessWidget {
             },
             title: "About",
           ),
-          const SizedBox(height: 6),
-          OtherItemCard(
-            onClick: () {
-              context.read<CartBloc>().add(const ClearCart());
-            },
-            title: "Clear cart",
-          ),
-          const SizedBox(height: 6),
+          // const SizedBox(height: 6),
           // OtherItemCard(
-          //   onClick: () async {
-          //     FirestoreService firestoreService = FirestoreService();
-          //     await firestoreService.addProductToFirestore();
+          //   onClick: () {
+          //     context.read<FavoritesBloc>().add(const ClearFavorites());
           //   },
-          //   title: "Add new product",
+          //   title: "--- Clear Favorites ---",
           // ),
           const SizedBox(height: 6),
           BlocBuilder<UserBloc, UserState>(
             builder: (context, state) {
               if (state is UserLogged) {
-                return OtherItemCard(
-                  onClick: () {
-                    context.read<UserBloc>().add(SignOutUser());
-                    context.read<CartBloc>().add(const ClearCart());
-                  },
-                  title: "Sign Out",
-                );
+                return Column(children: [
+                  OtherItemCard(
+                    onClick: () {
+                      showDialog(
+                        context: context,
+                        builder: (context)
+                      {
+                        return SignOutConfirmationAlert(
+                          onSignOut: () {
+                            context.read<UserBloc>().add(SignOutUser());
+                            context
+                                .read<FavoritesBloc>()
+                                .add(const ClearFavorites());
+                          },
+                        );
+                      },
+                      );
+                    },
+                    title: "Sign Out",
+                  )
+                ]);
               } else {
                 return const SizedBox();
               }

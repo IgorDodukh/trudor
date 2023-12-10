@@ -1,4 +1,4 @@
-import 'package:trudor/domain/entities/user/user.dart';
+import 'package:spoto/domain/entities/user/user.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../fixtures/constant_objects.dart';

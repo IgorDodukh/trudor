@@ -1,4 +1,4 @@
-import 'package:trudor/core/error/failures.dart';
+import 'package:spoto/core/error/failures.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../../core/error/exceptions.dart';
@@ -27,7 +27,7 @@ class OrderRemoteDataSourceSourceImpl implements OrderRemoteDataSource {
     if (response.statusCode == 200) {
       return orderDetailsModelFromJson(response.body);
     } else {
-      throw ServerException();
+      throw ServerException("Authentication Failed: ${response.statusCode}\n${response.body}");
     }
   }
 

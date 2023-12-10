@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:trudor/domain/usecases/delivery_info/get_selected_delivery_info_usecase.dart';
+import 'package:spoto/domain/usecases/delivery_info/get_selected_delivery_info_usecase.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../../../core/usecases/usecase.dart';

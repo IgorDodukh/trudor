@@ -1,5 +1,5 @@
 // App
-const String appTitle = 'Trudor';
+const String appTitle = 'Spoto';
 
 // Networking and APIs
 const String baseUrl = 'https://rich-jade-mackerel-kit.cyclic.app';

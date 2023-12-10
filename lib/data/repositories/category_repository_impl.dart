@@ -1,16 +1,15 @@
 import 'package:dartz/dartz.dart';
-import 'package:trudor/core/util/firstore_folder_methods.dart';
-import 'package:trudor/domain/entities/category/category.dart';
+import 'package:spoto/core/util/firestore/firestore_categories.dart';
+import 'package:spoto/domain/entities/category/category.dart';
 
-import '../../../../core/error/failures.dart';
 import '../../../../core/error/exceptions.dart';
+import '../../../../core/error/failures.dart';
 import '../../core/network/network_info.dart';
 import '../../domain/repositories/category_repository.dart';
 import '../data_sources/local/category_local_data_source.dart';
 
-
 class CategoryRepositoryImpl implements CategoryRepository {
-  final FirestoreService firestoreService = FirestoreService();
+  final FirestoreCategories firestoreService = FirestoreCategories();
   final CategoryLocalDataSource localDataSource;
   final NetworkInfo networkInfo;
 

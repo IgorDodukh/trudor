@@ -1,7 +1,7 @@
-import 'package:trudor/core/error/exceptions.dart';
-import 'package:trudor/data/data_sources/local/cart_local_data_source.dart';
-import 'package:trudor/data/data_sources/local/user_local_data_source.dart';
-import 'package:trudor/data/models/user/user_model.dart';
+import 'package:spoto/core/error/exceptions.dart';
+import 'package:spoto/data/data_sources/local/favorites_local_data_source.dart';
+import 'package:spoto/data/data_sources/local/user_local_data_source.dart';
+import 'package:spoto/data/models/user/user_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -127,7 +127,7 @@ void main() {
           .thenAnswer((_) => Future<void>.value());
       when(() => mockSharedPreferences.remove(cachedUser))
           .thenAnswer((_) => Future<bool>.value(true));
-      when(() => mockSharedPreferences.remove(cachedCart))
+      when(() => mockSharedPreferences.remove(cachedFavorites))
           .thenAnswer((_) => Future<bool>.value(true));
 
       /// Act

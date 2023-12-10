@@ -1,15 +1,16 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:trudor/firebase_options.dart';
+import 'package:spoto/firebase_options.dart';
 
 import 'core/constant/strings.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'domain/usecases/product/get_product_usecase.dart';
-import 'presentation/blocs/cart/cart_bloc.dart';
+import 'presentation/blocs/favorites/favorites_bloc.dart';
 import 'presentation/blocs/category/category_bloc.dart';
 import 'presentation/blocs/delivery_info/delivery_info_action/delivery_info_action_cubit.dart';
 import 'presentation/blocs/delivery_info/delivery_info_fetch/delivery_info_fetch_cubit.dart';
@@ -22,10 +23,9 @@ import 'presentation/blocs/product/product_bloc.dart';
 import 'presentation/blocs/user/user_bloc.dart';
 
 Future<void> main() async {
+  await dotenv.load(fileName: "lib/.env");
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await di.init();
 
   runApp(const MyApp());
@@ -54,7 +54,8 @@ class MyApp extends StatelessWidget {
               di.sl<CategoryBloc>()..add(const GetCategories()),
         ),
         BlocProvider(
-          create: (context) => di.sl<CartBloc>()..add(const GetCart()),
+          create: (context) =>
+              di.sl<FavoritesBloc>()..add(const GetFavorites()),
         ),
         BlocProvider(
           create: (context) => di.sl<UserBloc>()..add(CheckUser()),
@@ -63,7 +64,8 @@ class MyApp extends StatelessWidget {
           create: (context) => di.sl<DeliveryInfoActionCubit>(),
         ),
         BlocProvider(
-          create: (context) => di.sl<DeliveryInfoFetchCubit>()..fetchDeliveryInfo(),
+          create: (context) =>
+              di.sl<DeliveryInfoFetchCubit>()..fetchDeliveryInfo(),
         ),
         BlocProvider(
           create: (context) => di.sl<OrderFetchCubit>()..getOrders(),

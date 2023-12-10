@@ -1,5 +1,7 @@
-import 'package:trudor/domain/usecases/user/sign_up_usecase.dart';
-import 'package:trudor/presentation/blocs/user/user_bloc.dart';
+import 'package:spoto/core/constant/messages.dart';
+import 'package:spoto/data/models/user/user_model.dart';
+import 'package:spoto/domain/usecases/user/sign_up_usecase.dart';
+import 'package:spoto/presentation/blocs/user/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -7,7 +9,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import '../../../core/constant/images.dart';
 import '../../../core/error/failures.dart';
 import '../../../core/router/app_router.dart';
-import '../../blocs/cart/cart_bloc.dart';
+import '../../blocs/favorites/favorites_bloc.dart';
 import '../../widgets/input_form_button.dart';
 import '../../widgets/input_text_form_field.dart';
 
@@ -33,9 +35,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
       listener: (context, state) {
         EasyLoading.dismiss();
         if (state is UserLoading) {
-          EasyLoading.show(status: 'Loading...');
+          EasyLoading.show(status: loadingTitle);
         } else if (state is UserLogged) {
-          context.read<CartBloc>().add(const GetCart());
+          final userId = (context.read<UserBloc>().state.props.first as UserModel).id;
+          context.read<FavoritesBloc>().add(GetFavorites(userId: userId));
           Navigator.of(context).pushNamedAndRemoveUntil(
             AppRouter.home,
             ModalRoute.withName(''),

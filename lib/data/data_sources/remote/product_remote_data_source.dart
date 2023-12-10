@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:trudor/domain/entities/product/product.dart';
+import 'package:spoto/domain/entities/product/product.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../../core/error/exceptions.dart';
@@ -31,7 +31,7 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
     if (response.statusCode == 200) {
       return productResponseModelFromJson(response.body);
     } else {
-      throw ServerException();
+      throw ServerException("Authentication Failed: ${response.statusCode}\n${response.body}");
     }
   }
 

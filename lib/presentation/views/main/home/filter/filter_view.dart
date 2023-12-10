@@ -1,4 +1,4 @@
-import 'package:trudor/presentation/blocs/product/product_bloc.dart';
+import 'package:spoto/presentation/blocs/product/product_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,12 +17,15 @@ class FilterView extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Filter"),
         actions: [
-          IconButton(
-            onPressed: () {
-              context.read<FilterCubit>().reset();
-            },
-            icon: const Icon(Icons.refresh),
-          )
+          TextButton(
+              onPressed: () {
+                context.read<FilterCubit>().reset();
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.black87,
+                textStyle: const TextStyle(decoration: TextDecoration.underline),
+              ),
+              child: const Text("Reset all")),
         ],
       ),
       body: ListView(
