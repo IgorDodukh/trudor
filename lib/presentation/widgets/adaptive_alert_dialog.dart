@@ -93,7 +93,7 @@ class UnauthorisedAddFavoritesAlert extends StatelessWidget {
     return AdaptiveDialog(
       title: addFavoritesTitle,
       content: addFavoritesContent,
-      yes: addFavoritesYes,
+      yes: openSignInTitle,
       no: addFavoritesNo,
       onClickYes: () {
         Navigator.of(context).pop();

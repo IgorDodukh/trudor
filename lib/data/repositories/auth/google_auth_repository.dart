@@ -17,7 +17,7 @@ class GoogleAuthRepository {
 
     // If the user did not sign in successfully, return null
     if (account == null) {
-      EasyLoading.showError("Unable to Auth with Google");
+      EasyLoading.showError("Unable to Sign In with Google");
       return null;
     }
 

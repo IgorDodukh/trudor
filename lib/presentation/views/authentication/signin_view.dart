@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:sign_in_button/sign_in_button.dart';
+import 'package:spoto/presentation/blocs/home/navbar_cubit.dart';
 
 import '../../../core/constant/images.dart';
 import '../../../core/router/app_router.dart';
@@ -89,7 +90,7 @@ class _SignInViewState extends State<SignInView> {
                     hint: 'Email',
                     validation: (String? val) {
                       if (val == null || val.isEmpty) {
-                        return 'This field can\'t be empty';
+                        return fieldCantBeEmpty;
                       }
                       return null;
                     },
@@ -103,7 +104,7 @@ class _SignInViewState extends State<SignInView> {
                     isSecureField: true,
                     validation: (String? val) {
                       if (val == null || val.isEmpty) {
-                        return 'This field can\'t be empty';
+                        return fieldCantBeEmpty;
                       }
                       return null;
                     },
@@ -154,11 +155,13 @@ class _SignInViewState extends State<SignInView> {
                     height: 24,
                   ),
                   SizedBox(
-                    width: 300,
+                    width: double.maxFinite,
                     height: 50,
                     child: SignInButton(
                       Buttons.google,
-                      elevation: 2,
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.0)),
                       text: "Continue with Google",
                       onPressed: () async {
                         // if (_formKey.currentState!.validate()) {
@@ -171,6 +174,7 @@ class _SignInViewState extends State<SignInView> {
                         )));
                         // }
                         Navigator.pushNamed(context, AppRouter.home);
+                        context.read<NavbarCubit>().update(0);
                       }
                     ),
                   ),

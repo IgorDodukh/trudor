@@ -13,7 +13,7 @@ const String updateDeliveryDetails = "Update Delivery Details";
 const String productUpdatedSuccessfully = "Updated successfully.\nChanges will appear soon.";
 const String productPublishedSuccessfully = "Published successfully.";
 
-const String addFavoritesWithoutLogin = "Please login to use Favorites";
+const String addFavoritesWithoutLogin = "Please Sign In to see your Favorites";
 
 // adaptive dialog - discard changes
 const String discardChangesTitle = "Discard changes?";
@@ -22,10 +22,11 @@ const String discardChangesNo = "Back";
 const String discardChangesYes = "Discard";
 
 // adaptive dialog - add to favorites
-const String addFavoritesTitle = "Would you like to login?";
-const String addFavoritesContent = "Adding to Favorites is available only after login.";
+const String addFavoritesTitle = "Would you like to Sign In?";
+const String addFavoritesContent = "Adding to Favorites is available only after Sign In.";
+const String favoritesPageUnavailable = "Favorites list is available only after Sign in";
 const String addFavoritesNo = "Back";
-const String addFavoritesYes = "Open Login";
+const String openSignInTitle = "Open Sign In";
 
 // deactivate product alert
 const String deactivateProductTitle = "Deactivate publication?";

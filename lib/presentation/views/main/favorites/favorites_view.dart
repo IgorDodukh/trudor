@@ -1,11 +1,13 @@
 // import 'dart:js_interop';
 
-import 'package:spoto/core/constant/messages.dart';
-import 'package:spoto/core/util/price_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spoto/core/constant/messages.dart';
+import 'package:spoto/core/router/app_router.dart';
+import 'package:spoto/core/util/price_handler.dart';
 import 'package:spoto/data/models/user/user_model.dart';
 import 'package:spoto/presentation/blocs/user/user_bloc.dart';
+import 'package:spoto/presentation/widgets/input_form_button.dart';
 
 import '../../../../core/constant/images.dart';
 import '../../../../core/error/failures.dart';
@@ -20,7 +22,6 @@ class FavoritesView extends StatefulWidget {
 }
 
 class _FavoritesViewState extends State<FavoritesView> {
-
   final ScrollController scrollController = ScrollController();
 
   void _scrollListener() {
@@ -68,26 +69,58 @@ class _FavoritesViewState extends State<FavoritesView> {
                           return Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              if (state.failure is NetworkFailure)
-                                Image.asset(kNoConnection),
-                              if (state.failure is ServerFailure)
-                                Image.asset(kInternalServerError),
-                              if (state.failure is ExceptionFailure)
-                                Image.asset(kInternalServerError),
-                              Text(state.failure.toString()),
-                              const Text(noFavoritesYet),
-                              SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.1,
-                              ),
-                              IconButton(
-                                  onPressed: () {
-                                    final userId = (context.read<UserBloc>().state.props.first as UserModel).id;
-                                    context
-                                        .read<FavoritesBloc>()
-                                        .add(GetFavorites(userId: userId));
+                              if (context.read<UserBloc>().state
+                                  is UserLogged) ...[
+                                if (state.failure is NetworkFailure)
+                                  Image.asset(kNoConnection),
+                                if (state.failure is ServerFailure)
+                                  Image.asset(kInternalServerError),
+                                if (state.failure is ExceptionFailure)
+                                  Image.asset(kInternalServerError),
+                                Text(state.failure.toString()),
+                                const Text(noFavoritesYet),
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.1,
+                                ),
+                                IconButton(
+                                    onPressed: () {
+                                      final userId = (context
+                                              .read<UserBloc>()
+                                              .state
+                                              .props
+                                              .first as UserModel)
+                                          .id;
+                                      context
+                                          .read<FavoritesBloc>()
+                                          .add(GetFavorites(userId: userId));
+                                    },
+                                    icon: const Icon(Icons.refresh)),
+                              ] else ...[
+                                Image.asset(loginErrorAsset),
+                                const Center(
+                                    child: Text(
+                                  addFavoritesWithoutLogin,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 18),
+                                )),
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.05,
+                                ),
+                                InputFormButton(
+                                  color: Colors.black87,
+                                  onClick: () async {
+                                    Navigator.of(context)
+                                        .pushNamed(AppRouter.signIn);
                                   },
-                                  icon: const Icon(Icons.refresh)),
+                                  titleText: openSignInTitle,
+                                ),
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.1,
+                                ),
+                              ],
                             ],
                           );
                         }
@@ -95,8 +128,13 @@ class _FavoritesViewState extends State<FavoritesView> {
                           return Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Image.asset(kEmptyFavorites),
-                              const Text(noFavoritesYet),
+                              Image.asset(noFavoritesAsset),
+                              const Center(
+                                  child: Text(
+                                noFavoritesYet,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 18),
+                              )),
                               SizedBox(
                                 height:
                                     MediaQuery.of(context).size.height * 0.1,
@@ -105,8 +143,10 @@ class _FavoritesViewState extends State<FavoritesView> {
                           );
                         }
                         return ListView.builder(
-                          itemCount: state.favorites.length < 11 ? state.favorites.length : state.favorites.length +
-                              ((state is FavoritesLoading) ? 10 : 0),
+                          itemCount: state.favorites.length < 11
+                              ? state.favorites.length
+                              : state.favorites.length +
+                                  ((state is FavoritesLoading) ? 10 : 0),
                           padding: EdgeInsets.only(
                               top: (MediaQuery.of(context).padding.top - 30),
                               bottom:

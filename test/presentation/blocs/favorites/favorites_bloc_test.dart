@@ -40,7 +40,6 @@ void main() {
       mockRemoveFavoritesItemUseCase = MockRemoveFavoritesItemUseCase();
 
       favoritesBloc = FavoritesBloc(
-        mockGetCachedFavoritesUseCase,
         mockAddFavoritesUseCase,
         mockSyncFavoritesUseCase,
         mockClearFavoritesUseCase,
