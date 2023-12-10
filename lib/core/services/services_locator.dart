@@ -120,7 +120,7 @@ Future<void> init() async {
   //Features - Favorites
   // Bloc
   sl.registerFactory(
-    () => FavoritesBloc(sl(), sl(), sl(), sl(), sl()),
+    () => FavoritesBloc(sl(), sl(), sl(), sl()/*, sl()*/),
   );
   // Use cases
   sl.registerLazySingleton(() => GetCachedFavoritesUseCase(sl()));
