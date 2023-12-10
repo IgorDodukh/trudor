@@ -2,10 +2,9 @@ import 'package:basic_utils/basic_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:spoto/core/constant/messages.dart';
-import 'package:toggle_switch/toggle_switch.dart';
 import 'package:spoto/core/constant/collections.dart';
 import 'package:spoto/core/constant/images.dart';
+import 'package:spoto/core/constant/messages.dart';
 import 'package:spoto/core/error/failures.dart';
 import 'package:spoto/core/util/mappings.dart';
 import 'package:spoto/data/models/user/user_model.dart';
@@ -14,6 +13,7 @@ import 'package:spoto/presentation/blocs/product/product_bloc.dart';
 import 'package:spoto/presentation/blocs/user/user_bloc.dart';
 import 'package:spoto/presentation/widgets/alert_card.dart';
 import 'package:spoto/presentation/widgets/list_view_item_card.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 class MyPublicationsView extends StatefulWidget {
   const MyPublicationsView({Key? key}) : super(key: key);
@@ -25,6 +25,7 @@ class MyPublicationsView extends StatefulWidget {
 class _MyPublicationsViewState extends State<MyPublicationsView> {
   final ScrollController scrollController = ScrollController();
   String userId = "";
+  int currentIndex = 0;
 
   void _scrollListener() {
     double maxScroll = scrollController.position.maxScrollExtent;
@@ -39,19 +40,16 @@ class _MyPublicationsViewState extends State<MyPublicationsView> {
 
   void getOwnedActiveProducts() {
     context.read<ProductBloc>().add(GetProducts(FilterProductParams(
-            keyword: userId,
-            searchField: "ownerId",
-            status: ProductStatus.active.name.toString()
-    ))
-    );
+        keyword: userId,
+        searchField: "ownerId",
+        status: ProductStatus.active.name.toString())));
   }
 
   void getOwnedInactiveProducts() {
     context.read<ProductBloc>().add(GetProducts(FilterProductParams(
-            keyword: userId,
-            searchField: "ownerId",
-            status: ProductStatus.inactive.name.toString() ))
-    );
+        keyword: userId,
+        searchField: "ownerId",
+        status: ProductStatus.inactive.name.toString())));
   }
 
   @override
@@ -87,11 +85,13 @@ class _MyPublicationsViewState extends State<MyPublicationsView> {
                   initialLabelIndex: 0,
                   totalSwitches: 2,
                   labels: ProductStatus.values
-                      .map((e) => StringUtils.capitalize(e.toString().split('.').last) )
+                      .map((e) =>
+                          StringUtils.capitalize(e.toString().split('.').last))
                       .toList(),
                   radiusStyle: true,
                   onToggle: (index) {
-                    if (index == 0) {
+                    currentIndex = index!;
+                    if (currentIndex == 0) {
                       getOwnedActiveProducts();
                     } else {
                       getOwnedInactiveProducts();
@@ -104,7 +104,8 @@ class _MyPublicationsViewState extends State<MyPublicationsView> {
                     child: BlocListener<ProductBloc, ProductState>(
                       listener: (context, state) {
                         if (state is ProductError) {
-                          print("state is ProductError in My Publications View");
+                          print(
+                              "state is ProductError in My Publications View");
                         }
                       },
                       child: BlocBuilder<ProductBloc, ProductState>(
@@ -137,7 +138,11 @@ class _MyPublicationsViewState extends State<MyPublicationsView> {
                           }
                           return RefreshIndicator(
                             onRefresh: () async {
-                              getOwnedActiveProducts();
+                              if (currentIndex == 0) {
+                                getOwnedActiveProducts();
+                              } else {
+                                getOwnedInactiveProducts();
+                              }
                             },
                             child: ListView.builder(
                               itemCount: state.products.length +
@@ -154,11 +159,10 @@ class _MyPublicationsViewState extends State<MyPublicationsView> {
                               itemBuilder: (BuildContext context, int index) {
                                 if (state.products.length > index) {
                                   return ListViewItemCard(
-                                    listViewItem:
-                                        ProductMapping.productToListViewItem(
-                                            state.products[index]),
-                                    isOwned: true
-                                  );
+                                      listViewItem:
+                                          ProductMapping.productToListViewItem(
+                                              state.products[index]),
+                                      isOwned: true);
                                 }
                                 return Shimmer.fromColors(
                                   baseColor: Colors.grey.shade100,

@@ -17,12 +17,13 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   final UpdateProductUseCase _updateProductUseCase;
   final AddProductUseCase _addProductUseCase;
 
-  ProductBloc(this._getProductUseCase, this._addProductUseCase, this._updateProductUseCase)
+  ProductBloc(this._getProductUseCase, this._addProductUseCase,
+      this._updateProductUseCase)
       : super(ProductInitial(
             products: const [],
             params: const FilterProductParams(),
             metaData: PaginationMetaData(
-              pageSize: 20,
+              pageSize: 10,
               limit: 0,
               total: 0,
             ))) {
@@ -100,17 +101,17 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     try {
       final result = await _addProductUseCase(event.params);
       result.fold(
-            (failure) => emit(ProductError(
-              products: state.products,
-              metaData: state.metaData,
-              failure: failure,
-              params: const FilterProductParams(),
-            )),
-            (productResponse) => emit(ProductAdded(
-              metaData: productResponse.paginationMetaData,
-              products: productResponse.products,
-              params: const FilterProductParams(),
-            )),
+        (failure) => emit(ProductError(
+          products: state.products,
+          metaData: state.metaData,
+          failure: failure,
+          params: const FilterProductParams(),
+        )),
+        (productResponse) => emit(ProductAdded(
+          metaData: productResponse.paginationMetaData,
+          products: productResponse.products,
+          params: const FilterProductParams(),
+        )),
       );
     } catch (e) {
       EasyLoading.showError("Failed to add Product: $e");
@@ -139,16 +140,14 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
           params: state.params,
         ));
         final updatedParams = FilterProductParams(
-          keyword: state.params.keyword,
-          searchField: state.params.searchField,
-          categories: state.params.categories,
-          minPrice: state.params.minPrice,
-          maxPrice: state.params.maxPrice,
-          limit: limit + 1,
-          pageSize: state.params.pageSize
-        );
-        final result =
-            await _getProductUseCase(updatedParams);
+            keyword: state.params.keyword,
+            searchField: state.params.searchField,
+            categories: state.params.categories,
+            minPrice: state.params.minPrice,
+            maxPrice: state.params.maxPrice,
+            limit: limit + 1,
+            pageSize: state.params.pageSize);
+        final result = await _getProductUseCase(updatedParams);
         result.fold(
           (failure) => emit(ProductError(
             products: state.products,
@@ -160,7 +159,11 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
             List<Product> products = state.products;
             products.addAll(productResponse.products);
             emit(ProductLoaded(
-              metaData: state.metaData,
+              metaData: PaginationMetaData(
+                pageSize: state.metaData.pageSize,
+                limit: limit + 1,
+                total: state.metaData.total,
+              ),
               products: products,
               params: state.params,
             ));

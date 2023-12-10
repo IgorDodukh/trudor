@@ -130,7 +130,7 @@ class OtherView extends StatelessWidget {
                                 .pushNamed(AppRouter.signIn);
                           }
                         },
-                        title: "My publications",
+                        title: publicationsTitle,
                       );
                     },
                   ),

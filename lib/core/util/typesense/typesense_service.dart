@@ -68,7 +68,7 @@ class TypesenseService {
   Future<Map<String, dynamic>> searchProducts(FilterProductParams params) async {
     final searchName = params.keyword;
     final searchCategory = params.categories.isEmpty ? [] : params.categories.map((category) => category.name).toList();
-    final searchStatus = params.status!.isEmpty ? "" : params.status;
+    final searchStatus = params.status!.isEmpty ? "active" : params.status;
 
     final searchParameters = {
       'q': searchName,
@@ -77,7 +77,7 @@ class TypesenseService {
       'pre_segmented_query': 'true',
       'sort_by': 'createdAt:desc',
       'page': '${params.limit}',
-      'filter_by': 'status:active',
+      // 'filter_by': 'status:active',
       'per_page': '${params.pageSize}'
     };
     if (searchCategory.isNotEmpty) {

@@ -14,7 +14,7 @@ ProductResponseModel productResponseModelFromFirestore(QuerySnapshot querySnapsh
     ProductResponseModel.fromFirebase(querySnapshot);
 
 ProductResponseModel productResponseModelFromMap(Map<String, dynamic> result) =>
-    ProductResponseModel.fromTypesense(result);
+    ProductResponseModel.fromMap(result);
 
 String productResponseModelToJson(ProductResponseModel data) =>
     json.encode(data.toJson());
@@ -43,11 +43,11 @@ class ProductResponseModel extends ProductResponse {
             querySnapshot.docs.map((x) => ProductModel.fromJson(x.data() as Map<String, dynamic>))),
   );
 
-  factory ProductResponseModel.fromTypesense(Map<String, dynamic> result) =>
+  factory ProductResponseModel.fromMap(Map<String, dynamic> result) =>
       ProductResponseModel(
         meta: PaginationMetaDataModel(
-          pageSize: result["found"],
-          total: result["out_of"],
+          pageSize: result["request_params"]["per_page"],
+          total: result["found"],
           page: result["page"],
         ),
         data: List<ProductModel>.from(

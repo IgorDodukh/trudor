@@ -164,17 +164,17 @@ class _SignInViewState extends State<SignInView> {
                           borderRadius: BorderRadius.circular(12.0)),
                       text: "Continue with Google",
                       onPressed: () async {
-                        // if (_formKey.currentState!.validate()) {
                         final GoogleAuthRepository googleAuthRepository = GoogleAuthRepository();
                         final GoogleAuth? googleSignInUser = await googleAuthRepository.signIn();
-                        context.read<UserBloc>().add(GoogleSignInUser(SignInGoogleParams(
-                            id: googleSignInUser!.id,
-                            displayName: googleSignInUser.displayName,
-                            email: googleSignInUser.email
-                        )));
-                        // }
-                        Navigator.pushNamed(context, AppRouter.home);
-                        context.read<NavbarCubit>().update(0);
+                        if (googleSignInUser != null) {
+                          context.read<UserBloc>().add(GoogleSignInUser(SignInGoogleParams(
+                              id: googleSignInUser.id,
+                              displayName: googleSignInUser.displayName,
+                              email: googleSignInUser.email
+                          )));
+                          Navigator.pushNamed(context, AppRouter.home);
+                          context.read<NavbarCubit>().update(0);
+                        }
                       }
                     ),
                   ),

@@ -39,12 +39,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     super.initState();
-    _loadProducts();
     scrollController.addListener(_scrollListener);
-  }
-
-  void _loadProducts() {
-    context.read<ProductBloc>().add(const GetProducts(FilterProductParams()));
   }
 
   @override

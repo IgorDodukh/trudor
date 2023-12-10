@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:spoto/core/constant/images.dart';
-import 'package:spoto/core/util/firstore_folder_methods.dart';
+import 'package:spoto/core/util/firestore/firestore_images.dart';
+import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 class ImageUploadForm extends StatefulWidget {
   // TODO: https://medium.flutterdevs.com/multiimage-picker-in-flutter-69bd9f6cedfb
@@ -28,7 +28,7 @@ class _ImageUploadFormState extends State<ImageUploadForm> {
   int _currentIndex = 0;
   bool photosLimitReached = false;
   bool isLoading = false;
-  FirestoreService firestoreService = FirestoreService();
+  FirestoreImages firestoreService = FirestoreImages();
 
   @override
   void initState() {
@@ -128,7 +128,8 @@ class _ImageUploadFormState extends State<ImageUploadForm> {
                       : () async => {
                             await pickAndUploadImages(),
                           },
-                  child: const Text('Add more', style: TextStyle(decoration: TextDecoration.underline)),
+                  child: const Text('Add more',
+                      style: TextStyle(decoration: TextDecoration.underline)),
                 ),
               ),
           ],
