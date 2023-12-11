@@ -74,7 +74,6 @@ class TypesenseService {
       'q': searchName,
       'infix': 'always',
       'query_by': params.searchField,
-      'pre_segmented_query': 'true',
       'sort_by': 'createdAt:desc',
       'page': '${params.limit}',
       'per_page': '${params.pageSize}'

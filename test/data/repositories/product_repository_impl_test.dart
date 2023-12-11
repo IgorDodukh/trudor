@@ -4,7 +4,6 @@ import 'package:spoto/core/error/failures.dart';
 import 'package:spoto/core/network/network_info.dart';
 import 'package:spoto/data/data_sources/local/product_local_data_source.dart';
 import 'package:spoto/data/data_sources/remote/product_firebase_data_source.dart';
-import 'package:spoto/data/data_sources/remote/product_remote_data_source.dart';
 import 'package:spoto/data/repositories/product_repository_impl.dart';
 import 'package:spoto/domain/usecases/product/get_product_usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -13,7 +12,7 @@ import 'package:mocktail/mocktail.dart';
 import '../../fixtures/constant_objects.dart';
 
 class MockProductDataSource extends Mock implements ProductFirebaseDataSource {}
-class MockRemoteDataSource extends Mock implements ProductRemoteDataSource {}
+class MockRemoteDataSource extends Mock implements ProductFirebaseDataSource {}
 
 class MockLocalDataSource extends Mock implements ProductLocalDataSource {}
 
@@ -32,7 +31,6 @@ void main() {
     mockNetworkInfo = MockNetworkInfo();
     mockProductDataSource = MockProductDataSource();
     repository = ProductRepositoryImpl(
-      remoteDataSource: mockRemoteDataSource,
       localDataSource: mockLocalDataSource,
       networkInfo: mockNetworkInfo,
       firebaseDataSource: mockProductDataSource,

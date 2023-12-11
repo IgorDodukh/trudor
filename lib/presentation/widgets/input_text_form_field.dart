@@ -43,7 +43,9 @@ class _InputTextFormFieldState extends State<InputTextFormField> {
       keyboardType: widget.textInputType,
       inputFormatters: [
         LengthLimitingTextInputFormatter(widget.maxCharacters),
-        widget.hint == priceHint ? FilteringTextInputFormatter.allow(RegExp(r'(^\d*[.,]?\d{0,2})')) : FilteringTextInputFormatter.deny(RegExp(r'')),
+        widget.hint == priceHint
+            ? FilteringTextInputFormatter.allow(RegExp(r'(^\d*[.,]?\d{0,2})'))
+            : FilteringTextInputFormatter.deny(RegExp(r'')),
       ],
       controller: widget.controller,
       obscureText: widget.isSecureField && !_passwordVisible,

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:spoto/domain/usecases/auth/google_auth_usecase.dart';
 
 import 'user_model.dart';
@@ -7,7 +8,12 @@ import 'user_model.dart';
 AuthenticationResponseModel authenticationResponseModelFromJson(String str) =>
     AuthenticationResponseModel.fromJson(json.decode(str));
 
-AuthenticationResponseModel authenticationResponseModelFromGoogleParams(SignInGoogleParams params) =>
+AuthenticationResponseModel authenticationResponseModelFromUserCredential(
+        User user) =>
+    AuthenticationResponseModel.fromUserCredential(user);
+
+AuthenticationResponseModel authenticationResponseModelFromGoogleParams(
+        SignInGoogleParams params) =>
     AuthenticationResponseModel.fromGoogleParams(params);
 
 String authenticationResponseModelToJson(AuthenticationResponseModel data) =>
@@ -28,12 +34,22 @@ class AuthenticationResponseModel {
         user: UserModel.fromJson(json["user"]),
       );
 
-  factory AuthenticationResponseModel.fromGoogleParams(SignInGoogleParams params) {
+  factory AuthenticationResponseModel.fromUserCredential(User user) =>
+      AuthenticationResponseModel(
+          token: user.refreshToken!,
+          user: UserModel(
+            id: user.uid,
+            firstName: user.displayName!.split(" ").first,
+            lastName: user.displayName!.split(" ").last,
+            email: user.email!,
+          ));
+
+  factory AuthenticationResponseModel.fromGoogleParams(
+      SignInGoogleParams params) {
     return AuthenticationResponseModel(
       token: "no-token",
       user: UserModel.fromGoogleParams(params),
     );
-
   }
 
   Map<String, dynamic> toJson() => {

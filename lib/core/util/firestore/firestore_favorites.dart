@@ -13,21 +13,24 @@ class FirestoreFavorites {
   Future<List<FavoritesItemModel>> getProductsFromFavorites(
       String userId) async {
     try {
+      List<FavoritesItemModel> productsList = [];
       final querySnapshot =
           await _firestore.collection('favorites').doc(userId).get();
-      final favoritesQuery = querySnapshot.data() as Map<String, dynamic>;
-      List<FavoritesItemModel> productsList = [];
-      for (String productId in favoritesQuery.keys) {
-        if (favoritesQuery[productId] == true) {
-          await firestoreProducts.getProduct(productId).then((value) => {
-                if (value["status"] == "active")
-                  productsList.add(FavoritesItemModel.fromFirestoreJson(value)),
-              });
+      if (querySnapshot.exists) {
+        final favoritesQuery = querySnapshot.data() as Map<String, dynamic>;
+        for (String productId in favoritesQuery.keys) {
+          if (favoritesQuery[productId] == true) {
+            await firestoreProducts.getProduct(productId).then((value) => {
+                  if (value["status"] == "active")
+                    productsList
+                        .add(FavoritesItemModel.fromFirestoreJson(value)),
+                });
+          }
         }
       }
       return productsList;
     } catch (e) {
-      EasyLoading.showError("Failed to get products: $e");
+      EasyLoading.showError("Failed to get from favorites: $e");
       throw ServerException(e.toString());
     }
   }

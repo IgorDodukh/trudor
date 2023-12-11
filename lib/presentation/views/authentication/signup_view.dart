@@ -1,6 +1,8 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:spoto/core/constant/messages.dart';
 import 'package:spoto/data/models/user/user_model.dart';
 import 'package:spoto/domain/usecases/user/sign_up_usecase.dart';
+import 'package:spoto/presentation/blocs/home/navbar_cubit.dart';
 import 'package:spoto/presentation/blocs/user/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,6 +30,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController confirmPasswordController =
       TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  bool _validatePassword(String value){
+    String  pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+    RegExp regExp = RegExp(pattern);
+    return regExp.hasMatch(value);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +83,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     height: 20,
                   ),
                   const Text(
-                    "Please use your e-mail address to crate a new account",
+                    "Please use your valid e-mail address to create a new account",
                     style: TextStyle(fontSize: 16, color: Colors.grey),
                     textAlign: TextAlign.center,
                   ),
@@ -84,10 +92,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   InputTextFormField(
                     controller: firstNameController,
-                    hint: 'First Name',
+                    hint: firstNameHint,
                     validation: (String? val) {
                       if (val == null || val.isEmpty) {
-                        return 'This field can\'t be empty';
+                        return "$firstNameHint $fieldCantBeEmpty";
                       }
                       return null;
                     },
@@ -97,10 +105,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   InputTextFormField(
                     controller: lastNameController,
-                    hint: 'Last Name',
+                    hint: lastNameHint,
                     validation: (String? val) {
                       if (val == null || val.isEmpty) {
-                        return 'This field can\'t be empty';
+                        return "$lastNameHint $fieldCantBeEmpty";
                       }
                       return null;
                     },
@@ -110,10 +118,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   InputTextFormField(
                     controller: emailController,
-                    hint: 'Email',
+                    hint: emailHint,
                     validation: (String? val) {
                       if (val == null || val.isEmpty) {
-                        return 'This field can\'t be empty';
+                        return "$emailHint $fieldCantBeEmpty";
+                      } else if (!EmailValidator.validate(val)) {
+                        return invalidEmail;
                       }
                       return null;
                     },
@@ -123,31 +133,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   InputTextFormField(
                     controller: passwordController,
-                    hint: 'Password',
+                    hint: passwordHint,
                     isSecureField: true,
                     validation: (String? val) {
                       if (val == null || val.isEmpty) {
-                        return 'This field can\'t be empty';
+                        return "$passwordHint $fieldCantBeEmpty";
+                      } if (!_validatePassword(val)) {
+                        return "Password must be at least 8 characters and contain\none uppercase, one lowercase, one number and\none special character";
                       }
                       return null;
                     },
                   ),
                   const SizedBox(
-                    height: 12,
-                  ),
-                  InputTextFormField(
-                    controller: confirmPasswordController,
-                    hint: 'Confirm Password',
-                    isSecureField: true,
-                    validation: (String? val) {
-                      if (val == null || val.isEmpty) {
-                        return 'This field can\'t be empty';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(
-                    height: 40,
+                    height: 20,
                   ),
                   InputFormButton(
                     color: Colors.black87,
@@ -155,6 +153,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       if (_formKey.currentState!.validate()) {
                         if (passwordController.text !=
                             confirmPasswordController.text) {
+                          EasyLoading.showError(confirmPasswordNotMatch);
                         } else {
                           context.read<UserBloc>().add(SignUpUser(SignUpParams(
                                 firstName: firstNameController.text,
@@ -162,10 +161,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 email: emailController.text,
                                 password: passwordController.text,
                               )));
+                          context.read<NavbarCubit>().update(0);
                         }
                       }
                     },
-                    titleText: 'Sign Up',
+                    titleText: signUpTitle,
                   ),
                   const SizedBox(
                     height: 10,
@@ -175,7 +175,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     onClick: () {
                       Navigator.of(context).pop();
                     },
-                    titleText: 'Back',
+                    titleText: backTitle,
                   ),
                   const SizedBox(
                     height: 30,

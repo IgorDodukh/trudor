@@ -73,7 +73,7 @@ class DiscardChangesAlert extends StatelessWidget {
       title: discardChangesTitle,
       content: discardChangesContent,
       yes: discardChangesYes,
-      no: discardChangesNo,
+      no: backTitle,
       onClickYes: () {
         Navigator.of(context).pop();
         Navigator.of(context).pop();
@@ -94,7 +94,7 @@ class UnauthorisedAddFavoritesAlert extends StatelessWidget {
       title: addFavoritesTitle,
       content: addFavoritesContent,
       yes: openSignInTitle,
-      no: addFavoritesNo,
+      no: backTitle,
       onClickYes: () {
         Navigator.of(context).pop();
         Navigator.of(context).pushNamed(AppRouter.signIn);
@@ -117,7 +117,7 @@ class DeactivateProductAlert extends StatelessWidget {
       title: deactivateProductTitle,
       content: deactivateProductContent,
       yes: deactivateProductYes,
-      no: deactivateProductNo,
+      no: backTitle,
       onClickYes: () {
         onDeactivateProduct();
         EasyLoading.showSuccess(deactivatedSuccessfully);
@@ -141,7 +141,7 @@ class RenewProductAlert extends StatelessWidget {
       title: activateProductTitle,
       content: activateProductContent,
       yes: activateProductYes,
-      no: activateProductNo,
+      no: backTitle,
       onClickYes: () {
         onRenewProduct();
         EasyLoading.showSuccess(productPublishedSuccessfully);
@@ -165,7 +165,7 @@ class SignOutConfirmationAlert extends StatelessWidget {
       title: signOutConfirmTitle,
       content: signOutConfirmContent,
       yes: signOutConfirmYes,
-      no: signOutConfirmNo,
+      no: backTitle,
       onClickYes: () {
         onSignOut();
         EasyLoading.showSuccess(signOutSuccess);

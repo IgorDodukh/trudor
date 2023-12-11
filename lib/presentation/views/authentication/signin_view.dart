@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:spoto/core/constant/messages.dart';
 import 'package:spoto/core/error/failures.dart';
 import 'package:spoto/data/models/user/user_model.dart';
@@ -46,7 +47,7 @@ class _SignInViewState extends State<SignInView> {
           );
         } else if (state is UserLoggedFail) {
           if (state.failure is CredentialFailure) {
-            EasyLoading.showError("Username/Password Wrong!");
+            EasyLoading.showError("Username or Password is incorrect");
           } else {
             EasyLoading.showError("Error $state");
           }
@@ -86,11 +87,15 @@ class _SignInViewState extends State<SignInView> {
                     height: 24,
                   ),
                   InputTextFormField(
+                    textInputType: TextInputType.emailAddress,
                     controller: emailController,
-                    hint: 'Email',
+                    hint: emailHint,
+                    maxCharacters: 256,
                     validation: (String? val) {
                       if (val == null || val.isEmpty) {
-                        return fieldCantBeEmpty;
+                        return "$emailHint $fieldCantBeEmpty";
+                      } else if (!EmailValidator.validate(val)) {
+                        return invalidEmail;
                       }
                       return null;
                     },
@@ -100,11 +105,11 @@ class _SignInViewState extends State<SignInView> {
                   ),
                   InputTextFormField(
                     controller: passwordController,
-                    hint: 'Password',
+                    hint: passwordHint,
                     isSecureField: true,
                     validation: (String? val) {
                       if (val == null || val.isEmpty) {
-                        return fieldCantBeEmpty;
+                        return "$passwordHint $fieldCantBeEmpty";
                       }
                       return null;
                     },
@@ -119,7 +124,7 @@ class _SignInViewState extends State<SignInView> {
                         // Navigator.pushNamed(context, AppRouter.forgotPassword);
                       },
                       child: const Text(
-                        'Forgot Password?',
+                        forgotPasswordTitle,
                         style: TextStyle(
                           fontSize: 14,
                         ),
@@ -137,6 +142,7 @@ class _SignInViewState extends State<SignInView> {
                               username: emailController.text,
                               password: passwordController.text,
                             )));
+                        context.read<NavbarCubit>().update(0);
                       }
                     },
                     titleText: 'Sign In',
@@ -185,9 +191,9 @@ class _SignInViewState extends State<SignInView> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text(
-                          'Don\'t have an account! ',
+                          "Don't have an account? ",
                           style: TextStyle(
-                            fontSize: 14,
+                            fontSize: 16,
                           ),
                         ),
                         InkWell(
@@ -197,7 +203,7 @@ class _SignInViewState extends State<SignInView> {
                           child: const Text(
                             'Register',
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: 16,
                               color: Colors.black,
                               fontWeight: FontWeight.w600,
                             ),

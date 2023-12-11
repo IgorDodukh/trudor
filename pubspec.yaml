@@ -63,6 +63,8 @@ dependencies:
   custom_timer: ^0.1.2
   uuid: ^4.2.1
   basic_utils: ^5.7.0
+  email_validator: ^2.1.17
+  flutter_pw_validator: ^1.6.0
 
   #ui
   oktoast: ^3.3.1
@@ -83,7 +85,9 @@ dependencies:
   another_flutter_splash_screen: ^1.2.0
 #  babstrap_settings_screen: ^0.1.6 # settings screen
 # TODO: ALERTS https://gallery.flutter.dev/#/demo/cupertino-alerts
-# TODO: app version: https://pub.dev/packages/package_info_plus
+# package_info_plus 5.0.1 # app info
+# share_plus 7.2.1 # share feature
+# logger 2.0.2+1 # logging
 
 dev_dependencies:
   flutter_test:

@@ -9,20 +9,17 @@ import '../../domain/entities/product/product_response.dart';
 import '../../domain/repositories/product_repository.dart';
 import '../../domain/usecases/product/get_product_usecase.dart';
 import '../data_sources/local/product_local_data_source.dart';
-import '../data_sources/remote/product_remote_data_source.dart';
 import '../models/product/product_response_model.dart';
 
 typedef _ConcreteOrProductChooser = Future<ProductResponse> Function();
 
 class ProductRepositoryImpl implements ProductRepository {
   final ProductFirebaseDataSource firebaseDataSource;
-  final ProductRemoteDataSource remoteDataSource;
   final ProductLocalDataSource localDataSource;
   final NetworkInfo networkInfo;
 
   ProductRepositoryImpl({
     required this.firebaseDataSource,
-    required this.remoteDataSource,
     required this.localDataSource,
     required this.networkInfo,
   });

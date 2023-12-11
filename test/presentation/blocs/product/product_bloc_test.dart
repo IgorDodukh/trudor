@@ -114,7 +114,7 @@ void main() {
             .thenAnswer((_) async => Right(tProductResponseModel));
         return productBloc;
       },
-      act: (bloc) => bloc.add(const GetMoreProducts()),
+      act: (bloc) => bloc.add(const GetMoreProducts(FilterProductParams())),
       expect: () => [],
     );
 
@@ -125,7 +125,7 @@ void main() {
             .thenAnswer((_) async => Left(NetworkFailure()));
         return productBloc;
       },
-      act: (bloc) => bloc.add(const GetMoreProducts()),
+      act: (bloc) => bloc.add(const GetMoreProducts(FilterProductParams())),
       expect: () => [],
     );
   });
