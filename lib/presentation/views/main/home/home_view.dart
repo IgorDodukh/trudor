@@ -34,15 +34,22 @@ class _HomeViewState extends State<HomeView> {
     double scrollPercentage = 0.7;
     if (currentScroll > (maxScroll * scrollPercentage)) {
       if (context.read<ProductBloc>().state is ProductLoaded) {
-        context.read<ProductBloc>().add(GetMoreProducts(
-            FilterProductParams(keyword: searchValue, searchField: "name")));
+        _loadProducts();
       }
     }
+  }
+
+  void _loadProducts([FilterProductParams? params]) {
+    final filterParams = params ??
+        FilterProductParams(
+            keyword: searchValue, searchField: "name", status: "active");
+    context.read<ProductBloc>().add(GetProducts(filterParams));
   }
 
   @override
   void initState() {
     super.initState();
+    _loadProducts();
     scrollController.addListener(_scrollListener);
   }
 
@@ -162,15 +169,14 @@ class _HomeViewState extends State<HomeView> {
                         autofocus: false,
                         controller:
                             context.read<FilterCubit>().searchController,
-                        onChanged: (val) => setState(() {searchValue = val;}),
-                        onSubmitted: (val) =>
-                        {
+                        onChanged: (val) => setState(() {
+                          searchValue = val;
+                        }),
+                        onSubmitted: (val) => {
                           setState(() {
                             searchValue = val;
                           }),
-                          context.read<ProductBloc>().add(GetProducts(
-                              FilterProductParams(
-                                  keyword: searchValue, searchField: "name")))
+                          _loadProducts(),
                         },
                         decoration: InputDecoration(
                             contentPadding: const EdgeInsets.only(
@@ -195,9 +201,7 @@ class _HomeViewState extends State<HomeView> {
                                           context
                                               .read<FilterCubit>()
                                               .update(keyword: '');
-                                          context.read<ProductBloc>().add(
-                                              const GetProducts(
-                                                  FilterProductParams()));
+                                          _loadProducts(const FilterProductParams());
                                         },
                                         icon: const Icon(Icons.clear)),
                                   )
@@ -270,13 +274,12 @@ class _HomeViewState extends State<HomeView> {
                         image: kNoConnection,
                         message: "Network failure\nTry again!",
                         onClick: () {
-                          context.read<ProductBloc>().add(GetProducts(
-                              FilterProductParams(
-                                  keyword: context
-                                      .read<FilterCubit>()
-                                      .searchController
-                                      .text,
-                                  searchField: "name")));
+                          _loadProducts(FilterProductParams(
+                              keyword: context
+                                  .read<FilterCubit>()
+                                  .searchController
+                                  .text,
+                              searchField: "name"));
                         },
                       );
                     }
@@ -294,13 +297,12 @@ class _HomeViewState extends State<HomeView> {
                         const Text("Products not found!"),
                         IconButton(
                             onPressed: () {
-                              context.read<ProductBloc>().add(GetProducts(
-                                  FilterProductParams(
-                                      keyword: context
-                                          .read<FilterCubit>()
-                                          .searchController
-                                          .text,
-                                      searchField: "name")));
+                              _loadProducts(FilterProductParams(
+                                  keyword: context
+                                      .read<FilterCubit>()
+                                      .searchController
+                                      .text,
+                                  searchField: "name"));
                             },
                             icon: const Icon(Icons.refresh)),
                         SizedBox(
@@ -311,9 +313,7 @@ class _HomeViewState extends State<HomeView> {
                   }
                   return RefreshIndicator(
                     onRefresh: () async {
-                      context
-                          .read<ProductBloc>()
-                          .add(const GetProducts(FilterProductParams()));
+                      _loadProducts();
                     },
                     child: GridView.builder(
                       itemCount: state.products.length +
