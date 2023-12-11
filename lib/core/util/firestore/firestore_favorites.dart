@@ -14,14 +14,15 @@ class FirestoreFavorites {
       String userId) async {
     try {
       final querySnapshot =
-      await _firestore.collection('favorites').doc(userId).get();
+          await _firestore.collection('favorites').doc(userId).get();
       final favoritesQuery = querySnapshot.data() as Map<String, dynamic>;
       List<FavoritesItemModel> productsList = [];
       for (String productId in favoritesQuery.keys) {
         if (favoritesQuery[productId] == true) {
           await firestoreProducts.getProduct(productId).then((value) => {
-            productsList.add(FavoritesItemModel.fromFirestoreJson(value)),
-          });
+                if (value["status"] == "active")
+                  productsList.add(FavoritesItemModel.fromFirestoreJson(value)),
+              });
         }
       }
       return productsList;
@@ -34,7 +35,7 @@ class FirestoreFavorites {
   Future<void> addProductToFavorites(FavoritesItemModel favoritesItem) async {
     try {
       DocumentReference productRef =
-      _firestore.collection('favorites').doc(favoritesItem.userId);
+          _firestore.collection('favorites').doc(favoritesItem.userId);
       final snapshot = await productRef.get();
       if (!snapshot.exists) {
         productRef.set({favoritesItem.product.id: true});
@@ -50,12 +51,10 @@ class FirestoreFavorites {
       FavoritesItemModel favoritesItem) async {
     try {
       DocumentReference productRef =
-      _firestore.collection('favorites').doc(favoritesItem.userId);
+          _firestore.collection('favorites').doc(favoritesItem.userId);
       await productRef.update({favoritesItem.product.id: false});
     } catch (e) {
       EasyLoading.showError("Failed to remove product from favorites: $e");
     }
   }
-
-
 }

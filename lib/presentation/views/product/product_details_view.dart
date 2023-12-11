@@ -139,7 +139,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                       PriceTagModel(
                           id: '1',
                           name: "base",
-                          price: int.parse(
+                          price: double.parse(
                               widget.product.priceTags.first.price.toString()))
                     ],
                     categories: [
@@ -181,7 +181,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                       PriceTagModel(
                           id: '1',
                           name: "base",
-                          price: int.parse(
+                          price: double.parse(
                               widget.product.priceTags.first.price.toString()))
                     ],
                     categories: [
