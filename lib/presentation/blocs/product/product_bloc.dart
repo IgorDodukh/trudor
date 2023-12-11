@@ -78,7 +78,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
           products: state.products,
           metaData: state.metaData,
           failure: failure,
-          params: const FilterProductParams(),
+          params: state.params,
         )),
         (productResponse) => emit(ProductLoaded(
           metaData: productResponse.paginationMetaData,
@@ -92,7 +92,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         products: state.products,
         metaData: state.metaData,
         failure: ExceptionFailure(),
-        params: const FilterProductParams(),
+        params: state.params,
       ));
     }
   }

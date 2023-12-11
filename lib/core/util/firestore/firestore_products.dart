@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:spoto/core/constant/collections.dart';
 import 'package:spoto/core/error/exceptions.dart';
 import 'package:spoto/core/util/typesense/typesense_service.dart';
 import 'package:spoto/data/models/product/product_model.dart';
@@ -15,9 +16,9 @@ class FirestoreProducts {
     try {
       final productData = ProductModel.fromProduct(product).toJson();
 
-      DocumentReference productRef = _firestore.collection('products').doc(productData['_id']);
+      DocumentReference productRef =
+          _firestore.collection('products').doc(productData['_id']);
       await productRef.set(productData);
-
     } catch (e) {
       EasyLoading.showError("Failed to add product: $e");
       throw ServerException(e.toString());
@@ -32,9 +33,15 @@ class FirestoreProducts {
           _firestore.collection('products').doc(productData['_id']);
       await productRef.update(productData);
 
+      final productStatus = product.status == ProductStatus.active
+          ? ProductStatus.inactive
+          : ProductStatus.active;
+
       Map<String, dynamic> updatedProducts =
-          await typesenseService.searchProducts(
-              const FilterProductParams(keyword: "", searchField: "name"));
+          await typesenseService.searchProducts(FilterProductParams(
+              keyword: product.ownerId,
+              searchField: "ownerId",
+              status: productStatus.name.toString()));
       return productResponseModelFromMap(updatedProducts);
     } catch (e) {
       EasyLoading.showError("Failed to update product: $e");
@@ -60,7 +67,7 @@ class FirestoreProducts {
   Future<ProductResponseModel> getProducts(FilterProductParams params) async {
     try {
       CollectionReference productsCollection =
-      _firestore.collection('products');
+          _firestore.collection('products');
       Query productsQuery = productsCollection;
 
       if (params.keyword != null && params.keyword!.isNotEmpty) {

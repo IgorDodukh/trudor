@@ -29,7 +29,8 @@ class UpdateProduct extends ProductEvent {
 }
 
 class GetMoreProducts extends ProductEvent {
-  const GetMoreProducts();
+  final FilterProductParams params;
+  const GetMoreProducts(this.params);
   @override
   List<Object> get props => [];
 }

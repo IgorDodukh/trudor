@@ -33,7 +33,7 @@ class _MyPublicationsViewState extends State<MyPublicationsView> {
     double scrollPercentage = 0.7;
     if (currentScroll > (maxScroll * scrollPercentage)) {
       if (context.read<ProductBloc>().state is ProductLoaded) {
-        context.read<ProductBloc>().add(const GetMoreProducts());
+        context.read<ProductBloc>().add(const GetMoreProducts(FilterProductParams()));
       }
     }
   }
@@ -54,12 +54,12 @@ class _MyPublicationsViewState extends State<MyPublicationsView> {
 
   @override
   void initState() {
+    super.initState();
     setState(() {
       userId = (context.read<UserBloc>().state.props.first as UserModel).id;
     });
     getOwnedActiveProducts();
     scrollController.addListener(_scrollListener);
-    super.initState();
   }
 
   @override
@@ -156,7 +156,8 @@ class _MyPublicationsViewState extends State<MyPublicationsView> {
                                           200),
                               physics: const BouncingScrollPhysics(),
                               shrinkWrap: true,
-                              itemBuilder: (BuildContext context, int index) {
+                              itemBuilder:
+                                  (BuildContext context, int index) {
                                 if (state.products.length > index) {
                                   return ListViewItemCard(
                                       listViewItem:

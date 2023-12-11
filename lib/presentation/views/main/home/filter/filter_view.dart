@@ -1,3 +1,4 @@
+import 'package:spoto/core/constant/messages.dart';
 import 'package:spoto/presentation/blocs/product/product_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,7 +16,7 @@ class FilterView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Filter"),
+        title: const Text(filterTitle),
         actions: [
           TextButton(
               onPressed: () {
@@ -25,7 +26,7 @@ class FilterView extends StatelessWidget {
                 foregroundColor: Colors.black87,
                 textStyle: const TextStyle(decoration: TextDecoration.underline),
               ),
-              child: const Text("Reset all")),
+              child: const Text(resetAllTitle)),
         ],
       ),
       body: ListView(
@@ -36,7 +37,7 @@ class FilterView extends StatelessWidget {
               top: 10,
             ),
             child: Text(
-              "Categories",
+              categoriesTitle,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -83,7 +84,7 @@ class FilterView extends StatelessWidget {
           const Padding(
             padding: EdgeInsets.only(left: 20, top: 10),
             child: Text(
-              "Price Range",
+              priceRangeTitle,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -114,7 +115,7 @@ class FilterView extends StatelessWidget {
                     .state));
                 Navigator.of(context).pop();
               },
-              titleText: 'Continue',
+              titleText: applyFiltersTitle,
             );
           }),
         ),

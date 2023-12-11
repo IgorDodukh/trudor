@@ -87,7 +87,6 @@ class ListViewItemCard extends StatelessWidget {
                 context
                     .read<prod.ProductBloc>()
                     .add(prod.UpdateProduct(updatedModel));
-                Navigator.of(context).pop();
               },
             );
           },
@@ -172,6 +171,26 @@ class ListViewItemCard extends StatelessWidget {
         EasyLoading.showSuccess(removedFromFavoritesTitle);
       },
       icon: const Icon(Icons.favorite),
+    );
+  }
+
+  Widget addToFavoritesButton(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        final userId = (context
+            .read<UserBloc>()
+            .state
+            .props
+            .first as UserModel)
+            .id;
+        context.read<fav.FavoritesBloc>().add(
+            fav.AddProduct(
+                favoritesItem: ListViewItem(
+                    product: listViewItem!.product,
+                    userId: userId,
+                    priceTag: listViewItem!.priceTag)));
+      },
+      icon: const Icon(Icons.favorite_border),
     );
   }
 
@@ -308,23 +327,7 @@ class ListViewItemCard extends StatelessWidget {
                     )
                   : isFavorite
                       ? removeFromFavoritesButton(context)
-                      : IconButton(
-                          onPressed: () {
-                            final userId = (context
-                                    .read<UserBloc>()
-                                    .state
-                                    .props
-                                    .first as UserModel)
-                                .id;
-                            context.read<fav.FavoritesBloc>().add(
-                                fav.AddProduct(
-                                    favoritesItem: ListViewItem(
-                                        product: listViewItem!.product,
-                                        userId: userId,
-                                        priceTag: listViewItem!.priceTag)));
-                          },
-                          icon: const Icon(Icons.favorite_border),
-                        )),
+                      : addToFavoritesButton(context)),
         ],
       ),
     );

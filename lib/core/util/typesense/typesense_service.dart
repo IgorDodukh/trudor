@@ -77,7 +77,6 @@ class TypesenseService {
       'pre_segmented_query': 'true',
       'sort_by': 'createdAt:desc',
       'page': '${params.limit}',
-      // 'filter_by': 'status:active',
       'per_page': '${params.pageSize}'
     };
     if (searchCategory.isNotEmpty) {

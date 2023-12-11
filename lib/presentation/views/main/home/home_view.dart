@@ -25,13 +25,17 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   final ScrollController scrollController = ScrollController();
 
+  // TODO: check if this global variable works
+  String searchValue = "";
+
   void _scrollListener() {
     double maxScroll = scrollController.position.maxScrollExtent;
     double currentScroll = scrollController.position.pixels;
     double scrollPercentage = 0.7;
     if (currentScroll > (maxScroll * scrollPercentage)) {
       if (context.read<ProductBloc>().state is ProductLoaded) {
-        context.read<ProductBloc>().add(const GetMoreProducts());
+        context.read<ProductBloc>().add(GetMoreProducts(
+            FilterProductParams(keyword: searchValue, searchField: "name")));
       }
     }
   }
@@ -67,8 +71,8 @@ class _HomeViewState extends State<HomeView> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          Navigator.of(context)
-                              .pushNamed(AppRouter.userProfile, arguments: state.user);
+                          Navigator.of(context).pushNamed(AppRouter.userProfile,
+                              arguments: state.user);
                         },
                         child: Text(
                           "${state.user.firstName} ${state.user.lastName}",
@@ -81,8 +85,8 @@ class _HomeViewState extends State<HomeView> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.of(context)
-                              .pushNamed(AppRouter.userProfile, arguments: state.user);
+                          Navigator.of(context).pushNamed(AppRouter.userProfile,
+                              arguments: state.user);
                         },
                         child: state.user.image != null
                             ? CachedNetworkImage(
@@ -113,12 +117,12 @@ class _HomeViewState extends State<HomeView> {
                             height: 8,
                           ),
                           Text(
-                            "Welcome,",
+                            "Welcome",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 36),
                           ),
                           Text(
-                            "E-Shop mobile store",
+                            "Spoto mobile store",
                             style: TextStyle(
                                 fontWeight: FontWeight.normal, fontSize: 22),
                           ),
@@ -158,10 +162,16 @@ class _HomeViewState extends State<HomeView> {
                         autofocus: false,
                         controller:
                             context.read<FilterCubit>().searchController,
-                        onChanged: (val) => setState(() {}),
-                        onSubmitted: (val) => context.read<ProductBloc>().add(
-                            GetProducts(FilterProductParams(
-                                keyword: val, searchField: "name"))),
+                        onChanged: (val) => setState(() {searchValue = val;}),
+                        onSubmitted: (val) =>
+                        {
+                          setState(() {
+                            searchValue = val;
+                          }),
+                          context.read<ProductBloc>().add(GetProducts(
+                              FilterProductParams(
+                                  keyword: searchValue, searchField: "name")))
+                        },
                         decoration: InputDecoration(
                             contentPadding: const EdgeInsets.only(
                                 left: 20, bottom: 22, top: 22),
@@ -186,7 +196,8 @@ class _HomeViewState extends State<HomeView> {
                                               .read<FilterCubit>()
                                               .update(keyword: '');
                                           context.read<ProductBloc>().add(
-                                              const GetProducts(FilterProductParams()));
+                                              const GetProducts(
+                                                  FilterProductParams()));
                                         },
                                         icon: const Icon(Icons.clear)),
                                   )

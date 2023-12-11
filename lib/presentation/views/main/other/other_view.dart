@@ -123,7 +123,6 @@ class OtherView extends StatelessWidget {
                           if (state is UserLogged) {
                             Navigator.of(context).pushNamed(
                               AppRouter.myPublications,
-                              arguments: state.user,
                             );
                           } else {
                             Navigator.of(context)

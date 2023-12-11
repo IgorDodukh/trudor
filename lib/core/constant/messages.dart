@@ -80,3 +80,11 @@ const String publicationsTitle = "My Publications";
 const String addPublication = "Add Publication";
 const String updatePublication = "Update Publication";
 const String deliveryDetailsTitle = "Delivery Details";
+
+
+// filter page
+const String filterTitle = "Filter";
+const String priceRangeTitle = "Price Range";
+const String resetAllTitle = "Reset all";
+const String categoriesTitle = "Categories";
+const String applyFiltersTitle = "Apply Filters";
