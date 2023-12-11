@@ -245,7 +245,7 @@ class ListViewItemCard extends StatelessWidget {
                                   ? listViewItem!.product.images.first
                                   : noImagePlaceholder,
                               placeholder: (context, url) => const Center(
-                                  child: CircularProgressIndicator()),
+                                  child: CircularProgressIndicator.adaptive()),
                               errorWidget: (context, url, error) =>
                                   const Center(child: Icon(Icons.error)),
                             ),

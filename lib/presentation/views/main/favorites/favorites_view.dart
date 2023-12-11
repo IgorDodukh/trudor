@@ -64,6 +64,12 @@ class _FavoritesViewState extends State<FavoritesView> {
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: BlocBuilder<FavoritesBloc, FavoritesState>(
                       builder: (context, state) {
+                        if (state is FavoritesLoading &&
+                            state.favorites.isEmpty) {
+                          return const Center(
+                            child: CircularProgressIndicator.adaptive(),
+                          );
+                        }
                         if (state is FavoritesError &&
                             state.favorites.isEmpty) {
                           return Column(
