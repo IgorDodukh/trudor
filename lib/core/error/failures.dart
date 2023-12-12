@@ -17,3 +17,11 @@ class ExceptionFailure extends Failure {}
 class CredentialFailure extends Failure {}
 
 class AuthenticationFailure extends Failure {}
+
+class InvalidEmailFailure extends Failure {}
+
+class ExistingEmailFailure extends Failure {}
+
+class WeakPasswordFailure extends Failure {}
+
+class UserNotFoundFailure extends Failure {}

@@ -54,8 +54,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
         } else if (state is UserLoggedFail) {
           if (state.failure is CredentialFailure) {
             EasyLoading.showError("Username/Password Wrong!");
-          } else {
+          } else if (state.failure is ServerFailure) {
             EasyLoading.showError("Error: ${state.toString()}");
+          } else if (state.failure is WeakPasswordFailure) {
+            EasyLoading.showError("Provided password is too weak. Please try more complex password.");
+          } else if (state.failure is ExistingEmailFailure) {
+            EasyLoading.showError("The account with this email already exists.");
+          } else if (state.failure is InvalidEmailFailure) {
+            EasyLoading.showError("The email address is not valid! Please try again.");
+          } else {
+            EasyLoading.showError("Something went wrong. Please try again or contact support");
           }
         }
       },
@@ -117,8 +125,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     height: 12,
                   ),
                   InputTextFormField(
+                    textInputType: TextInputType.emailAddress,
                     controller: emailController,
                     hint: emailHint,
+                    maxCharacters: 256,
                     validation: (String? val) {
                       if (val == null || val.isEmpty) {
                         return "$emailHint $fieldCantBeEmpty";
@@ -139,7 +149,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       if (val == null || val.isEmpty) {
                         return "$passwordHint $fieldCantBeEmpty";
                       } if (!_validatePassword(val)) {
-                        return "Password must be at least 8 characters and contain\none uppercase, one lowercase, one number and\none special character";
+                        return "Password must be at least 8 characters and contain\nuppercase, lowercase, number and special character";
                       }
                       return null;
                     },
@@ -151,18 +161,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     color: Colors.black87,
                     onClick: () {
                       if (_formKey.currentState!.validate()) {
-                        if (passwordController.text !=
-                            confirmPasswordController.text) {
-                          EasyLoading.showError(confirmPasswordNotMatch);
-                        } else {
-                          context.read<UserBloc>().add(SignUpUser(SignUpParams(
-                                firstName: firstNameController.text,
-                                lastName: lastNameController.text,
-                                email: emailController.text,
-                                password: passwordController.text,
-                              )));
-                          context.read<NavbarCubit>().update(0);
-                        }
+                        context.read<UserBloc>().add(SignUpUser(SignUpParams(
+                              firstName: firstNameController.text,
+                              lastName: lastNameController.text,
+                              email: emailController.text,
+                              password: passwordController.text,
+                            )));
+                        context.read<NavbarCubit>().update(0);
                       }
                     },
                     titleText: signUpTitle,

@@ -39,8 +39,8 @@ class AuthenticationResponseModel {
           token: user.refreshToken!,
           user: UserModel(
             id: user.uid,
-            firstName: user.displayName!.split(" ").first,
-            lastName: user.displayName!.split(" ").last,
+            firstName: user.displayName != null ? user.displayName!.split(" ").first : "",
+            lastName: user.displayName != null ? user.displayName!.split(" ").last : "",
             email: user.email!,
           ));
 

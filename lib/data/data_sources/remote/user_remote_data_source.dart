@@ -24,52 +24,32 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
 
   @override
   Future<AuthenticationResponseModel> signIn(params) async {
-    try {
-      UserCredential credential = await _auth.signInWithEmailAndPassword(
-          email: params.username, password: params.password);
-      print("Sign in: ${credential.user}");
-      if (credential.user != null) {
-        return authenticationResponseModelFromUserCredential(credential.user!);
-      }
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
-      } else {
-        print("Sign in error: $e");
-        throw CredentialFailure();
-      }
+    UserCredential credential = await _auth
+        .signInWithEmailAndPassword(
+            email: params.username, password: params.password)
+        .then((value) => value)
+        .catchError((error) => handleSignInError(error));
+    if (credential.user != null) {
+      return authenticationResponseModelFromUserCredential(credential.user!);
     }
-    print("Sign in error");
     throw const ServerException("Sign In Failed");
   }
 
   @override
   Future<AuthenticationResponseModel> signUp(params) async {
-    try {
-      UserCredential credential = await _auth.createUserWithEmailAndPassword(
-          email: params.email, password: params.password);
+    UserCredential userCredential = await _auth
+        .createUserWithEmailAndPassword(
+            email: params.email, password: params.password)
+        .then((value) => value)
+        .catchError((error) => handleSignUpError(error));
 
-      User? user = credential.user;
-      await user?.updateDisplayName("${params.firstName} ${params.lastName}");
-      await user?.reload();
+    await userCredential.user
+        ?.updateDisplayName("${params.firstName} ${params.lastName}");
+    await userCredential.user?.reload();
 
-      User? latestUser = FirebaseAuth.instance.currentUser;
-      if (latestUser != null) {
-        return authenticationResponseModelFromUserCredential(latestUser);
-      }
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-        throw const ServerException("The password provided is too weak");
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
-        throw const ServerException(
-            "The account already exists for that email");
-      }
-    } catch (e) {
-      print(e);
+    User? latestUser = FirebaseAuth.instance.currentUser;
+    if (latestUser != null) {
+      return authenticationResponseModelFromUserCredential(latestUser);
     }
     throw const ServerException("Sign Up Failed");
   }
@@ -78,5 +58,27 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   Future<AuthenticationResponseModel> signInGoogle(
       SignInGoogleParams params) async {
     return authenticationResponseModelFromGoogleParams(params);
+  }
+
+  Future<UserCredential> handleSignInError(error) {
+    if (error.code == 'user-not-found') {
+      throw CredentialFailure();
+    } else if (error.code == 'wrong-password') {
+      throw CredentialFailure();
+    } else {
+      throw CredentialFailure();
+    }
+  }
+
+  Future<UserCredential> handleSignUpError(error) {
+    if (error.code == 'weak-password') {
+      throw WeakPasswordFailure();
+    } else if (error.code == 'email-already-in-use') {
+      throw ExistingEmailFailure();
+    } else if (error.code == 'invalid-email') {
+      throw InvalidEmailFailure();
+    } else {
+      throw const ServerException("Sign Up Failed");
+    }
   }
 }

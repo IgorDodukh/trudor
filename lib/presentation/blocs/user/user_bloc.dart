@@ -45,7 +45,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         (user) => emit(UserLogged(user)),
       );
     } catch (e) {
-      print("Login failed: $e");
       emit(UserLoggedFail(ExceptionFailure()));
     }
   }
@@ -95,6 +94,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         (user) => emit(UserLogged(user)),
       );
     } catch (e) {
+      print("Sign up error _onSignUp: $e");
       emit(UserLoggedFail(ExceptionFailure()));
     }
   }
