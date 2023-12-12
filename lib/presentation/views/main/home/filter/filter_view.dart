@@ -66,6 +66,8 @@ class _FilterViewState extends State<FilterView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(filterTitle),
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
         actions: [
           TextButton(
               onPressed: () {
@@ -165,18 +167,20 @@ class _FilterViewState extends State<FilterView> {
                         contentPadding:
                             const EdgeInsets.symmetric(horizontal: 12),
                         onChanged: (value) {
-                          validatePriceRange();
                           if (value != null && value.startsWith(",")) {
                             minPriceController.text = "0.";
                           } else if (value != null && value.contains(",")) {
                             minPriceController.text =
                                 minPriceController.text.replaceAll(",", ".");
                           }
+                          validatePriceRange();
                           return null;
                         },
                       ),
                     ),
-                    const SizedBox(width: 20),
+                    const SizedBox(width: 10),
+                    const Text("-"),
+                    const SizedBox(width: 10),
                     Expanded(
                       child: InputTextFormField(
                         controller: maxPriceController,
@@ -187,13 +191,13 @@ class _FilterViewState extends State<FilterView> {
                         contentPadding:
                             const EdgeInsets.symmetric(horizontal: 12),
                         onChanged: (value) {
-                          validatePriceRange();
                           if (value != null && value.startsWith(",")) {
                             maxPriceController.text = "0.";
                           } else if (value != null && value.contains(",")) {
                             maxPriceController.text =
                                 maxPriceController.text.replaceAll(",", ".");
                           }
+                          validatePriceRange();
                           return null;
                         },
                       ),
@@ -231,7 +235,7 @@ class _FilterViewState extends State<FilterView> {
                         maxPriceController.text.replaceAll(",", "."));
                 context
                     .read<FilterCubit>()
-                    .updatePriceRange(minPrice, maxPrice);
+                    .update(minPrice: minPrice, maxPrice: maxPrice);
                 context
                     .read<ProductBloc>()
                     .add(GetProducts(context.read<FilterCubit>().state));

@@ -83,8 +83,8 @@ const String priceRangeTitle = "Price Range";
 const String resetAllTitle = "Reset all";
 const String categoriesTitle = "Categories";
 const String applyFiltersTitle = "Apply Filters";
-const String minPriceHint = "Min Price";
-const String maxPriceHint = "Max Price";
+const String minPriceHint = "From";
+const String maxPriceHint = "To";
 const String priceRangeValidationMessage = "Min Price should be less than Max Price";
 
 // authentication

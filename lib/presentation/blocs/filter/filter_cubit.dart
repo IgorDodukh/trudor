@@ -13,6 +13,8 @@ class FilterCubit extends Cubit<FilterProductParams> {
     String? searchField,
     List<Category>? categories,
     Category? category,
+    double? minPrice,
+    double? maxPrice,
   }) {
     List<Category> updatedCategories = [];
     if (category != null) {
@@ -26,6 +28,8 @@ class FilterCubit extends Cubit<FilterProductParams> {
       keyword: keyword ?? state.keyword,
       searchField: searchField ?? state.searchField,
       categories: updatedCategories,
+      minPrice: minPrice ?? state.minPrice,
+      maxPrice: maxPrice ?? state.maxPrice,
     ));
   }
 
@@ -43,11 +47,6 @@ class FilterCubit extends Cubit<FilterProductParams> {
       categories: updatedCategories,
     ));
   }
-
-  void updatePriceRange(double? min, double? max) => emit(state.copyWith(
-        minPrice: min,
-        maxPrice: max,
-      ));
 
   int getFiltersCount() {
     int count = 0;

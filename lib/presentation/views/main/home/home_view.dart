@@ -38,6 +38,7 @@ class _HomeViewState extends State<HomeView> {
   }
 
   void _loadProducts([FilterProductParams? params]) {
+    context.read<FilterCubit>().update(keyword: searchValue);
     final filterParams = params ?? context.read<FilterCubit>().state;
     context.read<ProductBloc>().add(GetProducts(filterParams));
   }
@@ -103,11 +104,10 @@ class _HomeViewState extends State<HomeView> {
                                               .read<FilterCubit>()
                                               .searchController
                                               .clear();
-                                          context
-                                              .read<FilterCubit>()
-                                              .update(keyword: '');
-                                          _loadProducts(
-                                              const FilterProductParams());
+                                          setState(() {
+                                            searchValue = "";
+                                          });
+                                          _loadProducts();
                                         },
                                         icon: const Icon(Icons.clear)),
                                   )
