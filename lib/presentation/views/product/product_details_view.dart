@@ -135,6 +135,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                     description: widget.product.description,
                     isNew: widget.product.isNew,
                     status: ProductStatus.active,
+                    price: widget.product.price,
                     priceTags: [
                       PriceTagModel(
                           id: '1',
@@ -177,6 +178,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                     description: widget.product.description,
                     isNew: widget.product.isNew,
                     status: ProductStatus.inactive,
+                    price: widget.product.price,
                     priceTags: [
                       PriceTagModel(
                           id: '1',

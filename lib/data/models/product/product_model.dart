@@ -11,6 +11,7 @@ class ProductModel extends Product {
     required bool? isNew,
     required ProductStatus? status,
     required String name,
+    required num price,
     required String description,
     required List<PriceTagModel> priceTags,
     required List<CategoryModel> categories,
@@ -24,6 +25,7 @@ class ProductModel extends Product {
           isNew: isNew,
           status: status,
           name: name,
+          price: price,
           description: description,
           priceTags: priceTags,
           categories: categories,
@@ -39,6 +41,7 @@ class ProductModel extends Product {
         isNew: product.isNew,
         status: product.status,
         name: product.name,
+        price: product.price,
         description: product.description,
         priceTags: product.priceTags
             .map((priceTag) => PriceTagModel.fromPriceTag(priceTag))
@@ -58,6 +61,7 @@ class ProductModel extends Product {
         isNew: json["isNew"],
         status: ProductStatus.values.firstWhere((e) => e.toString() == 'ProductStatus.${json["status"]}'),
         name: json["name"],
+        price: json["price"] ?? 0,
         description: json["description"],
         priceTags: List<PriceTagModel>.from(
             json["priceTags"].map((x) => PriceTagModel.fromJson(x))),
@@ -75,6 +79,7 @@ class ProductModel extends Product {
         "isNew": isNew,
         "status": status!.name.toString(),
         "name": name,
+        "price": price,
         "description": description,
         "priceTags": List<dynamic>.from(
             (priceTags as List<PriceTagModel>).map((x) => x.toJson())),
@@ -92,6 +97,7 @@ class ProductModel extends Product {
         isNew: entity.isNew,
         status: entity.status,
         name: entity.name,
+        price: entity.price,
         description: entity.description,
         priceTags: entity.priceTags
             .map((priceTag) => PriceTagModel.fromEntity(priceTag))

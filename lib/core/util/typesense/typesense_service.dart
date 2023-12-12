@@ -74,16 +74,25 @@ class TypesenseService {
       'q': searchName,
       'infix': 'always',
       'query_by': params.searchField,
-      'sort_by': 'createdAt:desc',
+      'sort_by': '${params.sortBy}:${params.sortOrder}',
       'page': '${params.limit}',
       'per_page': '${params.pageSize}'
     };
+
+    StringBuffer filterBy = StringBuffer();
+    if (params.minPrice != null) {
+      filterBy.write('${filterBy.isEmpty ? filterBy : '&&'}price:>=${params.minPrice}') ;
+    }
+    if (params.maxPrice != null) {
+      filterBy.write('${filterBy.isEmpty ? filterBy : '&&'}price:<=${params.maxPrice}') ;
+    }
     if (searchCategory.isNotEmpty) {
-      searchParameters.addAll({'filter_by': 'category:[${searchCategory.join(",")}]'});
+      filterBy.write('${filterBy.isEmpty ? filterBy : '&&'}category:[${searchCategory.join(",")}]');
     }
     if (searchStatus!.isNotEmpty) {
-      searchParameters.addAll({'filter_by': 'status:$searchStatus'});
+      filterBy.write('${filterBy.isEmpty ? filterBy : '&&'}status:$searchStatus');
     }
+    searchParameters.addAll({'filter_by': filterBy.toString()});
 
     print("Search params: $searchParameters");
     final querySnapshot = await client.collection(_collectionName).documents.search(searchParameters);

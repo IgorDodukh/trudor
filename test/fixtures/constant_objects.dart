@@ -19,6 +19,7 @@ final tProductModel = ProductModel(
   id: "1",
   name: "name",
   description: "description",
+  price: 100,
   priceTags: [PriceTagModel(id: "1", name: "name", price: 100)],
   categories: const [CategoryModel(id: "1", name: "name", image: "image")],
   category: "category",

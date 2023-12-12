@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
@@ -10,7 +9,6 @@ import '../../../../core/router/app_router.dart';
 import '../../../../domain/usecases/product/get_product_usecase.dart';
 import '../../../blocs/filter/filter_cubit.dart';
 import '../../../blocs/product/product_bloc.dart';
-import '../../../blocs/user/user_bloc.dart';
 import '../../../widgets/alert_card.dart';
 import '../../../widgets/input_form_button.dart';
 import '../../../widgets/product_card.dart';
@@ -34,16 +32,13 @@ class _HomeViewState extends State<HomeView> {
     double scrollPercentage = 0.7;
     if (currentScroll > (maxScroll * scrollPercentage)) {
       if (context.read<ProductBloc>().state is ProductLoaded) {
-        context.read<ProductBloc>().add(GetMoreProducts(
-            FilterProductParams(keyword: searchValue, searchField: "name")));
+        context.read<ProductBloc>().add(GetMoreProducts(context.read<FilterCubit>().state));
       }
     }
   }
 
   void _loadProducts([FilterProductParams? params]) {
-    final filterParams = params ??
-        FilterProductParams(
-            keyword: searchValue, searchField: "name", status: "active");
+    final filterParams = params ?? context.read<FilterCubit>().state;
     context.read<ProductBloc>().add(GetProducts(filterParams));
   }
 
@@ -62,98 +57,7 @@ class _HomeViewState extends State<HomeView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: (MediaQuery.of(context).padding.top + 10),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: BlocListener<ProductBloc, ProductState>(
-              listener: (context, state) {
-                if (state is ProductError) {
-                  print("state is ProductError in Home View");
-                }
-              },
-              child:
-                  BlocBuilder<UserBloc, UserState>(builder: (context, state) {
-                if (state is UserLogged) {
-                  return Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pushNamed(AppRouter.userProfile,
-                              arguments: state.user);
-                        },
-                        child: Text(
-                          "${state.user.firstName} ${state.user.lastName}",
-                          style: const TextStyle(fontSize: 26),
-                        ),
-                      ),
-                      const Spacer(),
-                      const SizedBox(
-                        width: 8,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pushNamed(AppRouter.userProfile,
-                              arguments: state.user);
-                        },
-                        child: state.user.image != null
-                            ? CachedNetworkImage(
-                                imageUrl: state.user.image!,
-                                imageBuilder: (context, image) => CircleAvatar(
-                                  radius: 24.0,
-                                  backgroundImage: image,
-                                  backgroundColor: Colors.transparent,
-                                ),
-                              )
-                            : const CircleAvatar(
-                                radius: 24.0,
-                                backgroundImage: AssetImage(kUserAvatar),
-                                backgroundColor: Colors.transparent,
-                              ),
-                      )
-                    ],
-                  );
-                } else {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Text(
-                            "Welcome",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 36),
-                          ),
-                          Text(
-                            "Spoto mobile store",
-                            style: TextStyle(
-                                fontWeight: FontWeight.normal, fontSize: 22),
-                          ),
-                        ],
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pushNamed(AppRouter.signIn);
-                        },
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: CircleAvatar(
-                            radius: 24.0,
-                            backgroundImage: AssetImage(kUserAvatar),
-                            backgroundColor: Colors.transparent,
-                          ),
-                        ),
-                      )
-                    ],
-                  );
-                }
-              }),
-            ),
+            height: (MediaQuery.of(context).padding.top - 10),
           ),
           Padding(
             padding: const EdgeInsets.only(
@@ -202,7 +106,8 @@ class _HomeViewState extends State<HomeView> {
                                           context
                                               .read<FilterCubit>()
                                               .update(keyword: '');
-                                          _loadProducts(const FilterProductParams());
+                                          _loadProducts(
+                                              const FilterProductParams());
                                         },
                                         icon: const Icon(Icons.clear)),
                                   )

@@ -9,6 +9,7 @@ import '../../repositories/product_repository.dart';
 class GetProductUseCase
     implements UseCase<ProductResponse, FilterProductParams> {
   final ProductRepository repository;
+
   GetProductUseCase(this.repository);
 
   @override
@@ -22,19 +23,23 @@ class FilterProductParams {
   final String? keyword;
   final String? searchField;
   final String? status;
+  final String? sortBy;
+  final String? sortOrder;
   final List<Category> categories;
-  final double minPrice;
-  final double maxPrice;
+  final double? minPrice;
+  final double? maxPrice;
   final int? limit;
   final int? pageSize;
 
   const FilterProductParams({
     this.keyword = '',
     this.status = '',
+    this.sortBy = 'createdAt',
+    this.sortOrder = 'desc',
     this.searchField = 'name',
     this.categories = const [],
-    this.minPrice = 0,
-    this.maxPrice = 10000,
+    this.minPrice,
+    this.maxPrice,
     this.limit = 0,
     this.pageSize = 10,
   });
@@ -43,6 +48,8 @@ class FilterProductParams {
     int? skip,
     String? keyword,
     String? status,
+    String? sortBy,
+    String? sortOrder,
     String? searchField,
     List<Category>? categories,
     double? minPrice,
@@ -53,10 +60,12 @@ class FilterProductParams {
       FilterProductParams(
         keyword: keyword ?? this.keyword,
         status: status ?? this.status,
+        sortBy: sortBy ?? this.sortBy,
+        sortOrder: sortOrder ?? this.sortOrder,
         searchField: searchField ?? this.searchField,
         categories: categories ?? this.categories,
-        minPrice: minPrice ?? this.minPrice,
-        maxPrice: maxPrice ?? this.maxPrice,
+        minPrice: minPrice,
+        maxPrice: maxPrice,
         limit: skip ?? this.limit,
         pageSize: pageSize ?? this.pageSize,
       );

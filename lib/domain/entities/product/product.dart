@@ -10,6 +10,7 @@ class Product extends Equatable {
   final bool? isNew;
   final ProductStatus? status;
   final String name;
+  final num price;
   final String description;
   final List<PriceTag> priceTags;
   final List<Category> categories;
@@ -24,6 +25,7 @@ class Product extends Equatable {
     required this.isNew,
     required this.status,
     required this.name,
+    required this.price,
     required this.description,
     required this.priceTags,
     required this.categories,

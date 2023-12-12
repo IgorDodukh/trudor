@@ -9,7 +9,9 @@ class InputTextFormField extends StatefulWidget {
   final String? hint;
   final EdgeInsets? contentPadding;
   final String? Function(String?)? validation;
+  final String? Function(String?)? onChanged;
   final double hintTextSize;
+  final double? initialValue;
   final bool enable;
   final TextInputType textInputType;
   final int maxLines;
@@ -26,6 +28,8 @@ class InputTextFormField extends StatefulWidget {
       this.maxCharacters = 5000,
       this.hint,
       this.validation,
+      this.onChanged,
+      this.initialValue,
       this.contentPadding,
       this.hintTextSize = 16})
       : super(key: key);
@@ -43,7 +47,9 @@ class _InputTextFormFieldState extends State<InputTextFormField> {
       keyboardType: widget.textInputType,
       inputFormatters: [
         LengthLimitingTextInputFormatter(widget.maxCharacters),
-        widget.hint == priceHint
+        widget.hint == priceHint ||
+            widget.hint == minPriceHint ||
+            widget.hint == maxPriceHint
             ? FilteringTextInputFormatter.allow(RegExp(r'(^\d*[.,]?\d{0,2})'))
             : FilteringTextInputFormatter.deny(RegExp(r'')),
       ],
@@ -52,6 +58,8 @@ class _InputTextFormFieldState extends State<InputTextFormField> {
       enableSuggestions: !widget.isSecureField,
       autocorrect: widget.autoCorrect,
       validator: widget.validation,
+      onChanged: widget.onChanged,
+      initialValue: widget.initialValue?.toString(),
       autovalidateMode: AutovalidateMode.onUserInteraction,
       enabled: widget.enable,
       maxLines: widget.maxLines,
@@ -59,7 +67,11 @@ class _InputTextFormFieldState extends State<InputTextFormField> {
         filled: true,
         fillColor: Colors.black12,
         hintText: widget.hint,
-        suffixText: widget.hint == priceHint ? "€" : null,
+        suffixText: widget.hint == priceHint ||
+                widget.hint == minPriceHint ||
+                widget.hint == maxPriceHint
+            ? "€"
+            : null,
         hintStyle: TextStyle(
           fontSize: widget.hintTextSize,
         ),

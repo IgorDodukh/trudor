@@ -44,7 +44,7 @@ class FilterCubit extends Cubit<FilterProductParams> {
     ));
   }
 
-  void updateRange(double min, double max) => emit(state.copyWith(
+  void updatePriceRange(double? min, double? max) => emit(state.copyWith(
         minPrice: min,
         maxPrice: max,
       ));
@@ -52,7 +52,7 @@ class FilterCubit extends Cubit<FilterProductParams> {
   int getFiltersCount() {
     int count = 0;
     count = (state.categories.length) + count;
-    count = count + ((state.minPrice!=0 || state.maxPrice!=10000)? 1 : 0);
+    count = count + ((state.minPrice!=null || state.maxPrice!=null)? 1 : 0);
     return count;
   }
 

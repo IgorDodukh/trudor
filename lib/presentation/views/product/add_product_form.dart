@@ -176,6 +176,14 @@ class _AddProductFormState extends State<AddProductForm> {
         }
         return null;
       },
+      onChanged: (value) {
+        if (value != null && value.startsWith(",")) {
+          priceTags.text = "0.";
+        } else if (value != null && value.contains(",")) {
+          priceTags.text = priceTags.text.replaceAll(",", ".");
+        }
+        return null;
+      },
     );
   }
 
@@ -195,6 +203,7 @@ class _AddProductFormState extends State<AddProductForm> {
               description: description.text,
               isNew: isNew!,
               status: ProductStatus.active,
+              price: double.parse(priceTags.text.replaceAll(",", ".")),
               priceTags: [
                 PriceTagModel(
                     id: '1',
@@ -228,6 +237,7 @@ class _AddProductFormState extends State<AddProductForm> {
               description: description.text,
               isNew: isNew!,
               status: ProductStatus.active,
+              price: double.parse(priceTags.text.replaceAll(",", ".")),
               priceTags: [
                 PriceTagModel(
                     id: '1',

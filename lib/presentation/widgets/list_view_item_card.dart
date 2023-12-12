@@ -70,6 +70,7 @@ class ListViewItemCard extends StatelessWidget {
                     description: listViewItem!.product.description,
                     isNew: listViewItem!.product.isNew,
                     status: ProductStatus.active,
+                    price: listViewItem!.product.price,
                     priceTags: [
                       PriceTagModel(
                           id: '1',
@@ -111,6 +112,7 @@ class ListViewItemCard extends StatelessWidget {
                     description: listViewItem!.product.description,
                     isNew: listViewItem!.product.isNew,
                     status: ProductStatus.inactive,
+                    price: listViewItem!.product.price,
                     priceTags: [
                       PriceTagModel(
                           id: '1',
