@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:spoto/core/constant/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:spoto/core/util/input_converter.dart';
 import 'package:spoto/core/util/price_handler.dart';
 
 import '../../core/router/app_router.dart';
@@ -109,7 +110,7 @@ class ProductCard extends StatelessWidget {
                         ),
                       )
                     : Text(
-                        product!.name,
+                        product!.name.truncateTo(19),
                         style: const TextStyle(fontWeight: FontWeight.w600),
                       ),
               )),
