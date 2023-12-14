@@ -61,6 +61,31 @@ class _FilterViewState extends State<FilterView> {
     setPriceRange();
   }
 
+  Widget applyFilterButton() {
+    return InputFormButton(
+      color: Colors.black87,
+      onClick: () {
+        if (priceRangeValidation.isNotEmpty) {
+          return;
+        }
+        double? minPrice = minPriceController.text.isEmpty
+            ? null
+            : double.parse(minPriceController.text.replaceAll(",", "."));
+        double? maxPrice = maxPriceController.text.isEmpty
+            ? null
+            : double.parse(maxPriceController.text.replaceAll(",", "."));
+        context
+            .read<FilterCubit>()
+            .update(minPrice: minPrice, maxPrice: maxPrice);
+        context
+            .read<ProductBloc>()
+            .add(GetProducts(context.read<FilterCubit>().state));
+        Navigator.of(context).pop();
+      },
+      titleText: applyFiltersTitle,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -219,30 +244,7 @@ class _FilterViewState extends State<FilterView> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
           child: Builder(builder: (context) {
-            return InputFormButton(
-              color: Colors.black87,
-              onClick: () {
-                if (priceRangeValidation.isNotEmpty) {
-                  return;
-                }
-                double? minPrice = minPriceController.text.isEmpty
-                    ? null
-                    : double.parse(
-                        minPriceController.text.replaceAll(",", "."));
-                double? maxPrice = maxPriceController.text.isEmpty
-                    ? null
-                    : double.parse(
-                        maxPriceController.text.replaceAll(",", "."));
-                context
-                    .read<FilterCubit>()
-                    .update(minPrice: minPrice, maxPrice: maxPrice);
-                context
-                    .read<ProductBloc>()
-                    .add(GetProducts(context.read<FilterCubit>().state));
-                Navigator.of(context).pop();
-              },
-              titleText: applyFiltersTitle,
-            );
+            return applyFilterButton();
           }),
         ),
       ),

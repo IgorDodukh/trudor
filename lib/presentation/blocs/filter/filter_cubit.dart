@@ -28,8 +28,8 @@ class FilterCubit extends Cubit<FilterProductParams> {
       keyword: keyword ?? state.keyword,
       searchField: searchField ?? state.searchField,
       categories: updatedCategories,
-      minPrice: minPrice ?? state.minPrice,
-      maxPrice: maxPrice ?? state.maxPrice,
+      minPrice: minPrice,
+      maxPrice: maxPrice,
     ));
   }
 

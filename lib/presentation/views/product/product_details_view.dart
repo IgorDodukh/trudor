@@ -18,6 +18,7 @@ import 'package:spoto/data/models/user/user_model.dart';
 import 'package:spoto/presentation/blocs/user/user_bloc.dart';
 import 'package:spoto/presentation/views/product/add_product_form.dart';
 import 'package:spoto/presentation/widgets/adaptive_alert_dialog.dart';
+import 'package:spoto/presentation/widgets/image_full_screen_wrapper_widget.dart';
 
 import '../../../../../domain/entities/favorites/favorites_item.dart';
 import '../../../../../domain/entities/product/price_tag.dart';
@@ -301,32 +302,46 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                   : widget.product.images.map((image) {
                       return Builder(
                         builder: (BuildContext context) {
-                          return Hero(
-                            tag: widget.product.id,
-                            child: CachedNetworkImage(
-                              imageUrl:
-                                  image.isEmpty ? noImagePlaceholder : image,
-                              imageBuilder: (context, imageProvider) =>
-                                  Container(
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: imageProvider,
-                                    fit: BoxFit.cover,
-                                    colorFilter: ColorFilter.mode(
-                                        Colors.grey.shade50.withOpacity(0.25),
-                                        BlendMode.softLight),
+                          return GestureDetector(
+                            child: Hero(
+                              tag: "image",
+                              child: CachedNetworkImage(
+                                imageUrl:
+                                    image.isEmpty ? noImagePlaceholder : image,
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.cover,
+                                      colorFilter: ColorFilter.mode(
+                                          Colors.grey.shade50.withOpacity(0.25),
+                                          BlendMode.softLight),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              placeholder: (context, url) => Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.shade100,
+                                placeholder: (context, url) => Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.shade100,
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) => Center(
+                                  child: Image.asset(kNoImageAvailable),
                                 ),
                               ),
-                              errorWidget: (context, url, error) => Center(
-                                child: Image.asset(kNoImageAvailable),
-                              ),
                             ),
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (_) {
+                                return DetailScreen(
+                                    widget.product.images, _currentIndex,
+                                    (index) {
+                                  setState(() {
+                                    _currentIndex = index;
+                                  });
+                                });
+                              }));
+                            },
                           );
                         },
                       );
@@ -389,7 +404,6 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-
                 Text(
                   '${NumberHandler.formatPrice(_selectedPriceTag.price)} €',
                   style: const TextStyle(
