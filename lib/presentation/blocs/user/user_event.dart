@@ -20,4 +20,19 @@ class GoogleSignInUser extends UserEvent {
   GoogleSignInUser(this.params);
 }
 
+class ResetPassword extends UserEvent {
+  final ResetPasswordParams params;
+  ResetPassword(this.params);
+}
+
+class SendResetPasswordEmail extends UserEvent {
+  final String email;
+  SendResetPasswordEmail(this.email);
+}
+
+class ValidateResetPasswordCode extends UserEvent {
+  final String code;
+  ValidateResetPasswordCode(this.code);
+}
+
 class CheckUser extends UserEvent {}

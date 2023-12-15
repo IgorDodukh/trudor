@@ -1,3 +1,4 @@
+import 'package:spoto/presentation/views/authentication/forgot_password_view.dart';
 import 'package:spoto/presentation/views/main/home/filter/filter_view.dart';
 import 'package:flutter/material.dart';
 import 'package:spoto/presentation/views/main/other/my_publications/my_publications_view.dart';
@@ -26,6 +27,7 @@ class AppRouter {
   //authentication
   static const String signIn = '/sign-in';
   static const String signUp = '/sign-up';
+  static const String forgotPassword = '/forgot-password';
   //products
   static const String productDetails = '/product-details';
   //other
@@ -49,6 +51,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const SignInView());
       case signUp:
         return MaterialPageRoute(builder: (_) => const SignUpScreen());
+      case forgotPassword:
+        return MaterialPageRoute(builder: (_) => const ForgotPasswordScreen());
       case myPublications: return MaterialPageRoute(builder: (_) => const MyPublicationsView());
       case productDetails:
         Product product = routeSettings.arguments as Product;

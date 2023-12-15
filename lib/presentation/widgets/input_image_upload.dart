@@ -136,7 +136,7 @@ class _ImageUploadFormState extends State<ImageUploadForm> {
         ),
         if (imageUrls.isNotEmpty) ...[
           SizedBox(
-            height: 200,
+            height: 300,
             child: CarouselSlider(
               options: CarouselOptions(
                 height: double.infinity,
@@ -187,7 +187,7 @@ class _ImageUploadFormState extends State<ImageUploadForm> {
           ),
         ] else ...[
           SizedBox(
-            height: 250,
+            height: 300,
             child: TextButton(
               onPressed: () async => {
                 await pickAndUploadImages(),
@@ -195,13 +195,11 @@ class _ImageUploadFormState extends State<ImageUploadForm> {
               child: isLoading
                   ? const CircularProgressIndicator.adaptive()
                   : Container(
-                      width: 300.0,
-                      height: 250.0,
                       decoration: const BoxDecoration(
                           image: DecorationImage(
                               image: AssetImage(kAddPhoto), fit: BoxFit.cover)),
                       child: const Padding(
-                        padding: EdgeInsets.only(top: 160.0),
+                        padding: EdgeInsets.only(top: 180.0),
                         child: Center(
                             child: Text("Add pictures",
                                 style: TextStyle(
@@ -214,7 +212,7 @@ class _ImageUploadFormState extends State<ImageUploadForm> {
         ],
         const SizedBox(height: 12.0),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: StepProgressIndicator(
             totalSteps: maxImages,
             currentStep: imageUrls.length,
@@ -223,7 +221,10 @@ class _ImageUploadFormState extends State<ImageUploadForm> {
           ),
         ),
         const SizedBox(height: 2.0),
-        FAProgressBar(
+    Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 20),
+    child:
+    FAProgressBar(
           size: 20,
           maxValue: maxImages.toDouble(),
           currentValue: imageUrls.length.toDouble(),
@@ -231,7 +232,7 @@ class _ImageUploadFormState extends State<ImageUploadForm> {
           progressColor: Colors.white,
           displayTextStyle:
               const TextStyle(color: Colors.black87, fontSize: 14),
-        ),
+        )),
       ],
     );
   }

@@ -1,14 +1,14 @@
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:sign_in_button/sign_in_button.dart';
 import 'package:spoto/core/constant/messages.dart';
 import 'package:spoto/core/error/failures.dart';
 import 'package:spoto/data/models/user/user_model.dart';
 import 'package:spoto/data/repositories/auth/google_auth_repository.dart';
 import 'package:spoto/domain/auth/google_auth.dart';
 import 'package:spoto/domain/usecases/auth/google_auth_usecase.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:sign_in_button/sign_in_button.dart';
 import 'package:spoto/presentation/blocs/home/navbar_cubit.dart';
 
 import '../../../core/constant/images.dart';
@@ -31,6 +31,17 @@ class _SignInViewState extends State<SignInView> {
   final TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
+  Widget backButton() {
+    return InputFormButton(
+      color: Colors.white,
+      textColor: Colors.black,
+      onClick: () {
+        Navigator.of(context).pop();
+      },
+      titleText: backTitle,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<UserBloc, UserState>(
@@ -39,7 +50,8 @@ class _SignInViewState extends State<SignInView> {
         if (state is UserLoading) {
           EasyLoading.show(status: loadingTitle);
         } else if (state is UserLogged) {
-          final userId = (context.read<UserBloc>().state.props.first as UserModel).id;
+          final userId =
+              (context.read<UserBloc>().state.props.first as UserModel).id;
           context.read<FavoritesBloc>().add(GetFavorites(userId: userId));
           Navigator.of(context).pushNamedAndRemoveUntil(
             AppRouter.home,
@@ -49,7 +61,8 @@ class _SignInViewState extends State<SignInView> {
           if (state.failure is CredentialFailure) {
             EasyLoading.showError("Username or Password is incorrect");
           } else {
-            EasyLoading.showError("Something went wrong. Please try again or contact support.");
+            EasyLoading.showError(
+                "Something went wrong. Please try again or contact support.");
           }
         }
       },
@@ -121,7 +134,7 @@ class _SignInViewState extends State<SignInView> {
                     alignment: Alignment.centerRight,
                     child: InkWell(
                       onTap: () {
-                        // Navigator.pushNamed(context, AppRouter.forgotPassword);
+                        Navigator.pushNamed(context, AppRouter.forgotPassword);
                       },
                       child: const Text(
                         forgotPasswordTitle,
@@ -150,39 +163,32 @@ class _SignInViewState extends State<SignInView> {
                   const SizedBox(
                     height: 10,
                   ),
-                  InputFormButton(
-                    color: Colors.black87,
-                    onClick: () {
-                      Navigator.of(context).pop();
-                    },
-                    titleText: 'Back',
-                  ),
+                  backButton(),
                   const SizedBox(
                     height: 24,
                   ),
                   SizedBox(
                     width: double.maxFinite,
                     height: 50,
-                    child: SignInButton(
-                      Buttons.google,
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.0)),
-                      text: "Continue with Google",
-                      onPressed: () async {
-                        final GoogleAuthRepository googleAuthRepository = GoogleAuthRepository();
-                        final GoogleAuth? googleSignInUser = await googleAuthRepository.signIn();
-                        if (googleSignInUser != null) {
-                          context.read<UserBloc>().add(GoogleSignInUser(SignInGoogleParams(
-                              id: googleSignInUser.id,
-                              displayName: googleSignInUser.displayName,
-                              email: googleSignInUser.email
-                          )));
-                          Navigator.pushNamed(context, AppRouter.home);
-                          context.read<NavbarCubit>().update(0);
-                        }
+                    child: SignInButton(Buttons.google,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0)),
+                        text: "Continue with Google", onPressed: () async {
+                      final GoogleAuthRepository googleAuthRepository =
+                          GoogleAuthRepository();
+                      final GoogleAuth? googleSignInUser =
+                          await googleAuthRepository.signIn();
+                      if (googleSignInUser != null) {
+                        context.read<UserBloc>().add(GoogleSignInUser(
+                            SignInGoogleParams(
+                                id: googleSignInUser.id,
+                                displayName: googleSignInUser.displayName,
+                                email: googleSignInUser.email)));
+                        Navigator.pushNamed(context, AppRouter.home);
+                        context.read<NavbarCubit>().update(0);
                       }
-                    ),
+                    }),
                   ),
                   const Spacer(),
                   Padding(

@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:spoto/core/error/failures.dart';
 import 'package:spoto/domain/usecases/auth/google_auth_usecase.dart';
+import 'package:spoto/domain/usecases/user/reset_password_usecase.dart';
 
 import '../../../../core/error/exceptions.dart';
 import '../../../domain/usecases/user/sign_in_usecase.dart';
@@ -14,6 +15,12 @@ abstract class UserRemoteDataSource {
   Future<AuthenticationResponseModel> signInGoogle(SignInGoogleParams params);
 
   Future<AuthenticationResponseModel> signUp(SignUpParams params);
+
+  Future<AuthenticationResponseModel> sendPasswordResetEmail(String email);
+
+  Future<AuthenticationResponseModel> validateResetPasswordCode(String code);
+
+  Future<AuthenticationResponseModel> resetPassword(ResetPasswordParams params);
 }
 
 class UserRemoteDataSourceImpl implements UserRemoteDataSource {
@@ -47,11 +54,52 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
         ?.updateDisplayName("${params.firstName} ${params.lastName}");
     await userCredential.user?.reload();
 
-    User? latestUser = FirebaseAuth.instance.currentUser;
-    if (latestUser != null) {
-      return authenticationResponseModelFromUserCredential(latestUser);
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      return authenticationResponseModelFromUserCredential(currentUser);
     }
     throw const ServerException("Sign Up Failed");
+  }
+
+  @override
+  Future<AuthenticationResponseModel> sendPasswordResetEmail(email) async {
+    await _auth
+        .sendPasswordResetEmail(email: email)
+        .then((value) => value)
+        .catchError((error) => handleSendEmailError(error));
+
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      return authenticationResponseModelFromUserCredential(currentUser);
+    }
+    throw const ServerException("Send password reset Failed");
+  }
+
+  @override
+  Future<AuthenticationResponseModel> validateResetPasswordCode(code) async {
+    await _auth
+        .verifyPasswordResetCode(code)
+        .then((value) => value)
+        .catchError((error) => handleValidateCodeError(error));
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      return authenticationResponseModelFromUserCredential(currentUser);
+    }
+    throw const ServerException("Validate reset password Failed");
+  }
+
+  @override
+  Future<AuthenticationResponseModel> resetPassword(params) async {
+    await _auth
+        .confirmPasswordReset(
+            code: params.resetCode, newPassword: params.newPassword)
+        .then((value) => value)
+        .catchError((error) => handleResetPasswordError(error));
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      return authenticationResponseModelFromUserCredential(currentUser);
+    }
+    throw const ServerException("Reset password Failed");
   }
 
   @override
@@ -79,6 +127,42 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
       throw InvalidEmailFailure();
     } else {
       throw const ServerException("Sign Up Failed");
+    }
+  }
+
+  Future<UserCredential> handleSendEmailError(error) {
+    if (error.code == 'weak-password') {
+      throw WeakPasswordFailure();
+    } else if (error.code == 'email-already-in-use') {
+      throw ExistingEmailFailure();
+    } else if (error.code == 'invalid-email') {
+      throw InvalidEmailFailure();
+    } else {
+      throw const ServerException("Send restore email Failed");
+    }
+  }
+
+  Future<String> handleValidateCodeError(error) {
+    if (error.code == 'weak-password') {
+      throw WeakPasswordFailure();
+    } else if (error.code == 'email-already-in-use') {
+      throw ExistingEmailFailure();
+    } else if (error.code == 'invalid-email') {
+      throw InvalidEmailFailure();
+    } else {
+      throw const ServerException("Code validation Failed");
+    }
+  }
+
+  Future<UserCredential> handleResetPasswordError(error) {
+    if (error.code == 'weak-password') {
+      throw WeakPasswordFailure();
+    } else if (error.code == 'email-already-in-use') {
+      throw ExistingEmailFailure();
+    } else if (error.code == 'invalid-email') {
+      throw InvalidEmailFailure();
+    } else {
+      throw const ServerException("Reset password Failed");
     }
   }
 }

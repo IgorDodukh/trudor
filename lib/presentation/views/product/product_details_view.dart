@@ -18,7 +18,7 @@ import 'package:spoto/data/models/user/user_model.dart';
 import 'package:spoto/presentation/blocs/user/user_bloc.dart';
 import 'package:spoto/presentation/views/product/add_product_form.dart';
 import 'package:spoto/presentation/widgets/adaptive_alert_dialog.dart';
-import 'package:spoto/presentation/widgets/image_full_screen_wrapper_widget.dart';
+import 'package:spoto/presentation/widgets/image_fullscreen_view.dart';
 
 import '../../../../../domain/entities/favorites/favorites_item.dart';
 import '../../../../../domain/entities/product/price_tag.dart';
@@ -41,8 +41,14 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
   bool isFavorite = false;
   bool isLoading = false;
   bool isOwner = false;
+  bool isFullScreen = false;
   String userId = "";
   late Timer? _loadingTimer;
+
+  bool backgroundIsTransparent = false;
+  Color backgroundColor = Colors.black87;
+  DisposeLevel? disposeLevel;
+  bool disableSwipeToDismiss = false;
 
   void _startLoadingTimer() {
     // Start the timer to simulate loading
@@ -56,6 +62,12 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
       final popupMessage =
           isFavorite ? addedToFavoritesTitle : removedFromFavoritesTitle;
       EasyLoading.showSuccess(popupMessage);
+    });
+  }
+
+  void setFullScreenMode() {
+    setState(() {
+      isFullScreen = !isFullScreen;
     });
   }
 
@@ -83,6 +95,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
   @override
   void dispose() {
     super.dispose();
+    isFullScreen = false;
     // Cancel the timer if the widget is disposed
     _cancelTimer();
   }
@@ -206,6 +219,30 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
     );
   }
 
+  Widget networkImageView(String image, BoxFit boxFit) {
+    return CachedNetworkImage(
+      imageUrl: image.isEmpty ? noImagePlaceholder : image,
+      imageBuilder: (context, imageProvider) => Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: imageProvider,
+            fit: boxFit,
+            colorFilter: ColorFilter.mode(
+                Colors.grey.shade50.withOpacity(0.25), BlendMode.softLight),
+          ),
+        ),
+      ),
+      placeholder: (context, url) => Container(
+        decoration: BoxDecoration(
+          color: Colors.grey.shade100,
+        ),
+      ),
+      errorWidget: (context, url, error) => Center(
+        child: Image.asset(kNoImageAvailable),
+      ),
+    );
+  }
+
   @override
   void initState() {
     if (context.read<UserBloc>().state is UserLogged) {
@@ -227,6 +264,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
         break;
       }
     }
+    isFullScreen = false;
     _loadingTimer = null;
     _selectedPriceTag = widget.product.priceTags.first;
     super.initState();
@@ -234,6 +272,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
 
   @override
   Widget build(BuildContext context) {
+    final UniqueKey tag = UniqueKey();
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -248,7 +287,9 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
       body: ListView(
         children: [
           SizedBox(
-            height: MediaQuery.sizeOf(context).width,
+            height: isFullScreen
+                ? MediaQuery.sizeOf(context).height
+                : MediaQuery.sizeOf(context).width,
             child: CarouselSlider(
               options: CarouselOptions(
                 height: double.infinity,
@@ -299,49 +340,53 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                         },
                       )
                     ]
+                  // TODO: require changing implementation with carousel slider
+                  // to support full screen image view
                   : widget.product.images.map((image) {
                       return Builder(
                         builder: (BuildContext context) {
                           return GestureDetector(
                             child: Hero(
-                              tag: "image",
-                              child: CachedNetworkImage(
-                                imageUrl:
-                                    image.isEmpty ? noImagePlaceholder : image,
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: imageProvider,
-                                      fit: BoxFit.cover,
-                                      colorFilter: ColorFilter.mode(
-                                          Colors.grey.shade50.withOpacity(0.25),
-                                          BlendMode.softLight),
-                                    ),
-                                  ),
-                                ),
-                                placeholder: (context, url) => Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.shade100,
-                                  ),
-                                ),
-                                errorWidget: (context, url, error) => Center(
-                                  child: Image.asset(kNoImageAvailable),
-                                ),
+                              tag: tag,
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                          opaque: false,
+                                          barrierColor: backgroundIsTransparent
+                                              ? Colors.white.withOpacity(0)
+                                              : Colors.black,
+                                          pageBuilder:
+                                              (BuildContext context, _, __) {
+                                            return FullScreenViewer(
+                                              tag: tag,
+                                              backgroundColor: backgroundColor,
+                                              backgroundIsTransparent:
+                                                  backgroundIsTransparent,
+                                              disposeLevel: disposeLevel,
+                                              disableSwipeToDismiss:
+                                                  disableSwipeToDismiss,
+                                              child: networkImageView(
+                                                  image, BoxFit.fitWidth),
+                                            );
+                                          }));
+                                },
+                                child: networkImageView(image, BoxFit.cover),
                               ),
                             ),
-                            onTap: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (_) {
-                                return DetailScreen(
-                                    widget.product.images, _currentIndex,
-                                    (index) {
-                                  setState(() {
-                                    _currentIndex = index;
-                                  });
-                                });
-                              }));
-                            },
+                            // onTap: () {
+                            //   Navigator.push(context,
+                            //       MaterialPageRoute(builder: (_) {
+                            //     return DetailScreen(
+                            //         widget.product.images, _currentIndex,
+                            //         (index) {
+                            //       setState(() {
+                            //         _currentIndex = index;
+                            //       });
+                            //     });
+                            //   }));
+                            // },
                           );
                         },
                       );
@@ -366,25 +411,30 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
               ),
             ),
           ),
-          Padding(
-            padding:
-                const EdgeInsets.only(left: 20, right: 14, top: 20, bottom: 4),
-            child: Text(
-              widget.product.name,
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-                left: 20,
-                right: 10,
-                top: 16,
-                bottom: MediaQuery.of(context).padding.bottom),
-            child: Text(
-              widget.product.description,
-              style: const TextStyle(fontSize: 14),
-            ),
-          )
+          isFullScreen
+              ? Container()
+              : Padding(
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 14, top: 20, bottom: 4),
+                  child: Text(
+                    widget.product.name,
+                    style: const TextStyle(
+                        fontSize: 22, fontWeight: FontWeight.w500),
+                  ),
+                ),
+          isFullScreen
+              ? Container()
+              : Padding(
+                  padding: EdgeInsets.only(
+                      left: 20,
+                      right: 10,
+                      top: 16,
+                      bottom: MediaQuery.of(context).padding.bottom),
+                  child: Text(
+                    widget.product.description,
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                )
         ],
       ),
       bottomNavigationBar: Container(

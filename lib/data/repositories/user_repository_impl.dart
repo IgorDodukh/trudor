@@ -57,6 +57,42 @@ class UserRepositoryImpl implements UserRepository {
     }
   }
 
+  @override
+  Future<Either<Failure, NoParams>> sendPasswordResetEmail(email) async {
+    try {
+      await _authenticate(() {
+        return remoteDataSource.sendPasswordResetEmail(email);
+      });
+      return Right(NoParams());
+    } on Failure {
+      return Left(SendResetPasswordEmailFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, NoParams>> validateResetPasswordCode(code) async {
+    try {
+      await _authenticate(() {
+        return remoteDataSource.validateResetPasswordCode(code);
+      });
+      return Right(NoParams());
+    } on Failure {
+      return Left(SendResetPasswordEmailFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, NoParams>> resetPassword(params) async {
+    try {
+      await _authenticate(() {
+        return remoteDataSource.resetPassword(params);
+      });
+      return Right(NoParams());
+    } on Failure {
+      return Left(SendResetPasswordEmailFailure());
+    }
+  }
+
   Future<Either<Failure, User>> _authenticate(
     _DataSourceChooser getDataSource,
   ) async {

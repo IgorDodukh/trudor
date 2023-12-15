@@ -74,7 +74,7 @@ class _DetailScreenState extends State<DetailScreen> {
                             maxScale: 3.0,
                             animationMaxScale: 3.5,
                             speed: 1.0,
-                            inertialSpeed: 100.0,
+                            inertialSpeed: 500.0,
                             initialScale: 1.0,
                             inPageView: false,
                             initialAlignment: InitialAlignment.center,
@@ -84,7 +84,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     ),
                     onVerticalDragUpdate: (details) {
                       if (details.delta.dy > 0) {
-                        // Navigator.pop(context);
+                        Navigator.pop(context);
                       }
                     },
                   );
@@ -122,6 +122,7 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 }
 
+// TODO: try https://github.com/Tkko/Flutter_dismissible_page/tree/master/lib/src
 class DoubleTappableInteractiveViewer extends StatefulWidget {
   final double scale;
   final Duration scaleDuration;

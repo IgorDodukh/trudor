@@ -25,3 +25,5 @@ class ExistingEmailFailure extends Failure {}
 class WeakPasswordFailure extends Failure {}
 
 class UserNotFoundFailure extends Failure {}
+
+class SendResetPasswordEmailFailure extends Failure {}

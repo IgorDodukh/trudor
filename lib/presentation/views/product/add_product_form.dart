@@ -312,7 +312,8 @@ class _AddProductFormState extends State<AddProductForm> {
 
   Widget cancelButton() {
     return InputFormButton(
-      color: Colors.black87,
+      color: Colors.white,
+      textColor: Colors.black,
       onClick: () {
         onPopupClose();
       },
@@ -363,7 +364,7 @@ class _AddProductFormState extends State<AddProductForm> {
                     ),
                   ),
                   Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 25),
                       child: Column(children: [
                         formDivider(),
                         titleField(),

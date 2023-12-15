@@ -4,8 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:spoto/core/constant/messages.dart';
 import 'package:spoto/data/models/user/user_model.dart';
-import 'package:spoto/domain/usecases/user/sign_up_usecase.dart';
-import 'package:spoto/presentation/blocs/home/navbar_cubit.dart';
 import 'package:spoto/presentation/blocs/user/user_bloc.dart';
 
 import '../../../core/constant/images.dart';
@@ -15,45 +13,38 @@ import '../../blocs/favorites/favorites_bloc.dart';
 import '../../widgets/input_form_button.dart';
 import '../../widgets/input_text_form_field.dart';
 
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
+class ForgotPasswordScreen extends StatefulWidget {
+  const ForgotPasswordScreen({Key? key}) : super(key: key);
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
-  final TextEditingController firstNameController = TextEditingController();
-  final TextEditingController lastNameController = TextEditingController();
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
   final _formKey = GlobalKey<FormState>();
-
-  bool _validatePassword(String value) {
-    String pattern =
-        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
-    RegExp regExp = RegExp(pattern);
-    return regExp.hasMatch(value);
-  }
-
-  Widget backButton() {
-    return InputFormButton(
-      color: Colors.white,
-      textColor: Colors.black,
-      onClick: () {
-        Navigator.of(context).pop();
-      },
-      titleText: backTitle,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<UserBloc, UserState>(
       listener: (context, state) {
         EasyLoading.dismiss();
+        if (state is ResetPasswordSending) {
+          EasyLoading.show(status: loadingTitle);
+        } else if (state is ResetPasswordSent) {
+          EasyLoading.showSuccess(
+              "Please check your mailbox for reset password link");
+        } else if (state is ResetPasswordFail) {
+          if (state.failure is ServerFailure) {
+            EasyLoading.showError("Error: ${state.toString()}");
+          } else if (state.failure is InvalidEmailFailure) {
+            EasyLoading.showError(
+                "The email address is not valid! Please try again.");
+          } else {
+            EasyLoading.showError(
+                "Something went wrong. Please try again or contact support");
+          }
+        }
         if (state is UserLoading) {
           EasyLoading.show(status: loadingTitle);
         } else if (state is UserLogged) {
@@ -108,38 +99,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     height: 20,
                   ),
                   const Text(
-                    "Please use your valid e-mail address to create a new account",
+                    "Please enter registered e-mail address to restore your password",
                     style: TextStyle(fontSize: 16, color: Colors.grey),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(
                     height: 40,
-                  ),
-                  InputTextFormField(
-                    controller: firstNameController,
-                    hint: firstNameHint,
-                    validation: (String? val) {
-                      if (val == null || val.isEmpty) {
-                        return "$firstNameHint $fieldCantBeEmpty";
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  InputTextFormField(
-                    controller: lastNameController,
-                    hint: lastNameHint,
-                    validation: (String? val) {
-                      if (val == null || val.isEmpty) {
-                        return "$lastNameHint $fieldCantBeEmpty";
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(
-                    height: 12,
                   ),
                   InputTextFormField(
                     textInputType: TextInputType.emailAddress,
@@ -156,44 +121,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     },
                   ),
                   const SizedBox(
-                    height: 12,
-                  ),
-                  InputTextFormField(
-                    controller: passwordController,
-                    hint: passwordHint,
-                    isSecureField: true,
-                    validation: (String? val) {
-                      if (val == null || val.isEmpty) {
-                        return "$passwordHint $fieldCantBeEmpty";
-                      }
-                      if (!_validatePassword(val)) {
-                        return "Password must be at least 8 characters and contain\nuppercase, lowercase, number and special character";
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(
                     height: 20,
                   ),
                   InputFormButton(
                     color: Colors.black87,
                     onClick: () {
                       if (_formKey.currentState!.validate()) {
-                        context.read<UserBloc>().add(SignUpUser(SignUpParams(
-                              firstName: firstNameController.text,
-                              lastName: lastNameController.text,
-                              email: emailController.text,
-                              password: passwordController.text,
-                            )));
-                        context.read<NavbarCubit>().update(0);
+                        context.read<UserBloc>().add(SendResetPasswordEmail(
+                              emailController.text,
+                            ));
+                        // context.read<NavbarCubit>().update(0);
                       }
                     },
-                    titleText: signUpTitle,
+                    titleText: sendConfirmEmailTitle,
                   ),
                   const SizedBox(
                     height: 10,
                   ),
-                  backButton(),
+                  InputFormButton(
+                    color: Colors.white,
+                    textColor: Colors.black87,
+                    onClick: () {
+                      Navigator.of(context).pop();
+                    },
+                    titleText: backTitle,
+                  ),
                   const SizedBox(
                     height: 30,
                   ),
