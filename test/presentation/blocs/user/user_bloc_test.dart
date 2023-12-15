@@ -4,9 +4,12 @@ import 'package:spoto/core/error/failures.dart';
 import 'package:spoto/core/usecases/usecase.dart';
 import 'package:spoto/domain/usecases/auth/google_auth_usecase.dart';
 import 'package:spoto/domain/usecases/user/get_cached_user_usecase.dart';
+import 'package:spoto/domain/usecases/user/reset_password_usecase.dart';
+import 'package:spoto/domain/usecases/user/send_reset_password_email_usecase.dart';
 import 'package:spoto/domain/usecases/user/sign_in_usecase.dart';
 import 'package:spoto/domain/usecases/user/sign_out_usecase.dart';
 import 'package:spoto/domain/usecases/user/sign_up_usecase.dart';
+import 'package:spoto/domain/usecases/user/validate_reset_password_code.dart';
 import 'package:spoto/presentation/blocs/user/user_bloc.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -20,6 +23,14 @@ class MockSignUpUseCase extends Mock implements SignUpUseCase {}
 
 class MockSignOutUseCase extends Mock implements SignOutUseCase {}
 
+class MockResetPasswordUseCase extends Mock implements ResetPasswordUseCase {}
+
+class MockSendResetPasswordEmailUseCase extends Mock
+    implements SendResetPasswordEmailUseCase {}
+
+class MockValidateResetPasswordUseCase extends Mock
+    implements ValidateResetPasswordUseCase {}
+
 class MockGetCachedUserUseCase extends Mock implements GetCachedUserUseCase {}
 
 void main() {
@@ -30,6 +41,9 @@ void main() {
     late MockSignUpUseCase mockSignUpUseCase;
     late MockSignOutUseCase mockSignOutUseCase;
     late MockGetCachedUserUseCase mockGetCachedUserUseCase;
+    late MockResetPasswordUseCase mockResetPasswordUseCase;
+    late MockSendResetPasswordEmailUseCase mockSendResetPasswordEmailUseCase;
+    late MockValidateResetPasswordUseCase mockValidateResetPasswordUseCase;
 
     setUp(() {
       mockSignInUseCase = MockSignInUseCase();
@@ -37,14 +51,19 @@ void main() {
       mockSignUpUseCase = MockSignUpUseCase();
       mockSignOutUseCase = MockSignOutUseCase();
       mockGetCachedUserUseCase = MockGetCachedUserUseCase();
+      mockResetPasswordUseCase = MockResetPasswordUseCase();
+      mockSendResetPasswordEmailUseCase = MockSendResetPasswordEmailUseCase();
+      mockValidateResetPasswordUseCase = MockValidateResetPasswordUseCase();
 
       userBloc = UserBloc(
-        mockSignInUseCase,
-        mockGetCachedUserUseCase,
-        mockSignOutUseCase,
-        mockSignUpUseCase,
-        mockGoogleAuthUseCase
-      );
+          mockSignInUseCase,
+          mockGetCachedUserUseCase,
+          mockSignOutUseCase,
+          mockSignUpUseCase,
+          mockGoogleAuthUseCase,
+          mockResetPasswordUseCase,
+          mockSendResetPasswordEmailUseCase,
+          mockValidateResetPasswordUseCase);
     });
 
     test('initial state should be UserInitial', () {
