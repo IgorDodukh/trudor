@@ -91,6 +91,7 @@ dependencies:
   dots_indicator: ^3.0.0
   atlas_icons: ^0.0.12
   google_places_flutter: ^2.0.6
+  adaptive_dialog: ^2.0.0
 #  babstrap_settings_screen: ^0.1.6 # settings screen
 # share_plus 7.2.1 # share feature
 # dotted_border: 2.1.0 # dotted border

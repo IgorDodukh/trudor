@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +15,9 @@ import 'package:spoto/core/util/price_handler.dart';
 import 'package:spoto/data/models/product/price_tag_model.dart';
 import 'package:spoto/data/models/product/product_model.dart';
 import 'package:spoto/data/models/user/user_model.dart';
+import 'package:spoto/domain/usecases/product/update_product_usecase.dart';
 import 'package:spoto/presentation/blocs/user/user_bloc.dart';
-import 'package:spoto/presentation/views/product/add_product_pages/add_product_form.dart';
+import 'package:spoto/presentation/views/product/add_product_multistep.dart';
 import 'package:spoto/presentation/widgets/adaptive_alert_dialog.dart';
 import 'package:spoto/presentation/widgets/image_fullscreen_view.dart';
 
@@ -163,9 +165,9 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                     images: widget.product.images,
                     createdAt: widget.product.createdAt,
                     updatedAt: DateTime.now());
-                context
-                    .read<prod.ProductBloc>()
-                    .add(prod.UpdateProduct(updatedModel));
+                context.read<prod.ProductBloc>().add(prod.UpdateProduct(
+                    UpdateProductParams(
+                        product: updatedModel, isPublicationsAction: false)));
                 Navigator.of(context).pop();
               },
             );
@@ -206,9 +208,9 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                     images: widget.product.images,
                     createdAt: widget.product.createdAt,
                     updatedAt: DateTime.now());
-                context
-                    .read<prod.ProductBloc>()
-                    .add(prod.UpdateProduct(updatedModel));
+                context.read<prod.ProductBloc>().add(prod.UpdateProduct(
+                    UpdateProductParams(
+                        product: updatedModel, isPublicationsAction: false)));
                 Navigator.of(context).pop();
               },
             );
@@ -271,7 +273,6 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
 
   @override
   Widget build(BuildContext context) {
-    final UniqueKey tag = UniqueKey();
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -471,24 +472,30 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                           IconButton(
                             icon: const Icon(Icons.edit,
                                 color: Colors.white, size: 36),
-                            onPressed: () {
-                              showModalBottomSheet<void>(
-                                isDismissible: false,
-                                context: context,
-                                isScrollControlled: true,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(24.0),
-                                ),
-                                builder: (BuildContext context) {
-                                  return Padding(
-                                      padding: EdgeInsets.only(
-                                          bottom: MediaQuery.of(context)
-                                              .viewInsets
-                                              .bottom),
-                                      child: AddProductForm(
-                                          productInfo: widget.product));
-                                },
-                              );
+                            onPressed: () async {
+                              final result = await showModalActionSheet(
+                                  context: context,
+                                  title: "What would you like to update?",
+                                  actions: [
+                                    const SheetAction(
+                                      label: "Pictures",
+                                      key: "pictures",
+                                    ),
+                                    const SheetAction(
+                                        label: "Details", key: "details"),
+                                    const SheetAction(
+                                        label: "Contact Info", key: "contact"),
+                                  ]);
+                              if (result != null) {
+                                await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          AddProductMultiStepForm(
+                                              pageKey: result,
+                                              productInfo: widget.product)),
+                                );
+                              }
                             },
                           ),
                         ],

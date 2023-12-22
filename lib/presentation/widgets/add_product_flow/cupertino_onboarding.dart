@@ -51,6 +51,7 @@ class CupertinoOnboarding extends StatefulWidget {
     super.key,
     this.secondFormKey,
     this.thirdFormKey,
+    this.editPageKey,
   }) : assert(
           pages.isNotEmpty,
           'Number of pages must be greater than 0',
@@ -131,6 +132,8 @@ class CupertinoOnboarding extends StatefulWidget {
 
   final GlobalKey<FormState>? secondFormKey;
   final GlobalKey<FormState>? thirdFormKey;
+
+  final String? editPageKey;
 
   @override
   State<CupertinoOnboarding> createState() => _CupertinoOnboardingState();
@@ -242,7 +245,10 @@ class _CupertinoOnboardingState extends State<CupertinoOnboarding> {
                           color: widget.bottomButtonColor ?? Colors.black87,
                           padding: const EdgeInsets.all(16),
                           onPressed: () => {
-                            if (_currentPage == widget.pages.length - 1)
+                            if (widget.editPageKey != null){
+                              widget.onPressedOnLastPage!()
+                            }
+                            else if (_currentPage == widget.pages.length - 1)
                               {
                                 if (widget.thirdFormKey!.currentState!
                                     .validate())
@@ -270,7 +276,7 @@ class _CupertinoOnboardingState extends State<CupertinoOnboarding> {
                               children: [
                                 const Spacer(),
                                 _currentPage == widget.pages.length - 1
-                                    ? const Text(confirmAndPublishTitle)
+                                    ? Text(widget.editPageKey == null ? confirmAndPublishTitle : "Update")
                                     : widget.bottomButtonChild,
                                 const Spacer(),
                               ],

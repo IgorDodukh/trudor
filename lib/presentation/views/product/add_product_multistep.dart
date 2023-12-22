@@ -6,6 +6,8 @@ import 'package:spoto/core/constant/messages.dart';
 import 'package:spoto/data/models/product/price_tag_model.dart';
 import 'package:spoto/data/models/product/product_model.dart';
 import 'package:spoto/data/models/user/user_model.dart';
+import 'package:spoto/domain/entities/product/product.dart';
+import 'package:spoto/domain/usecases/product/update_product_usecase.dart';
 import 'package:spoto/presentation/blocs/product/product_bloc.dart';
 import 'package:spoto/presentation/blocs/user/user_bloc.dart';
 import 'package:spoto/presentation/views/product/add_product_pages/add_product_form.dart';
@@ -17,8 +19,13 @@ import 'package:spoto/presentation/widgets/input_image_upload.dart';
 import 'package:uuid/uuid.dart';
 
 class AddProductMultiStepForm extends StatefulWidget {
+  final Product? productInfo;
+  final String? pageKey;
+
   const AddProductMultiStepForm({
     super.key,
+    this.pageKey,
+    this.productInfo,
   });
 
   @override
@@ -94,15 +101,14 @@ class _AddProductMultiStepFormState extends State<AddProductMultiStepForm> {
     });
   }
 
-  // bool isExistingProductUpdated() {
-  //   return nameController.text != widget.productInfo!.name ||
-  //       descriptionController.text != widget.productInfo!.description ||
-  //       isNew != widget.productInfo!.isNew ||
-  //       images != widget.productInfo!.images ||
-  //       selectedCategory != widget.productInfo!.category ||
-  //       priceController.text !=
-  //           widget.productInfo!.priceTags.first.price.toString();
-  // }
+  bool isExistingProductUpdated() {
+    return name != widget.productInfo!.name ||
+        description != widget.productInfo!.description ||
+        isNew != widget.productInfo!.isNew ||
+        images != widget.productInfo!.images ||
+        category != widget.productInfo!.category ||
+        double.parse(price!) != widget.productInfo!.price;
+  }
 
   bool isProductInfoUpdated() {
     return name != null ||
@@ -114,17 +120,16 @@ class _AddProductMultiStepFormState extends State<AddProductMultiStepForm> {
   }
 
   Future<dynamic>? onPopupClose() {
-    // if (widget.productInfo != null) {
-    //   if (isExistingProductUpdated()) {
-    //     return showDialog(
-    //       context: context,
-    //       builder: (context) {
-    //         return const DiscardChangesAlert();
-    //       },
-    //     );
-    //   }
-    // } else
-    if (isProductInfoUpdated()) {
+    if (widget.productInfo != null) {
+      if (isExistingProductUpdated()) {
+        return showDialog(
+          context: context,
+          builder: (context) {
+            return const DiscardChangesAlert();
+          },
+        );
+      }
+    } else if (isProductInfoUpdated()) {
       return showDialog(
         context: context,
         builder: (context) {
@@ -134,6 +139,32 @@ class _AddProductMultiStepFormState extends State<AddProductMultiStepForm> {
     }
     Navigator.pop(context);
     return Future(() => null);
+  }
+
+  void updateButtonAction() {
+    final updatedModel = ProductModel(
+        id: widget.productInfo!.id,
+        ownerId: widget.productInfo!.ownerId,
+        name: name!,
+        description: description!,
+        isNew: isNew!,
+        status: ProductStatus.active,
+        price: double.parse(price!.replaceAll(",", ".")),
+        priceTags: [
+          PriceTagModel(
+              id: '1',
+              name: "base",
+              price: double.parse(price!.replaceAll(",", ".")))
+        ],
+        // categories: [CategoryModel.fromEntity(selectedCategory!)],
+        category: category!,
+        images: images.isEmpty ? [] : images,
+        createdAt: widget.productInfo!.createdAt,
+        updatedAt: DateTime.now());
+    context.read<ProductBloc>().add(UpdateProduct(UpdateProductParams(
+        product: updatedModel, isPublicationsAction: false)));
+    EasyLoading.showSuccess(productUpdatedSuccessfully);
+    Navigator.of(context).pop();
   }
 
   void publishButtonAction() async {
@@ -189,68 +220,80 @@ class _AddProductMultiStepFormState extends State<AddProductMultiStepForm> {
         contactName = "${currentUser.firstName} ${currentUser.lastName}";
         phoneNumber = currentUser.phoneNumber;
       });
+      if (widget.productInfo != null) {
+        images = widget.productInfo!.images;
+        category = widget.productInfo!.category;
+        name = widget.productInfo!.name;
+        description = widget.productInfo!.description;
+        price = widget.productInfo!.priceTags.first.price.toString();
+        isNew = widget.productInfo!.isNew;
+      }
     }
-
-    // if (widget.productInfo != null) {
-    //   images = widget.productInfo!.images;
-    //   category = widget.productInfo!.category;
-    //   name = widget.productInfo!.name;
-    //   description = widget.productInfo!.description;
-    //   price = widget.productInfo!.priceTags.first.price.toString();
-    //   isNew = widget.productInfo!.isNew;
-    // }
   }
 
   @override
   Widget build(BuildContext context) {
     return CupertinoOnboarding(
+      editPageKey: widget.pageKey,
       secondFormKey: _detailsFormKey,
       thirdFormKey: _contactFormKey,
       bottomButtonChild: const Text(nextTitle),
       scrollPhysics: const NeverScrollableScrollPhysics(),
       onPressedOnFirstPage: () => onPopupClose(),
-      onPressedOnLastPage: () => publishButtonAction(),
+      onPressedOnLastPage: () => widget.productInfo == null
+          ? publishButtonAction()
+          : updateButtonAction(),
       pages: [
-        StepFormPage(
-          title: const Text(uploadPicturesTitle),
-          features: [
-            const WhatsNewFeature(
-              description: Text(addImagesDetails),
-            ),
-            ImageUploadForm(
-                onImagesUploaded: _handleImageUpload, existingImages: images),
-          ],
-        ),
-        StepFormPage(
-          title: const Text(addDetailsTitle),
-          features: [
-            AddProductForm(
-              formKey: _detailsFormKey,
-              onNameChanged: _handleChangingName,
-              onDescriptionChanged: _handleChangingDescription,
-              onPriceChanged: _handleChangingPrice,
-              onTypeChanged: _handleChangingType,
-              onCategoryChanged: _handleAddingCategory,
-            ),
-          ],
-        ),
-        StepFormPage(
-          title: const Text(contactInfoTitle),
-          features: [
-            const WhatsNewFeature(
-              description: Text(contactInfoDetails),
-            ),
-            ConfirmContactsForm(
-              contactName: contactName,
-              contactLocation: location,
-              contactPhoneNumber: phoneNumber,
-              formKey: _contactFormKey,
-              onLocationChanged: _handleChangingLocation,
-              onContactNameChanged: _handleChangingContactName,
-              onPhoneNumberChanged: _handleChangingPhoneNumber,
-            ),
-          ],
-        ),
+        if ((widget.productInfo != null && widget.pageKey == "pictures") ||
+            widget.productInfo == null)
+          StepFormPage(
+            title: Text(widget.pageKey == null
+                ? uploadPicturesTitle
+                : "Update Pictures"),
+            features: [
+              const WhatsNewFeature(
+                description: Text(addImagesDetails),
+              ),
+              ImageUploadForm(
+                  onImagesUploaded: _handleImageUpload, existingImages: images),
+            ],
+          ),
+        if ((widget.productInfo != null && widget.pageKey == "details") ||
+            widget.productInfo == null)
+          StepFormPage(
+            title: Text(
+                widget.pageKey == null ? addDetailsTitle : "Update Details"),
+            features: [
+              AddProductForm(
+                productInfo: widget.productInfo,
+                formKey: _detailsFormKey,
+                onNameChanged: _handleChangingName,
+                onDescriptionChanged: _handleChangingDescription,
+                onPriceChanged: _handleChangingPrice,
+                onTypeChanged: _handleChangingType,
+                onCategoryChanged: _handleAddingCategory,
+              ),
+            ],
+          ),
+        if ((widget.productInfo != null && widget.pageKey == "contact") ||
+            widget.productInfo == null)
+          StepFormPage(
+            title: Text(widget.pageKey == null ? contactInfoTitle : "Update Contacts"),
+            features: [
+              const WhatsNewFeature(
+                description: Text(contactInfoDetails),
+              ),
+              ConfirmContactsForm(
+                contactName: contactName,
+                contactLocation: location,
+                contactPhoneNumber: phoneNumber,
+                formKey: _contactFormKey,
+                onLocationChanged: _handleChangingLocation,
+                onContactNameChanged: _handleChangingContactName,
+                onPhoneNumberChanged: _handleChangingPhoneNumber,
+              ),
+            ],
+          ),
       ],
     );
   }

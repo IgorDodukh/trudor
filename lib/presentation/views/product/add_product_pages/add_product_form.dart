@@ -1,22 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:spoto/core/constant/collections.dart';
 import 'package:spoto/core/constant/messages.dart';
 import 'package:spoto/core/util/price_handler.dart';
-import 'package:spoto/data/models/product/price_tag_model.dart';
-import 'package:spoto/data/models/product/product_model.dart';
-import 'package:spoto/data/models/user/user_model.dart';
 import 'package:spoto/domain/entities/product/product.dart';
 import 'package:spoto/presentation/blocs/home/navbar_cubit.dart';
-import 'package:spoto/presentation/blocs/product/product_bloc.dart';
-import 'package:spoto/presentation/blocs/user/user_bloc.dart';
 import 'package:spoto/presentation/views/main/category/category_view.dart';
-import 'package:spoto/presentation/widgets/adaptive_alert_dialog.dart';
 import 'package:spoto/presentation/widgets/input_form_button.dart';
 import 'package:spoto/presentation/widgets/input_text_form_field.dart';
 import 'package:toggle_switch/toggle_switch.dart';
-import 'package:uuid/uuid.dart';
 
 class AddProductForm extends StatefulWidget {
   final GlobalKey<FormState>? formKey;
@@ -45,7 +37,6 @@ class AddProductForm extends StatefulWidget {
 class _AddProductFormState extends State<AddProductForm> {
   String? id;
   bool? isNew;
-  bool isPublishPressed = false;
   int? initialLabelIndex;
   bool isFree = false;
   bool isPriceValid = true;
@@ -55,31 +46,27 @@ class _AddProductFormState extends State<AddProductForm> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
-  List<String> images = [];
   String? selectedCategory;
 
   @override
   void initState() {
     final existingProduct = widget.productInfo;
     if (widget.productInfo != null) {
+      final existingPriceVal =
+          NumberHandler.formatPrice(existingProduct!.price);
       id = widget.productInfo!.id;
-      nameController.text = existingProduct?.name ?? "";
-      descriptionController.text = existingProduct?.description ?? "";
-      setState(() {
-        isNew = existingProduct?.isNew;
-        initialLabelIndex = isNew != null ? (isNew! ? 0 : 1) : null;
-        selectedCategory = existingProduct?.category;
-      });
+      nameController.text = existingProduct.name;
+      descriptionController.text = existingProduct.description;
       priceController.text =
-          NumberHandler.formatPrice(existingProduct!.priceTags.first.price);
+          existingPriceVal == "0" ? itsFreeHint : existingPriceVal;
+      setState(() {
+        isNew = existingProduct.isNew;
+        initialLabelIndex = isNew != null ? (isNew! ? 0 : 1) : null;
+        selectedCategory = existingProduct.category;
+        isFree = existingProduct.price == 0;
+      });
     }
     super.initState();
-  }
-
-  void _setIsPublishPressed() {
-    setState(() {
-      isPublishPressed = !isPublishPressed;
-    });
   }
 
   void _handleCategorySelection(String category) {
@@ -92,23 +79,6 @@ class _AddProductFormState extends State<AddProductForm> {
         isCategoryValid = true;
       }
     });
-  }
-
-  Future<dynamic>? onClickClose() {
-    if (nameController.text.isNotEmpty ||
-        descriptionController.text.isNotEmpty ||
-        isNew != null ||
-        selectedCategory != null ||
-        priceController.text.isNotEmpty) {
-      return showDialog(
-        context: context,
-        builder: (context) {
-          return const DiscardChangesAlert();
-        },
-      );
-    }
-    Navigator.of(context).pop();
-    return Future(() => null);
   }
 
   Widget productTypeToggle() {
@@ -169,12 +139,6 @@ class _AddProductFormState extends State<AddProductForm> {
         });
         return null;
       },
-    );
-  }
-
-  SizedBox formDivider() {
-    return const SizedBox(
-      height: 20,
     );
   }
 
@@ -284,120 +248,6 @@ class _AddProductFormState extends State<AddProductForm> {
         });
   }
 
-  Widget addProductButton() {
-    return InputFormButton(
-      color: Colors.black87,
-      onClick: () async {
-        _setIsPublishPressed();
-        if (widget.formKey!.currentState!.validate() && isNew != null) {
-          final userId =
-              (context.read<UserBloc>().state.props.first as UserModel).id;
-          var uuid = const Uuid();
-          final updatedModel = ProductModel(
-              id: uuid.v1(),
-              ownerId: userId,
-              name: nameController.text,
-              description: descriptionController.text,
-              isNew: isNew!,
-              status: ProductStatus.active,
-              price: double.parse(priceController.text.replaceAll(",", ".")),
-              priceTags: [
-                PriceTagModel(
-                    id: '1',
-                    name: "base",
-                    price:
-                        double.parse(priceController.text.replaceAll(",", ".")))
-              ],
-              // categories: [CategoryModel.fromEntity(selectedCategory!)],
-              category: selectedCategory!,
-              images: images.isEmpty ? [] : images,
-              createdAt: DateTime.now(),
-              updatedAt: DateTime.now());
-          context.read<ProductBloc>().add(AddProduct(updatedModel));
-          EasyLoading.showSuccess(productPublishedSuccessfully);
-          Navigator.of(context).pop();
-        }
-      },
-      titleText: publishTitle,
-    );
-  }
-
-  Widget updateProductButton() {
-    return InputFormButton(
-      color: Colors.black87,
-      onClick: () async {
-        _setIsPublishPressed();
-        if (widget.formKey!.currentState!.validate() && isNew != null) {
-          final updatedModel = ProductModel(
-              id: widget.productInfo!.id,
-              ownerId: widget.productInfo!.ownerId,
-              name: nameController.text,
-              description: descriptionController.text,
-              isNew: isNew!,
-              status: ProductStatus.active,
-              price: double.parse(priceController.text.replaceAll(",", ".")),
-              priceTags: [
-                PriceTagModel(
-                    id: '1',
-                    name: "base",
-                    price:
-                        double.parse(priceController.text.replaceAll(",", ".")))
-              ],
-              // categories: [CategoryModel.fromEntity(selectedCategory!)],
-              category: selectedCategory!,
-              images: images.isEmpty ? [] : images,
-              createdAt: widget.productInfo!.createdAt,
-              updatedAt: DateTime.now());
-          context.read<ProductBloc>().add(UpdateProduct(updatedModel));
-          EasyLoading.showSuccess(productUpdatedSuccessfully);
-          Navigator.of(context).pop();
-        }
-      },
-      titleText: updateTitle,
-    );
-  }
-
-  bool isExistingProductUpdated() {
-    return nameController.text != widget.productInfo!.name ||
-        descriptionController.text != widget.productInfo!.description ||
-        isNew != widget.productInfo!.isNew ||
-        images != widget.productInfo!.images ||
-        selectedCategory != widget.productInfo!.category ||
-        priceController.text !=
-            widget.productInfo!.priceTags.first.price.toString();
-  }
-
-  bool isProductInfoUpdated() {
-    return nameController.text.isNotEmpty ||
-        descriptionController.text.isNotEmpty ||
-        isNew != null ||
-        images.isNotEmpty ||
-        selectedCategory != null ||
-        priceController.text.isNotEmpty;
-  }
-
-  Future<dynamic>? onPopupClose() {
-    if (widget.productInfo != null) {
-      if (isExistingProductUpdated()) {
-        return showDialog(
-          context: context,
-          builder: (context) {
-            return const DiscardChangesAlert();
-          },
-        );
-      }
-    } else if (isProductInfoUpdated()) {
-      return showDialog(
-        context: context,
-        builder: (context) {
-          return const DiscardChangesAlert();
-        },
-      );
-    }
-    Navigator.of(context).pop();
-    return Future(() => null);
-  }
-
   Widget saveDraftButton() {
     return InputFormButton(
       color: Colors.black26,
@@ -407,17 +257,6 @@ class _AddProductFormState extends State<AddProductForm> {
         context.read<NavbarCubit>().update(0);
       },
       titleText: saveDraftTitle,
-    );
-  }
-
-  Widget cancelButton() {
-    return InputFormButton(
-      color: Colors.white,
-      textColor: Colors.black,
-      onClick: () {
-        onPopupClose();
-      },
-      titleText: cancelTitle,
     );
   }
 

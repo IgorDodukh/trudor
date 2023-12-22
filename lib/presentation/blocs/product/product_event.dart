@@ -21,7 +21,7 @@ class AddProduct extends ProductEvent {
 }
 
 class UpdateProduct extends ProductEvent {
-  final Product params;
+  final UpdateProductParams params;
   const UpdateProduct(this.params);
 
   @override

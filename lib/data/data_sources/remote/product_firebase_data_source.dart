@@ -4,13 +4,14 @@ import 'package:spoto/core/util/typesense/typesense_products.dart';
 import 'package:spoto/data/models/product/product_response_model.dart';
 import 'package:spoto/domain/entities/product/product.dart';
 import 'package:spoto/domain/usecases/product/get_product_usecase.dart';
+import 'package:spoto/domain/usecases/product/update_product_usecase.dart';
 
 abstract class ProductFirebaseDataSource {
   Future<ProductResponseModel> getProducts(FilterProductParams params);
 
   Future<ProductResponseModel> addProduct(Product product);
 
-  Future<ProductResponseModel> updateProduct(Product product);
+  Future<ProductResponseModel> updateProduct(UpdateProductParams params);
 }
 
 class ProductFirebaseDataSourceSourceImpl implements ProductFirebaseDataSource {
@@ -34,8 +35,8 @@ class ProductFirebaseDataSourceSourceImpl implements ProductFirebaseDataSource {
   }
 
   @override
-  Future<ProductResponseModel> updateProduct(Product product) async {
+  Future<ProductResponseModel> updateProduct(UpdateProductParams params) async {
     FirestoreProducts firestoreService = FirestoreProducts();
-    return await firestoreService.updateProduct(product);
+    return await firestoreService.updateProduct(params);
   }
 }

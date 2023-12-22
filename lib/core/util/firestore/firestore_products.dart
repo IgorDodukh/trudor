@@ -7,6 +7,7 @@ import 'package:spoto/data/models/product/product_model.dart';
 import 'package:spoto/data/models/product/product_response_model.dart';
 import 'package:spoto/domain/entities/product/product.dart';
 import 'package:spoto/domain/usecases/product/get_product_usecase.dart';
+import 'package:spoto/domain/usecases/product/update_product_usecase.dart';
 
 class FirestoreProducts {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -25,23 +26,29 @@ class FirestoreProducts {
     }
   }
 
-  Future<ProductResponseModel> updateProduct(Product product) async {
+  Future<ProductResponseModel> updateProduct(UpdateProductParams params) async {
     try {
-      final productData = ProductModel.fromProduct(product).toJson();
+      final productData = ProductModel.fromProduct(params.product).toJson();
       await typesenseService.updateDocument(productData);
       DocumentReference productRef =
           _firestore.collection('products').doc(productData['_id']);
       await productRef.update(productData);
 
-      final productStatus = product.status == ProductStatus.active
+      final productStatus = params.product.status == ProductStatus.active
           ? ProductStatus.inactive
           : ProductStatus.active;
 
-      Map<String, dynamic> updatedProducts =
-          await typesenseService.searchProducts(FilterProductParams(
-              keyword: product.ownerId,
-              searchField: "ownerId",
-              status: productStatus.name.toString()));
+      Map<String, dynamic> updatedProducts;
+      if (params.isPublicationsAction) {
+        updatedProducts = await typesenseService.searchProducts(
+            FilterProductParams(
+                keyword: params.product.ownerId,
+                searchField: "ownerId",
+                status: productStatus.name.toString()));
+      } else {
+        updatedProducts =
+            await typesenseService.searchProducts(const FilterProductParams());
+      }
       return productResponseModelFromMap(updatedProducts);
     } catch (e) {
       EasyLoading.showError("Failed to update product: $e");

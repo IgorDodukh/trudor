@@ -7,11 +7,11 @@ import 'package:spoto/core/constant/collections.dart';
 import 'package:spoto/core/constant/messages.dart';
 import 'package:spoto/core/constant/strings.dart';
 import 'package:spoto/core/util/price_handler.dart';
-import 'package:spoto/data/models/category/category_model.dart';
 import 'package:spoto/data/models/product/price_tag_model.dart';
 import 'package:spoto/data/models/product/product_model.dart';
 import 'package:spoto/data/models/user/user_model.dart';
 import 'package:spoto/domain/entities/favorites/favorites_item.dart';
+import 'package:spoto/domain/usecases/product/update_product_usecase.dart';
 import 'package:spoto/presentation/blocs/favorites/favorites_bloc.dart' as fav;
 import 'package:spoto/presentation/blocs/product/product_bloc.dart' as prod;
 import 'package:spoto/presentation/blocs/user/user_bloc.dart';
@@ -85,9 +85,9 @@ class ListViewItemCard extends StatelessWidget {
                     images: listViewItem!.product.images,
                     createdAt: listViewItem!.product.createdAt,
                     updatedAt: DateTime.now());
-                context
-                    .read<prod.ProductBloc>()
-                    .add(prod.UpdateProduct(updatedModel));
+                context.read<prod.ProductBloc>().add(prod.UpdateProduct(
+                    UpdateProductParams(
+                        product: updatedModel, isPublicationsAction: true)));
               },
             );
           },
@@ -127,9 +127,9 @@ class ListViewItemCard extends StatelessWidget {
                     images: listViewItem!.product.images,
                     createdAt: listViewItem!.product.createdAt,
                     updatedAt: DateTime.now());
-                context
-                    .read<prod.ProductBloc>()
-                    .add(prod.UpdateProduct(updatedModel));
+                context.read<prod.ProductBloc>().add(prod.UpdateProduct(
+                    UpdateProductParams(
+                        product: updatedModel, isPublicationsAction: true)));
               },
             );
           },
@@ -179,18 +179,13 @@ class ListViewItemCard extends StatelessWidget {
   Widget addToFavoritesButton(BuildContext context) {
     return IconButton(
       onPressed: () {
-        final userId = (context
-            .read<UserBloc>()
-            .state
-            .props
-            .first as UserModel)
-            .id;
-        context.read<fav.FavoritesBloc>().add(
-            fav.AddProduct(
-                favoritesItem: ListViewItem(
-                    product: listViewItem!.product,
-                    userId: userId,
-                    priceTag: listViewItem!.priceTag)));
+        final userId =
+            (context.read<UserBloc>().state.props.first as UserModel).id;
+        context.read<fav.FavoritesBloc>().add(fav.AddProduct(
+            favoritesItem: ListViewItem(
+                product: listViewItem!.product,
+                userId: userId,
+                priceTag: listViewItem!.priceTag)));
       },
       icon: const Icon(Icons.favorite_border),
     );

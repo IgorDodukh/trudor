@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:spoto/data/data_sources/remote/product_firebase_data_source.dart';
 import 'package:spoto/domain/entities/product/product.dart';
+import 'package:spoto/domain/usecases/product/update_product_usecase.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../../../core/error/exceptions.dart';
@@ -34,7 +35,7 @@ class ProductRepositoryImpl implements ProductRepository {
   }
 
   @override
-  Future<Either<Failure, ProductResponse>> updateProduct(Product params) async {
+  Future<Either<Failure, ProductResponse>> updateProduct(UpdateProductParams params) async {
     try {
       return await _updateProduct(() {
         return firebaseDataSource.updateProduct(params);

@@ -7,6 +7,7 @@ import 'package:spoto/core/util/firestore/firestore_products.dart';
 import 'package:spoto/core/util/typesense/typesense_products.dart';
 import 'package:spoto/domain/entities/product/product.dart';
 import 'package:spoto/domain/usecases/product/get_product_usecase.dart';
+import 'package:spoto/domain/usecases/product/update_product_usecase.dart';
 import 'package:spoto/presentation/widgets/adaptive_alert_dialog.dart';
 
 import '../../../../core/constant/images.dart';
@@ -42,7 +43,8 @@ class OtherView extends StatelessWidget {
             isNew: product.isNew,
             status: product.status,
           );
-          firestoreService.updateProduct(productData);
+          firestoreService.updateProduct(UpdateProductParams(
+              product: productData, isPublicationsAction: false));
         }
         EasyLoading.dismiss();
         EasyLoading.showToast(
