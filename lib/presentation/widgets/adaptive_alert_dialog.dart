@@ -56,8 +56,7 @@ class AdaptiveDialog extends StatelessWidget {
           onPressed: () {
             onClickYes!();
           },
-          child:
-              Text(yes, style: const TextStyle(color: Colors.red)),
+          child: Text(yes, style: const TextStyle(color: Colors.red)),
         ),
       ],
     );
@@ -73,7 +72,7 @@ class DiscardChangesAlert extends StatelessWidget {
       title: discardChangesTitle,
       content: discardChangesContent,
       yes: discardChangesYes,
-      no: backTitle,
+      no: goBackTitle,
       onClickYes: () {
         Navigator.of(context).pop();
         Navigator.of(context).pop();
@@ -85,16 +84,18 @@ class DiscardChangesAlert extends StatelessWidget {
   }
 }
 
-class UnauthorisedAddFavoritesAlert extends StatelessWidget {
-  const UnauthorisedAddFavoritesAlert({super.key});
+class SignInToUseFeatureAlert extends StatelessWidget {
+  final String contentText;
+
+  const SignInToUseFeatureAlert({super.key, required this.contentText});
 
   @override
   Widget build(BuildContext context) {
     return AdaptiveDialog(
-      title: addFavoritesTitle,
-      content: addFavoritesContent,
+      title: wouldLikeToSignInTitle,
+      content: contentText,
       yes: openSignInTitle,
-      no: backTitle,
+      no: goBackTitle,
       onClickYes: () {
         Navigator.of(context).pop();
         Navigator.of(context).pushNamed(AppRouter.signIn);
@@ -117,7 +118,7 @@ class DeactivateProductAlert extends StatelessWidget {
       title: deactivateProductTitle,
       content: deactivateProductContent,
       yes: deactivateProductYes,
-      no: backTitle,
+      no: goBackTitle,
       onClickYes: () {
         onDeactivateProduct();
         EasyLoading.showSuccess(deactivatedSuccessfully);
@@ -141,7 +142,7 @@ class RenewProductAlert extends StatelessWidget {
       title: activateProductTitle,
       content: activateProductContent,
       yes: activateProductYes,
-      no: backTitle,
+      no: goBackTitle,
       onClickYes: () {
         onRenewProduct();
         EasyLoading.showSuccess(productPublishedSuccessfully);
@@ -165,7 +166,7 @@ class SignOutConfirmationAlert extends StatelessWidget {
       title: signOutConfirmTitle,
       content: signOutConfirmContent,
       yes: signOutConfirmYes,
-      no: backTitle,
+      no: goBackTitle,
       onClickYes: () {
         onSignOut();
         EasyLoading.showSuccess(signOutSuccess);

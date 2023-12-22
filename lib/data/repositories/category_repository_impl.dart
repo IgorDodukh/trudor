@@ -22,9 +22,9 @@ class CategoryRepositoryImpl implements CategoryRepository {
   Future<Either<Failure, List<Category>>> getRemoteCategories() async {
     if (await networkInfo.isConnected) {
       try {
-        final remoteProducts = await firestoreService.getCategories();
-        localDataSource.saveCategories(remoteProducts!);
-        return Right(remoteProducts);
+        final remoteCategories = await firestoreService.getCategories();
+        localDataSource.saveCategories(remoteCategories!);
+        return Right(remoteCategories);
       } on Failure catch (failure) {
         return Left(failure);
       }
@@ -36,8 +36,8 @@ class CategoryRepositoryImpl implements CategoryRepository {
   @override
   Future<Either<Failure, List<Category>>> getCachedCategories() async {
     try {
-      final localProducts = await localDataSource.getCategories();
-      return Right(localProducts);
+      final localCategories = await localDataSource.getCategories();
+      return Right(localCategories);
     } on Failure catch (failure) {
       return Left(failure);
     }

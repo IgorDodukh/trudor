@@ -18,7 +18,7 @@ import 'package:spoto/presentation/blocs/user/user_bloc.dart';
 import 'package:spoto/presentation/widgets/adaptive_alert_dialog.dart';
 
 import '../../core/router/app_router.dart';
-import '../views/product/add_product_form.dart';
+import '../views/product/add_product_pages/add_product_form.dart';
 
 class ListViewItemCard extends StatelessWidget {
   final ListViewItem? listViewItem;
@@ -77,10 +77,10 @@ class ListViewItemCard extends StatelessWidget {
                           name: "base",
                           price: listViewItem!.product.priceTags.first.price)
                     ],
-                    categories: [
-                      CategoryModel.fromEntity(
-                          listViewItem!.product.categories.first)
-                    ],
+                    // categories: [
+                    //   CategoryModel.fromEntity(
+                    //       listViewItem!.product.categories.first)
+                    // ],
                     category: listViewItem!.product.category,
                     images: listViewItem!.product.images,
                     createdAt: listViewItem!.product.createdAt,
@@ -119,10 +119,10 @@ class ListViewItemCard extends StatelessWidget {
                           name: "base",
                           price: listViewItem!.product.priceTags.first.price)
                     ],
-                    categories: [
-                      CategoryModel.fromEntity(
-                          listViewItem!.product.categories.first)
-                    ],
+                    // categories: [
+                    //   CategoryModel.fromEntity(
+                    //       listViewItem!.product.categories.first)
+                    // ],
                     category: listViewItem!.product.category,
                     images: listViewItem!.product.images,
                     createdAt: listViewItem!.product.createdAt,

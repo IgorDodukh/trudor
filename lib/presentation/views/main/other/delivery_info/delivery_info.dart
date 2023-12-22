@@ -27,7 +27,7 @@ class _DeliveryInfoViewState extends State<DeliveryInfoView> {
       listener: (context, state) {
         EasyLoading.dismiss();
         if (state is DeliveryInfoActionLoading) {
-          EasyLoading.show(status: loadingTitle);
+          EasyLoading.show(status: loadingTitle, dismissOnTap: false);
         } else if (state is DeliveryInfoSelectActionSuccess) {
           context
               .read<DeliveryInfoFetchCubit>()
@@ -136,7 +136,7 @@ class _DeliveryInfoFormState extends State<DeliveryInfoForm> {
       listener: (context, state) {
         EasyLoading.dismiss();
         if (state is DeliveryInfoActionLoading) {
-          EasyLoading.show(status: loadingTitle);
+          EasyLoading.show(status: loadingTitle, dismissOnTap: false);
         } else if (state is DeliveryInfoAddActionSuccess) {
           Navigator.of(context).pop();
           context

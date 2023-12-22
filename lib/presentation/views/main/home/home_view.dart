@@ -32,7 +32,9 @@ class _HomeViewState extends State<HomeView> {
     double scrollPercentage = 0.7;
     if (currentScroll > (maxScroll * scrollPercentage)) {
       if (context.read<ProductBloc>().state is ProductLoaded) {
-        context.read<ProductBloc>().add(GetMoreProducts(context.read<FilterCubit>().state));
+        context
+            .read<ProductBloc>()
+            .add(GetMoreProducts(context.read<FilterCubit>().state));
       }
     }
   }
@@ -59,7 +61,7 @@ class _HomeViewState extends State<HomeView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: (MediaQuery.of(context).padding.top - 10),
+            height: (MediaQuery.of(context).padding.top - 15),
           ),
           Padding(
             padding: const EdgeInsets.only(
@@ -74,6 +76,9 @@ class _HomeViewState extends State<HomeView> {
                     builder: (context, state) {
                       return TextField(
                         autofocus: false,
+                        onTapOutside: ((event) {
+                          FocusScope.of(context).unfocus();
+                        }),
                         controller:
                             context.read<FilterCubit>().searchController,
                         onChanged: (val) => setState(() {
@@ -87,7 +92,7 @@ class _HomeViewState extends State<HomeView> {
                         },
                         decoration: InputDecoration(
                             contentPadding: const EdgeInsets.only(
-                                left: 20, bottom: 22, top: 22),
+                                left: 20, bottom: 0, top: 22),
                             prefixIcon: const Padding(
                               padding: EdgeInsets.only(left: 8),
                               child: Icon(Icons.search),
@@ -134,7 +139,8 @@ class _HomeViewState extends State<HomeView> {
                   width: 8,
                 ),
                 SizedBox(
-                  width: 55,
+                  width: 40,
+                  height: 40,
                   child: BlocBuilder<FilterCubit, FilterProductParams>(
                     builder: (context, state) {
                       return Badge(
@@ -150,6 +156,8 @@ class _HomeViewState extends State<HomeView> {
                             context.read<FilterCubit>().getFiltersCount() != 0,
                         backgroundColor: Theme.of(context).primaryColor,
                         child: InputFormButton(
+                          cornerRadius: 14,
+                          padding: const EdgeInsets.all(0),
                           color: Colors.black87,
                           onClick: () {
                             Navigator.of(context).pushNamed(AppRouter.filter);

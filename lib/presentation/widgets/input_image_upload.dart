@@ -1,14 +1,11 @@
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:spoto/core/constant/images.dart';
 import 'package:spoto/core/util/firestore/firestore_images.dart';
-import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 class ImageUploadForm extends StatefulWidget {
-  // TODO: https://medium.flutterdevs.com/multiimage-picker-in-flutter-69bd9f6cedfb
   final ValueChanged<List<String>> onImagesUploaded;
   final List<String>? existingImages;
 
@@ -24,8 +21,7 @@ class ImageUploadForm extends StatefulWidget {
 
 class _ImageUploadFormState extends State<ImageUploadForm> {
   List<String> imageUrls = [];
-  final int maxImages = 5;
-  int _currentIndex = 0;
+  final int maxImages = 9;
   bool photosLimitReached = false;
   bool isLoading = false;
   FirestoreImages firestoreService = FirestoreImages();
@@ -46,193 +42,159 @@ class _ImageUploadFormState extends State<ImageUploadForm> {
 
   Future<List<XFile>> pickImages() async {
     final ImagePicker picker = ImagePicker();
-    final result = await picker.pickMultiImage(imageQuality: 50);
+    final result = await picker.pickMultiImage(imageQuality: 30);
     return result.map((XFile file) => file).toList();
   }
 
   Future<List<String>> pickAndUploadImages() async {
     final images = await pickImages();
     setIsLoading();
-    final imageUrls = await firestoreService.uploadImagesToFirebase(images);
-    setState(() {
+    for (var image in images) {
+      final imageUrls = await firestoreService.uploadImagesToFirebase([image]);
       this.imageUrls.addAll(imageUrls);
-      widget.onImagesUploaded(this.imageUrls);
+      if (this.imageUrls.length >= maxImages) {
+        break;
+      }
+    }
+    setState(() {
+      widget.onImagesUploaded(imageUrls);
     });
     setIsLoading();
     return imageUrls;
   }
 
-  void showAlertDialog(BuildContext context, String imageUrl) {
-    Widget cancelButton = TextButton(
-      child: const Text("Cancel"),
-      onPressed: () {
-        Navigator.pop(context);
-      },
-    );
-
-    Widget removeButton = TextButton(
-      child: const Text("Remove"),
-      onPressed: () async {
-        await firestoreService.removeImageFromFirebase(imageUrl);
-        setState(() {
-          int pickedImageIndex = imageUrls.indexOf(imageUrl);
-          imageUrls.removeAt(pickedImageIndex);
-          widget.onImagesUploaded(imageUrls);
-        });
-        Navigator.pop(context);
-      },
-    );
-    Widget setMainImageButton = TextButton(
-      child: const Text("Make primary"),
-      onPressed: () {
-        setState(() {
-          // imageUrls.removeAt(imageUrl);
-        });
-        Navigator.pop(context);
-      },
-    );
-
-    AlertDialog alert = AlertDialog(
-      surfaceTintColor: Colors.grey,
-      title: const Text("Image actions"),
-      actions: [
-        setMainImageButton,
-        removeButton,
-        cancelButton,
-      ],
-    );
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
+  Widget removeImageButton(BuildContext context, String imageUrl) {
+    return Positioned(
+      right: 8,
+      top: 8,
+      child: InkWell(
+        child: const Icon(
+          Icons.remove_circle,
+          size: 24,
+          color: Colors.redAccent,
+        ),
+        onTap: () async {
+          await firestoreService.removeImageFromFirebase(imageUrl);
+          setState(() {
+            int pickedImageIndex = imageUrls.indexOf(imageUrl);
+            imageUrls.removeAt(pickedImageIndex);
+            widget.onImagesUploaded(imageUrls);
+          });
+        },
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: add validation if upload more than max images at once
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            if (imageUrls.isNotEmpty)
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
+        imageUrls.isEmpty
+            ? Center(
+                child: Column(children: [
+                const SizedBox(
+                  height: 30,
+                ),
+                const Icon(
+                  CupertinoIcons.photo_on_rectangle,
+                  size: 200,
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                TextButton(
                   onPressed: imageUrls.length >= maxImages
                       ? null
                       : () async => {
+                            EasyLoading.show(
+                                status: 'Processing images.\nPlease wait.',
+                                dismissOnTap: false),
                             await pickAndUploadImages(),
+                            EasyLoading.dismiss(),
                           },
-                  child: const Text('Add more',
-                      style: TextStyle(decoration: TextDecoration.underline)),
+                  child: const Text('Add pictures',
+                      style: TextStyle(
+                          decoration: TextDecoration.underline, fontSize: 20)),
+                ),
+              ]))
+            : Container(
+                height: 345,
+                // decoration: const BoxDecoration(
+                //   color: Colors.black12,
+                //   borderRadius: BorderRadius.all(Radius.circular(12)),
+                // ),
+                child: GridView.builder(
+                  itemCount: imageUrls.length + 1,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                  ),
+                  physics: const BouncingScrollPhysics(),
+                  shrinkWrap: true,
+                  itemBuilder: (BuildContext context, int index) {
+                    if (imageUrls.length > index) {
+                      return Stack(children: [
+                        SizedBox(
+                          width: 120,
+                          height: 120,
+                          child: Card(
+                            color: Colors.white,
+                            surfaceTintColor: Colors.white,
+                            elevation: 2,
+                            clipBehavior: Clip.antiAlias,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(0.0),
+                              child: CachedNetworkImage(
+                                imageUrl: imageUrls[index],
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
+                        removeImageButton(context, imageUrls[index]),
+                      ]);
+                    }
+                    return imageUrls.length < maxImages
+                        ? SizedBox(
+                            child: TextButton(
+                              onPressed: imageUrls.length >= maxImages
+                                  ? null
+                                  : () async => {
+                                        EasyLoading.show(
+                                            status:
+                                                'Processing images.\nPlease wait.',
+                                            dismissOnTap: false),
+                                        await pickAndUploadImages(),
+                                        EasyLoading.dismiss(),
+                                      },
+                              child: const Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.add_a_photo_outlined,
+                                      size: 40,
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      'Add more',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          )
+                        : null;
+                  },
                 ),
               ),
-          ],
-        ),
-        if (imageUrls.isNotEmpty) ...[
-          SizedBox(
-            height: 300,
-            child: CarouselSlider(
-              options: CarouselOptions(
-                height: double.infinity,
-                enlargeCenterPage: true,
-                enableInfiniteScroll: false,
-                aspectRatio: 16 / 9,
-                viewportFraction: 1,
-                onPageChanged: (index, reason) {
-                  setState(() {
-                    _currentIndex = index;
-                  });
-                },
-              ),
-              items: imageUrls.map((imageUrl) {
-                return Builder(
-                  builder: (BuildContext context) {
-                    return GestureDetector(
-                        child: SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            child: isLoading
-                                ? const CircularProgressIndicator.adaptive()
-                                : Image.network(imageUrl, fit: BoxFit.cover)),
-                        onTap: () {
-                          showAlertDialog(context, imageUrl);
-                        });
-                  },
-                );
-              }).toList(),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: Align(
-              alignment: Alignment.center,
-              child: AnimatedSmoothIndicator(
-                activeIndex: _currentIndex,
-                count: imageUrls.length,
-                effect: ScrollingDotsEffect(
-                    dotColor: Colors.grey.shade300,
-                    maxVisibleDots: 7,
-                    activeDotColor: Colors.grey,
-                    dotHeight: 6,
-                    dotWidth: 6,
-                    activeDotScale: 1.1,
-                    spacing: 6),
-              ),
-            ),
-          ),
-        ] else ...[
-          SizedBox(
-            height: 300,
-            child: TextButton(
-              onPressed: () async => {
-                await pickAndUploadImages(),
-              },
-              child: isLoading
-                  ? const CircularProgressIndicator.adaptive()
-                  : Container(
-                      decoration: const BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage(kAddPhoto), fit: BoxFit.cover)),
-                      child: const Padding(
-                        padding: EdgeInsets.only(top: 180.0),
-                        child: Center(
-                            child: Text("Add pictures",
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold))),
-                      ),
-                    ),
-            ),
-          ),
-        ],
-        const SizedBox(height: 12.0),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: StepProgressIndicator(
-            totalSteps: maxImages,
-            currentStep: imageUrls.length,
-            selectedColor: Colors.black87,
-            unselectedColor: Colors.grey,
-          ),
-        ),
-        const SizedBox(height: 2.0),
-    Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20),
-    child:
-    FAProgressBar(
-          size: 20,
-          maxValue: maxImages.toDouble(),
-          currentValue: imageUrls.length.toDouble(),
-          displayText: '/$maxImages',
-          progressColor: Colors.white,
-          displayTextStyle:
-              const TextStyle(color: Colors.black87, fontSize: 14),
-        )),
       ],
     );
   }

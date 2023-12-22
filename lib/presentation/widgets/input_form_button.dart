@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:spoto/core/constant/images.dart';
 
 class InputFormButton extends StatelessWidget {
   final Function() onClick;
@@ -49,10 +48,7 @@ class InputFormButton extends StatelessWidget {
               titleText!,
               style: TextStyle(color: textColor ?? Colors.white, fontSize: 16),
             )
-          : Image.asset(
-              kFilterIcon,
-              color: Colors.white,
-            ),
+          : Icon(Icons.filter_list, color: textColor ?? Colors.white),
     );
   }
 }

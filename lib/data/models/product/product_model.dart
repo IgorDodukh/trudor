@@ -14,7 +14,7 @@ class ProductModel extends Product {
     required num price,
     required String description,
     required List<PriceTagModel> priceTags,
-    required List<CategoryModel> categories,
+    // required List<CategoryModel> categories,
     required String category,
     required List<String> images,
     required DateTime createdAt,
@@ -28,7 +28,7 @@ class ProductModel extends Product {
           price: price,
           description: description,
           priceTags: priceTags,
-          categories: categories,
+          // categories: categories,
           category: category,
           images: images,
           createdAt: createdAt,
@@ -46,9 +46,9 @@ class ProductModel extends Product {
         priceTags: product.priceTags
             .map((priceTag) => PriceTagModel.fromPriceTag(priceTag))
             .toList(),
-        categories: product.categories
-            .map((category) => CategoryModel.fromCategory(category))
-            .toList(),
+        // categories: product.categories
+        //     .map((category) => CategoryModel.fromCategory(category))
+        //     .toList(),
         category: product.category,
         images: product.images,
         createdAt: product.createdAt,
@@ -65,8 +65,8 @@ class ProductModel extends Product {
         description: json["description"],
         priceTags: List<PriceTagModel>.from(
             json["priceTags"].map((x) => PriceTagModel.fromJson(x))),
-        categories: List<CategoryModel>.from(
-            json["categories"].map((x) => CategoryModel.fromJson(x))),
+        // categories: List<CategoryModel>.from(
+        //     json["categories"].map((x) => CategoryModel.fromJson(x))),
         category: json["category"],
         images: List<String>.from(json["images"].map((x) => x)),
         createdAt: DateTime.parse(json["createdAt"]),
@@ -83,8 +83,8 @@ class ProductModel extends Product {
         "description": description,
         "priceTags": List<dynamic>.from(
             (priceTags as List<PriceTagModel>).map((x) => x.toJson())),
-        "categories": List<dynamic>.from(
-            (categories as List<CategoryModel>).map((x) => x.toJson())),
+        // "categories": List<dynamic>.from(
+        //     (categories as List<CategoryModel>).map((x) => x.toJson())),
         "category": category,
         "images": List<dynamic>.from(images.map((x) => x)),
         "createdAt": createdAt.toIso8601String(),
@@ -102,9 +102,9 @@ class ProductModel extends Product {
         priceTags: entity.priceTags
             .map((priceTag) => PriceTagModel.fromEntity(priceTag))
             .toList(),
-        categories: entity.categories
-            .map((category) => CategoryModel.fromEntity(category))
-            .toList(),
+        // categories: entity.categories
+        //     .map((category) => CategoryModel.fromEntity(category))
+        //     .toList(),
         category: entity.category,
         images: entity.images,
         createdAt: entity.createdAt,

@@ -55,7 +55,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         )),
       );
     } catch (e) {
-      EasyLoading.showError("Failed to load Products: $e");
+      print("Failed to load Products: $e");
       emit(ProductError(
         products: state.products,
         metaData: state.metaData,

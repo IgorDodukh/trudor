@@ -30,14 +30,15 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       ///Initial Category loading with minimal loading animation
       ///
       ///Cashed category
-      emit(const CategoryLoading(categories: []));
-      final cashedResult = await _getCashedCategoryUseCase(NoParams());
-      cashedResult.fold(
-        (failure) => (EasyLoading.showError("Failed to load cached categories")),
-        (categories) => emit(CategoryCacheLoaded(
-          categories: categories,
-        )),
-      );
+      // temporary disable this feature
+      // emit(const CategoryLoading(categories: []));
+      // final cashedResult = await _getCashedCategoryUseCase(NoParams());
+      // cashedResult.fold(
+      //   (failure) => (EasyLoading.showError("Failed to load cached categories")),
+      //   (categories) => emit(CategoryCacheLoaded(
+      //     categories: categories,
+      //   )),
+      // );
 
       ///Check remote data source to find categories
       ///Method will find and update if there any new category update from server
@@ -53,7 +54,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
         )),
       );
     } catch (e) {
-      EasyLoading.showError(e.toString());
+      print("Load category error: $e");
       emit(CategoryError(
         categories: state.categories,
         failure: ExceptionFailure(),
@@ -79,7 +80,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
         )),
       );
     } catch (e) {
-      EasyLoading.showError("Failed to load filter categories: $e");
+      print("Failed to load filter categories: $e");
       emit(CategoryError(
         categories: state.categories,
         failure: ExceptionFailure(),

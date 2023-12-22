@@ -14,11 +14,13 @@ class UserModel extends User {
     required String firstName,
     required String lastName,
     required String email,
+    String? phoneNumber,
   }) : super(
     id: id,
     firstName: firstName,
     lastName: lastName,
     email: email,
+    phoneNumber: phoneNumber,
   );
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(

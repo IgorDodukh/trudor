@@ -45,7 +45,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       onClick: () {
         Navigator.of(context).pop();
       },
-      titleText: backTitle,
+      titleText: goBackTitle,
     );
   }
 
@@ -55,7 +55,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       listener: (context, state) {
         EasyLoading.dismiss();
         if (state is UserLoading) {
-          EasyLoading.show(status: loadingTitle);
+          EasyLoading.show(status: loadingTitle, dismissOnTap: false);
         } else if (state is UserLogged) {
           final userId =
               (context.read<UserBloc>().state.props.first as UserModel).id;

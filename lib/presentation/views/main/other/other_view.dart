@@ -18,13 +18,14 @@ import '../../../widgets/other_item_card.dart';
 class OtherView extends StatelessWidget {
   const OtherView({Key? key}) : super(key: key);
 
-  Widget updateTypesenseFirestore(){
+  Widget updateTypesenseFirestore() {
     return OtherItemCard(
       onClick: () async {
-        EasyLoading.show(status: 'loading...');
+        EasyLoading.show(status: loadingTitle, dismissOnTap: false);
         TypesenseProducts typesenseService = TypesenseProducts();
         FirestoreProducts firestoreService = FirestoreProducts();
-        final products = await typesenseService.getProducts(FilterProductParams(pageSize: 100));
+        final products = await typesenseService
+            .getProducts(const FilterProductParams(pageSize: 100));
         for (var product in products.products) {
           final productData = Product(
             id: product.id,
@@ -32,7 +33,7 @@ class OtherView extends StatelessWidget {
             description: product.description,
             price: product.priceTags[0].price,
             priceTags: product.priceTags,
-            categories: product.categories,
+            // categories: product.categories,
             category: product.category,
             images: product.images,
             createdAt: product.createdAt,
@@ -44,7 +45,8 @@ class OtherView extends StatelessWidget {
           firestoreService.updateProduct(productData);
         }
         EasyLoading.dismiss();
-        EasyLoading.showToast(products.toJson()['meta']["total"].toString() + " products found");
+        EasyLoading.showToast(
+            "${products.toJson()['meta']["total"]} products found");
       },
       title: "Update Typesense & Firestore",
     );
@@ -144,8 +146,7 @@ class OtherView extends StatelessWidget {
                               arguments: state.user,
                             );
                           } else {
-                            Navigator.of(context)
-                                .pushNamed(AppRouter.signIn);
+                            Navigator.of(context).pushNamed(AppRouter.signIn);
                           }
                         },
                         title: profileTitle,
@@ -162,8 +163,7 @@ class OtherView extends StatelessWidget {
                               AppRouter.myPublications,
                             );
                           } else {
-                            Navigator.of(context)
-                                .pushNamed(AppRouter.signIn);
+                            Navigator.of(context).pushNamed(AppRouter.signIn);
                           }
                         },
                         title: publicationsTitle,
@@ -234,17 +234,16 @@ class OtherView extends StatelessWidget {
                     onClick: () {
                       showDialog(
                         context: context,
-                        builder: (context)
-                      {
-                        return SignOutConfirmationAlert(
-                          onSignOut: () {
-                            context.read<UserBloc>().add(SignOutUser());
-                            context
-                                .read<FavoritesBloc>()
-                                .add(const ClearFavorites());
-                          },
-                        );
-                      },
+                        builder: (context) {
+                          return SignOutConfirmationAlert(
+                            onSignOut: () {
+                              context.read<UserBloc>().add(SignOutUser());
+                              context
+                                  .read<FavoritesBloc>()
+                                  .add(const ClearFavorites());
+                            },
+                          );
+                        },
                       );
                     },
                     title: "Sign Out",

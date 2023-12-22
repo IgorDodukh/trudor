@@ -1,11 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spoto/presentation/widgets/category_item.dart';
 
 import '../../../blocs/category/category_bloc.dart';
-import '../../../widgets/category_card.dart';
 
 class CategoryView extends StatefulWidget {
-  const CategoryView({Key? key}) : super(key: key);
+  ValueChanged<String>? onCategorySelected;
+  CategoryView({Key? key, this.onCategorySelected}) : super(key: key);
 
   @override
   State<CategoryView> createState() => _CategoryViewState();
@@ -13,78 +15,55 @@ class CategoryView extends StatefulWidget {
 
 class _CategoryViewState extends State<CategoryView> {
   final TextEditingController _textEditingController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
+    return Container(
+      height: MediaQuery.of(context).size.height - 200,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(24),
+          topRight: Radius.circular(24),
+        ),
+      ),
+      child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           children: [
-            SizedBox(
-              height: (MediaQuery.of(context).padding.top + 8),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 12,
-              ),
-              child: TextField(
-                controller: _textEditingController,
-                autofocus: false,
-                onSubmitted: (val) {
-                  context.read<CategoryBloc>().add(FilterCategories(val));
+            Align(
+              alignment: Alignment.centerRight,
+              child: IconButton(
+                padding: const EdgeInsets.only(top: 20),
+                onPressed: () => {
+                  Navigator.of(context).pop(),
                 },
-                onChanged: (val) => setState(() {
-                  context.read<CategoryBloc>().add(FilterCategories(val));
-                }),
-                decoration: InputDecoration(
-                    contentPadding:
-                        const EdgeInsets.only(left: 20, bottom: 22, top: 22),
-                    prefixIcon: const Padding(
-                      padding: EdgeInsets.only(left: 8),
-                      child: Icon(Icons.search),
-                    ),
-                    suffixIcon: _textEditingController.text.isNotEmpty
-                        ? Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              _textEditingController.clear();
-                              context.read<CategoryBloc>().add(const FilterCategories(''));
-                            });
-                          },
-                          icon: const Icon(Icons.clear)),
-                    )
-                        : null,
-                    border: const OutlineInputBorder(),
-                    hintText: "Search Category",
-                    fillColor: Colors.grey.shade100,
-                    filled: true,
-                    focusedBorder: OutlineInputBorder(
-                        borderSide:
-                            const BorderSide(color: Colors.white, width: 3.0),
-                        borderRadius: BorderRadius.circular(26)),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(26),
-                      borderSide:
-                          const BorderSide(color: Colors.white, width: 3.0),
-                    )),
+                icon: const Icon(
+                  CupertinoIcons.xmark_circle_fill,
+                  color: Colors.black54,
+                  size: 35,
+                ),
               ),
             ),
+            const Text("Category",
+                style: TextStyle(
+                    fontSize: 30,
+                    letterSpacing: 1,
+                    fontWeight: FontWeight.w600,
+                    color: CupertinoColors.black)), // Text("Categories"),
             Expanded(
               child: BlocBuilder<CategoryBloc, CategoryState>(
                 builder: (context, state) {
                   return ListView.builder(
-                    itemCount: (state is CategoryLoading)
-                        ? 10
-                        : state.categories.length,
+                    itemCount: state.categories.length,
                     physics: const BouncingScrollPhysics(),
                     padding: EdgeInsets.only(
                         top: 14,
                         bottom: (80 + MediaQuery.of(context).padding.bottom)),
                     itemBuilder: (context, index) => (state is CategoryLoading)
-                        ? const CategoryCard()
-                        : CategoryCard(
+                        ? CategoryItemCard()
+                        : CategoryItemCard(
+                            onCategorySelected: widget.onCategorySelected,
                             category: state.categories[index],
                           ),
                   );

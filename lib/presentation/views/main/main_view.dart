@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:spoto/core/constant/colors.dart';
-import 'package:spoto/presentation/views/product/add_product_form.dart';
+import 'package:spoto/core/constant/messages.dart';
+import 'package:spoto/core/router/app_router.dart';
+import 'package:spoto/presentation/blocs/user/user_bloc.dart';
+import 'package:spoto/presentation/views/product/add_product_multistep.dart';
+import 'package:spoto/presentation/views/product/add_product_pages/add_product_form.dart';
+import 'package:spoto/presentation/widgets/adaptive_alert_dialog.dart';
 
 import '../../blocs/home/navbar_cubit.dart';
 import 'category/category_view.dart';
@@ -18,6 +23,8 @@ class MainView extends StatefulWidget {
 }
 
 class _MainViewState extends State<MainView> {
+  final double iconSize = 30;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,12 +38,12 @@ class _MainViewState extends State<MainView> {
                 child: PageView(
                   physics: const NeverScrollableScrollPhysics(),
                   controller: context.read<NavbarCubit>().controller,
-                  children: const <Widget>[
-                    HomeView(),
+                  children: <Widget>[
+                    const HomeView(),
                     CategoryView(),
-                    AddProductForm(),
-                    FavoritesView(),
-                    OtherView(),
+                    const AddProductForm(),
+                    const FavoritesView(),
+                    const OtherView(),
                   ],
                 ),
               );
@@ -58,7 +65,7 @@ class _MainViewState extends State<MainView> {
                     ),
                     backgroundColor: Colors.black87,
                     snakeViewColor: Colors.black87,
-                    height: 90,
+                    height: 70,
                     elevation: 6,
                     selectedItemColor: SnakeShape.circle == SnakeShape.indicator
                         ? Colors.black87
@@ -78,35 +85,60 @@ class _MainViewState extends State<MainView> {
                     showSelectedLabels: true,
                     currentIndex: state,
                     onTap: (index) => setState(() {
+                      if (index == 4) {
+                        final currentState = context.read<UserBloc>().state;
+                        if (currentState is UserLoggedFail) {
+                          Navigator.of(context).pushNamed(AppRouter.signIn);
+                          return;
+                        }
+                      }
                       context.read<NavbarCubit>().controller.animateToPage(
                           index,
                           duration: const Duration(milliseconds: 400),
                           curve: Curves.linear);
                       context.read<NavbarCubit>().update(index);
+                      if (index == 3) {
+                        Future.delayed(
+                            const Duration(milliseconds: 600),
+                            () => {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return const SignInToUseFeatureAlert(
+                                          contentText:
+                                              favoritesPageUnavailable);
+                                    },
+                                  )
+                                });
+                      }
                     }),
-                    items: const [
+                    items: [
                       BottomNavigationBarItem(
-                        icon: Icon(Icons.home_outlined, size: 25),
-                        activeIcon: Icon(Icons.home, size: 25),
-                        label: 'Home',
+                        icon: Icon(Icons.home_outlined, size: iconSize),
+                        activeIcon: Icon(Icons.home, size: iconSize),
+                        // label: 'Home',
                       ),
                       BottomNavigationBarItem(
-                          icon: Icon(Icons.dashboard_outlined, size: 25),
-                          activeIcon: Icon(Icons.dashboard, size: 25),
-                          label: 'Category'),
-                      BottomNavigationBarItem(
+                        icon: Icon(Icons.dashboard_outlined, size: iconSize),
+                        activeIcon: Icon(Icons.dashboard, size: iconSize),
+                        // label: 'Category'
+                      ),
+                      const BottomNavigationBarItem(
                         icon: Icon(Icons.add_circle_outline_rounded, size: 0),
                         activeIcon: Icon(Icons.add_circle, size: 0),
                         // label: 'Publish'
                       ),
                       BottomNavigationBarItem(
-                          icon: Icon(Icons.favorite_border, size: 25),
-                          activeIcon: Icon(Icons.favorite, size: 25),
-                          label: 'Favorites'),
+                        icon: Icon(Icons.favorite_border, size: iconSize),
+                        activeIcon: Icon(Icons.favorite, size: iconSize),
+                        // label: 'Favorites'
+                      ),
                       BottomNavigationBarItem(
-                          icon: Icon(Icons.manage_accounts_outlined, size: 25),
-                          activeIcon: Icon(Icons.manage_accounts, size: 25),
-                          label: 'User'),
+                        icon: Icon(Icons.manage_accounts_outlined,
+                            size: iconSize),
+                        activeIcon: Icon(Icons.manage_accounts, size: iconSize),
+                        // label: 'User'
+                      ),
                     ],
                   );
                 },
@@ -114,7 +146,7 @@ class _MainViewState extends State<MainView> {
             ),
           ),
           Positioned(
-            bottom: -40.0,
+            bottom: -50.0,
             top: MediaQuery.of(context).size.height - 175,
             left: MediaQuery.of(context).size.width / 2 - 50,
             right: MediaQuery.of(context).size.width / 2 - 50,
@@ -123,23 +155,32 @@ class _MainViewState extends State<MainView> {
                 padding: const EdgeInsets.all(8.0),
                 child: FloatingActionButton(
                   elevation: 0,
+                  focusColor: Colors.transparent,
+                  splashColor: Colors.transparent,
+                  hoverColor: Colors.transparent,
+                  highlightElevation: 0,
+                  foregroundColor: Colors.transparent,
                   backgroundColor: Colors.transparent,
-                  onPressed: () {
-                    showModalBottomSheet<void>(
-                      isDismissible: false,
-                      context: context,
-                      isScrollControlled: true,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24.0),
-                      ),
-                      builder: (BuildContext context) {
-                        return Padding(
-                            padding: EdgeInsets.only(
-                                bottom:
-                                    MediaQuery.of(context).viewInsets.bottom),
-                            child: const AddProductForm());
-                      },
-                    );
+                  focusElevation: 0,
+                  hoverElevation: 0,
+                  onPressed: () async {
+                    final currentState = context.read<UserBloc>().state;
+                    if (currentState is UserLoggedFail) {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return const SignInToUseFeatureAlert(
+                              contentText: addProductPageUnavailable);
+                        },
+                      );
+                    } else {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const AddProductMultiStepForm()),
+                      );
+                    }
                   },
                   child: Icon(
                     Icons.add_circle,

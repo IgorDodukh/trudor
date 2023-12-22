@@ -7,6 +7,7 @@ import 'package:spoto/core/router/app_router.dart';
 import 'package:spoto/core/util/price_handler.dart';
 import 'package:spoto/data/models/user/user_model.dart';
 import 'package:spoto/presentation/blocs/user/user_bloc.dart';
+import 'package:spoto/presentation/widgets/adaptive_alert_dialog.dart';
 import 'package:spoto/presentation/widgets/input_form_button.dart';
 
 import '../../../../core/constant/images.dart';
@@ -72,6 +73,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                         }
                         if (state is FavoritesError &&
                             state.favorites.isEmpty) {
+
                           return Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -103,7 +105,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                                     },
                                     icon: const Icon(Icons.refresh)),
                               ] else ...[
-                                Image.asset(loginErrorAsset),
+                                Image.asset(noFavoritesAsset),
                                 const Center(
                                     child: Text(
                                   addFavoritesWithoutLogin,
@@ -113,14 +115,6 @@ class _FavoritesViewState extends State<FavoritesView> {
                                 SizedBox(
                                   height:
                                       MediaQuery.of(context).size.height * 0.05,
-                                ),
-                                InputFormButton(
-                                  color: Colors.black87,
-                                  onClick: () async {
-                                    Navigator.of(context)
-                                        .pushNamed(AppRouter.signIn);
-                                  },
-                                  titleText: openSignInTitle,
                                 ),
                                 SizedBox(
                                   height:
@@ -179,45 +173,6 @@ class _FavoritesViewState extends State<FavoritesView> {
                 ),
               ],
             ),
-            BlocBuilder<FavoritesBloc, FavoritesState>(
-                builder: (context, state) {
-              if (state.favorites.isEmpty) {
-                return const SizedBox();
-              }
-              return Positioned(
-                bottom: (MediaQuery.of(context).padding.bottom + 90),
-                left: 0,
-                right: 0,
-                child: Container(
-                  color: Colors.white,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(bottom: 4, left: 8, right: 8),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Total (${state.favorites.length} items)',
-                              style: const TextStyle(fontSize: 16),
-                            ),
-                            Text(
-                              '${NumberHandler.formatPrice(state.favorites.fold(0.00, (previousValue, element) => (element.priceTag.price + previousValue)))} €',
-                              style: const TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            })
           ],
         ),
       ),

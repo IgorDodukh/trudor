@@ -21,7 +21,7 @@ final tProductModel = ProductModel(
   description: "description",
   price: 100,
   priceTags: [PriceTagModel(id: "1", name: "name", price: 100)],
-  categories: const [CategoryModel(id: "1", name: "name", image: "image")],
+  // categories: const [CategoryModel(id: "1", name: "name", image: "image")],
   category: "category",
   images: const ["image"],
   createdAt: DateTime(2000),
@@ -65,6 +65,7 @@ const tCategoryModel = CategoryModel(
   id: "1",
   name: "name",
   image: "image",
+  subcategory: ["subcategory"],
 );
 
 // delivery info

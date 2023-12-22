@@ -38,7 +38,7 @@ class _SignInViewState extends State<SignInView> {
       onClick: () {
         Navigator.of(context).pop();
       },
-      titleText: backTitle,
+      titleText: goBackTitle,
     );
   }
 
@@ -48,7 +48,7 @@ class _SignInViewState extends State<SignInView> {
       listener: (context, state) {
         EasyLoading.dismiss();
         if (state is UserLoading) {
-          EasyLoading.show(status: loadingTitle);
+          EasyLoading.show(status: loadingTitle, dismissOnTap: false);
         } else if (state is UserLogged) {
           final userId =
               (context.read<UserBloc>().state.props.first as UserModel).id;

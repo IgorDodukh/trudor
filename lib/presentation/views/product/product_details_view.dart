@@ -11,12 +11,11 @@ import 'package:spoto/core/constant/images.dart';
 import 'package:spoto/core/constant/messages.dart';
 import 'package:spoto/core/constant/strings.dart';
 import 'package:spoto/core/util/price_handler.dart';
-import 'package:spoto/data/models/category/category_model.dart';
 import 'package:spoto/data/models/product/price_tag_model.dart';
 import 'package:spoto/data/models/product/product_model.dart';
 import 'package:spoto/data/models/user/user_model.dart';
 import 'package:spoto/presentation/blocs/user/user_bloc.dart';
-import 'package:spoto/presentation/views/product/add_product_form.dart';
+import 'package:spoto/presentation/views/product/add_product_pages/add_product_form.dart';
 import 'package:spoto/presentation/widgets/adaptive_alert_dialog.dart';
 import 'package:spoto/presentation/widgets/image_fullscreen_view.dart';
 
@@ -157,9 +156,9 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                           price: double.parse(
                               widget.product.priceTags.first.price.toString()))
                     ],
-                    categories: [
-                      CategoryModel.fromEntity(widget.product.categories.first)
-                    ],
+                    // categories: [
+                    //   CategoryModel.fromEntity(widget.product.categories.first)
+                    // ],
                     category: widget.product.category,
                     images: widget.product.images,
                     createdAt: widget.product.createdAt,
@@ -200,9 +199,9 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                           price: double.parse(
                               widget.product.priceTags.first.price.toString()))
                     ],
-                    categories: [
-                      CategoryModel.fromEntity(widget.product.categories.first)
-                    ],
+                    // categories: [
+                    //   CategoryModel.fromEntity(widget.product.categories.first)
+                    // ],
                     category: widget.product.category,
                     images: widget.product.images,
                     createdAt: widget.product.createdAt,
@@ -345,48 +344,36 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                   : widget.product.images.map((image) {
                       return Builder(
                         builder: (BuildContext context) {
-                          return GestureDetector(
-                            child: Hero(
-                              tag: tag,
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      PageRouteBuilder(
-                                          opaque: false,
-                                          barrierColor: backgroundIsTransparent
-                                              ? Colors.white.withOpacity(0)
-                                              : Colors.black,
-                                          pageBuilder:
-                                              (BuildContext context, _, __) {
-                                            return FullScreenViewer(
-                                              tag: tag,
-                                              backgroundColor: backgroundColor,
-                                              backgroundIsTransparent:
-                                                  backgroundIsTransparent,
-                                              disposeLevel: disposeLevel,
-                                              disableSwipeToDismiss:
-                                                  disableSwipeToDismiss,
-                                              child: networkImageView(
-                                                  image, BoxFit.fitWidth),
-                                            );
-                                          }));
-                                },
-                                child: networkImageView(image, BoxFit.cover),
+                          return Hero(
+                            tag: widget.product.id,
+                            child: CachedNetworkImage(
+                              imageUrl:
+                                  image.isEmpty ? noImagePlaceholder : image,
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: imageProvider,
+                                    fit: BoxFit.cover,
+                                    colorFilter: ColorFilter.mode(
+                                        Colors.grey.shade50.withOpacity(0.25),
+                                        BlendMode.softLight),
+                                  ),
+                                ),
+                              ),
+                              placeholder: (context, url) => Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade100,
+                                ),
+                              ),
+                              errorWidget: (context, url, error) =>
+                                  const Center(
+                                child: Icon(
+                                  Icons.error_outline,
+                                  color: Colors.grey,
+                                ),
                               ),
                             ),
-                            // onTap: () {
-                            //   Navigator.push(context,
-                            //       MaterialPageRoute(builder: (_) {
-                            //     return DetailScreen(
-                            //         widget.product.images, _currentIndex,
-                            //         (index) {
-                            //       setState(() {
-                            //         _currentIndex = index;
-                            //       });
-                            //     });
-                            //   }));
-                            // },
                           );
                         },
                       );
@@ -536,7 +523,8 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                             showDialog(
                               context: context,
                               builder: (context) {
-                                return const UnauthorisedAddFavoritesAlert();
+                                return const SignInToUseFeatureAlert(
+                                    contentText: addFavoritesContent);
                               },
                             );
                           },
