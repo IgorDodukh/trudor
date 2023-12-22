@@ -87,7 +87,7 @@ class _MainViewState extends State<MainView> {
                     onTap: (index) => setState(() {
                       if (index == 4) {
                         final currentState = context.read<UserBloc>().state;
-                        if (currentState is UserLoggedFail) {
+                        if (currentState is UserLoggedFail || currentState is UserLoggedOut) {
                           Navigator.of(context).pushNamed(AppRouter.signIn);
                           return;
                         }
@@ -165,7 +165,7 @@ class _MainViewState extends State<MainView> {
                   hoverElevation: 0,
                   onPressed: () async {
                     final currentState = context.read<UserBloc>().state;
-                    if (currentState is UserLoggedFail) {
+                    if (currentState is UserLoggedFail || currentState is UserLoggedOut) {
                       showDialog(
                         context: context,
                         builder: (context) {

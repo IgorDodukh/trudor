@@ -171,7 +171,7 @@ class _AddProductMultiStepFormState extends State<AddProductMultiStepForm> {
   void initState() {
     super.initState();
     final currentState = context.read<UserBloc>().state;
-    if (currentState is UserLoggedFail) {
+    if (currentState is UserLoggedFail || currentState is UserLoggedOut) {
       Future.delayed(
           const Duration(milliseconds: 600),
           () => {
@@ -183,8 +183,6 @@ class _AddProductMultiStepFormState extends State<AddProductMultiStepForm> {
                   },
                 )
               });
-
-      // EasyLoading.showError("Please login to publish your product");
     } else {
       final currentUser = currentState.props.first as UserModel;
       setState(() {
