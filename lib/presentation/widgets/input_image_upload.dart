@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:spoto/core/util/firestore/firestore_images.dart';
 
@@ -46,11 +49,24 @@ class _ImageUploadFormState extends State<ImageUploadForm> {
     return result.map((XFile file) => file).toList();
   }
 
+  Future<XFile?> testCompressAndGetFile(File file, String targetPath) async {
+    var result = await FlutterImageCompress.compressAndGetFile(
+      file.absolute.path,
+      '${file.path}_compressed.jpg',
+      quality: 60,
+    );
+    return result;
+  }
+
   Future<List<String>> pickAndUploadImages() async {
     final images = await pickImages();
     setIsLoading();
     for (var image in images) {
-      final imageUrls = await firestoreService.uploadImagesToFirebase([image]);
+      print("IMAGE: ${image.name}");
+      final resultFile =
+          await testCompressAndGetFile(File(image.path), image.path);
+      final imageUrls =
+          await firestoreService.uploadImagesToFirebase([resultFile!]);
       this.imageUrls.addAll(imageUrls);
       if (this.imageUrls.length >= maxImages) {
         break;

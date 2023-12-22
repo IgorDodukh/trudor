@@ -6,16 +6,15 @@ import 'package:spoto/presentation/widgets/category_item.dart';
 import '../../../blocs/category/category_bloc.dart';
 
 class CategoryView extends StatefulWidget {
-  ValueChanged<String>? onCategorySelected;
-  CategoryView({Key? key, this.onCategorySelected}) : super(key: key);
+  final ValueChanged<String>? onCategorySelected;
+
+  const CategoryView({Key? key, this.onCategorySelected}) : super(key: key);
 
   @override
   State<CategoryView> createState() => _CategoryViewState();
 }
 
 class _CategoryViewState extends State<CategoryView> {
-  final TextEditingController _textEditingController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return Container(
