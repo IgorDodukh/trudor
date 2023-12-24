@@ -5,29 +5,27 @@ import '../../../../../core/usecases/usecase.dart';
 import '../../entities/user/user.dart';
 import '../../repositories/user_repository.dart';
 
-class SignUpUseCase implements UseCase<User, SignUpParams> {
+class UpdateUserDetailsUseCase implements UseCase<User, UserDetailsParams> {
   final UserRepository repository;
 
-  SignUpUseCase(this.repository);
+  UpdateUserDetailsUseCase(this.repository);
 
   @override
-  Future<Either<Failure, User>> call(SignUpParams params) async {
-    return await repository.signUp(params);
+  Future<Either<Failure, User>> call(UserDetailsParams params) async {
+    return await repository.updateUserDetails(params);
   }
 }
 
-class SignUpParams {
+class UserDetailsParams {
   final String firstName;
   final String lastName;
   final String email;
-  final String? password;
   final String? phoneNumber;
 
-  const SignUpParams({
+  const UserDetailsParams({
     required this.firstName,
     required this.lastName,
     required this.email,
-    this.password,
     this.phoneNumber,
   });
 }

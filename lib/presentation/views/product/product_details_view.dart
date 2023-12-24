@@ -246,6 +246,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
 
   @override
   void initState() {
+    super.initState();
     if (context.read<UserBloc>().state is UserLogged) {
       setState(() {
         userId = (context.read<UserBloc>().state.props.first as UserModel).id;
@@ -268,7 +269,6 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
     isFullScreen = false;
     _loadingTimer = null;
     _selectedPriceTag = widget.product.priceTags.first;
-    super.initState();
   }
 
   @override

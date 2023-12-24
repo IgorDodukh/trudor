@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
@@ -5,15 +6,15 @@ import 'package:spoto/core/constant/colors.dart';
 import 'package:spoto/core/constant/messages.dart';
 import 'package:spoto/core/router/app_router.dart';
 import 'package:spoto/presentation/blocs/user/user_bloc.dart';
+import 'package:spoto/presentation/views/main/other/blank_view.dart';
+import 'package:spoto/presentation/views/main/other/settings_view.dart';
 import 'package:spoto/presentation/views/product/add_product_multistep.dart';
-import 'package:spoto/presentation/views/product/add_product_pages/add_product_form.dart';
 import 'package:spoto/presentation/widgets/adaptive_alert_dialog.dart';
 
 import '../../blocs/home/navbar_cubit.dart';
 import 'category/category_view.dart';
 import 'favorites/favorites_view.dart';
 import 'home/home_view.dart';
-import 'other/other_view.dart';
 
 class MainView extends StatefulWidget {
   const MainView({Key? key}) : super(key: key);
@@ -38,12 +39,12 @@ class _MainViewState extends State<MainView> {
                 child: PageView(
                   physics: const NeverScrollableScrollPhysics(),
                   controller: context.read<NavbarCubit>().controller,
-                  children: <Widget>[
-                    const HomeView(),
+                  children: const <Widget>[
+                    HomeView(),
                     CategoryView(),
-                    const AddProductForm(),
-                    const FavoritesView(),
-                    const OtherView(),
+                    BlankView(),
+                    FavoritesView(),
+                    SettingsView(),
                   ],
                 ),
               );
@@ -189,9 +190,9 @@ class _MainViewState extends State<MainView> {
                     }
                   },
                   child: Icon(
-                    Icons.add_circle,
+                    CupertinoIcons.add_circled_solid,
                     size: 65,
-                    color: kButtonAccentColor,
+                    color: kLightPrimaryColor,
                   ),
                 ),
               ),

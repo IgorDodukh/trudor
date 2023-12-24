@@ -26,20 +26,13 @@ class _ImageUploadFormState extends State<ImageUploadForm> {
   List<String> imageUrls = [];
   final int maxImages = 9;
   bool photosLimitReached = false;
-  bool isLoading = false;
   FirestoreImages firestoreService = FirestoreImages();
 
   @override
   void initState() {
+    super.initState();
     setState(() {
       imageUrls = widget.existingImages ?? [];
-    });
-    super.initState();
-  }
-
-  void setIsLoading() {
-    setState(() {
-      isLoading = !isLoading;
     });
   }
 
@@ -60,9 +53,7 @@ class _ImageUploadFormState extends State<ImageUploadForm> {
 
   Future<List<String>> pickAndUploadImages() async {
     final images = await pickImages();
-    setIsLoading();
     for (var image in images) {
-      print("IMAGE: ${image.name}");
       final resultFile =
           await testCompressAndGetFile(File(image.path), image.path);
       final imageUrls =
@@ -75,7 +66,6 @@ class _ImageUploadFormState extends State<ImageUploadForm> {
     setState(() {
       widget.onImagesUploaded(imageUrls);
     });
-    setIsLoading();
     return imageUrls;
   }
 

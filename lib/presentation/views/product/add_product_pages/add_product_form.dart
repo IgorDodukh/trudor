@@ -126,7 +126,6 @@ class _AddProductFormState extends State<AddProductForm> {
     return InputTextFormField(
       controller: nameController,
       hint: nameHint,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 12),
       validation: (String? val) {
         if (val == null || val.isEmpty) {
           return nameValidation;
@@ -191,8 +190,6 @@ class _AddProductFormState extends State<AddProductForm> {
                           maxCharacters: 13,
                           textInputType: const TextInputType.numberWithOptions(
                               decimal: true),
-                          contentPadding:
-                              const EdgeInsets.symmetric(horizontal: 12),
                           onChanged: (value) {
                             if (value != null && value.startsWith(",")) {
                               priceController.text = "0.";

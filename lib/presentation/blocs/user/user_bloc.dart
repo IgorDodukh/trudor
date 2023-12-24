@@ -8,6 +8,8 @@ import 'package:spoto/domain/usecases/user/reset_password_usecase.dart';
 import 'package:spoto/domain/usecases/user/send_reset_password_email_usecase.dart';
 import 'package:spoto/domain/usecases/user/sign_out_usecase.dart';
 import 'package:spoto/domain/usecases/user/sign_up_usecase.dart';
+import 'package:spoto/domain/usecases/user/update_user_details_usecase.dart';
+import 'package:spoto/domain/usecases/user/update_user_picture_usecase.dart';
 import 'package:spoto/domain/usecases/user/validate_reset_password_code.dart';
 
 import '../../../core/error/failures.dart';
@@ -24,6 +26,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   final SignInUseCase _signInUseCase;
   final SignUpUseCase _signUpUseCase;
   final SignOutUseCase _signOutUseCase;
+  final UpdateUserDetailsUseCase _updateUserDetailsUseCase;
+  final UpdateUserPictureUseCase _updateUserPictureUseCase;
   final GoogleAuthUseCase _googleAuthUseCase;
   final ResetPasswordUseCase _resetPasswordUseCase;
   final SendResetPasswordEmailUseCase _sendResetPasswordEmailUseCase;
@@ -34,6 +38,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       this._getCachedUserUseCase,
       this._signOutUseCase,
       this._signUpUseCase,
+      this._updateUserDetailsUseCase,
+      this._updateUserPictureUseCase,
       this._googleAuthUseCase,
       this._resetPasswordUseCase,
       this._sendResetPasswordEmailUseCase,
@@ -43,6 +49,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<SignUpUser>(_onSignUp);
     on<CheckUser>(_onCheckUser);
     on<SignOutUser>(_onSignOut);
+    on<UpdateUserDetails>(_onUpdateUserDetails);
+    on<UpdateUserPicture>(_onUpdateUserPicture);
     on<GoogleSignInUser>(_onGoogleSignIn);
     on<ResetPassword>(_onResetPassword);
     on<SendResetPasswordEmail>(_onSendResetPasswordEmail);
@@ -65,7 +73,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   void _onGoogleSignIn(GoogleSignInUser event, Emitter<UserState> emit) async {
     try {
       emit(UserLoading());
-      final result = await _googleAuthUseCase(event.params);
+      final result = await _googleAuthUseCase(NoParams());
       result.fold(
         (failure) => emit(UserLoggedFail(failure)),
         (user) => emit(UserLogged(user)),
@@ -80,6 +88,35 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       emit(UserLoading());
       await _signOutUseCase(NoParams());
       emit(UserLoggedOut());
+    } catch (e) {
+      emit(UserLoggedFail(ExceptionFailure()));
+    }
+  }
+
+  void _onUpdateUserDetails(
+      UpdateUserDetails event, Emitter<UserState> emit) async {
+    try {
+      emit(UserLoading());
+      final result = await _updateUserDetailsUseCase(event.params);
+      print("Update result: $result");
+      result.fold(
+        (failure) => emit(UserUpdateFail(failure)),
+        (user) => emit(UserLogged(user)),
+      );
+    } catch (e) {
+      emit(UserUpdateFail(ExceptionFailure()));
+    }
+  }
+
+  void _onUpdateUserPicture(
+      UpdateUserPicture event, Emitter<UserState> emit) async {
+    try {
+      emit(UserLoading());
+      final result = await _updateUserPictureUseCase(event.pictureUrl);
+      result.fold(
+        (failure) => emit(UserLoggedFail(failure)),
+        (user) => emit(UserLogged(user)),
+      );
     } catch (e) {
       emit(UserLoggedFail(ExceptionFailure()));
     }

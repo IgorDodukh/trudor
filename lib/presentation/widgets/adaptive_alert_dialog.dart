@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:spoto/core/constant/messages.dart';
 import 'package:spoto/core/router/app_router.dart';
+import 'package:spoto/presentation/blocs/home/navbar_cubit.dart';
 
 class AdaptiveDialog extends StatelessWidget {
   final String title;
@@ -163,14 +165,19 @@ class SignOutConfirmationAlert extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AdaptiveDialog(
-      title: signOutConfirmTitle,
+      title: signOutTitle,
       content: signOutConfirmContent,
-      yes: signOutConfirmYes,
+      yes: signOutTitle,
       no: goBackTitle,
       onClickYes: () {
         onSignOut();
         EasyLoading.showSuccess(signOutSuccess);
         Navigator.of(context).pop();
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          AppRouter.home,
+          ModalRoute.withName(''),
+        );
+        context.read<NavbarCubit>().update(0);
       },
       onClickNo: () {
         Navigator.of(context).pop();

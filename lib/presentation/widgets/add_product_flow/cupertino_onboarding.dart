@@ -1,9 +1,9 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:spoto/core/constant/messages.dart';
+import 'package:spoto/presentation/widgets/buttons/back_button.dart';
+import 'package:spoto/presentation/widgets/buttons/next_button.dart';
 
-// Estimated from the iPhone Simulator running iOS 15
 final CupertinoDynamicColor _kBackgroundColor =
     CupertinoDynamicColor.withBrightness(
   color: CupertinoColors.white,
@@ -23,10 +23,13 @@ final CupertinoDynamicColor _kInactiveDotColor =
 
 const Size _kDotSize = Size(8, 8);
 
-final BorderRadius _bottomButtonBorderRadius = BorderRadius.circular(15);
 const EdgeInsets _kBottomButtonPadding = EdgeInsets.only(
   left: 22,
   right: 22,
+  bottom: 12,
+);
+const EdgeInsets _kTopBackButtonPadding = EdgeInsets.only(
+  left: 12,
   bottom: 10,
 );
 
@@ -158,7 +161,7 @@ class _CupertinoOnboardingState extends State<CupertinoOnboarding> {
 
   Widget backButton() {
     return Padding(
-      padding: _kBottomButtonPadding,
+      padding: _kTopBackButtonPadding,
       child: SizedBox(
         height: 50,
         child: Row(
@@ -176,11 +179,11 @@ class _CupertinoOnboardingState extends State<CupertinoOnboarding> {
                     CupertinoIcons.back,
                     color: CupertinoColors.black,
                   ),
-                  SizedBox(width: 5),
+                  SizedBox(width: 2),
                   Text(
                     backTitle,
                     style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 16,
                         letterSpacing: 1,
                         fontWeight: FontWeight.w400,
                         color: CupertinoColors.black),
@@ -239,15 +242,15 @@ class _CupertinoOnboardingState extends State<CupertinoOnboarding> {
                     padding: widget.bottomButtonPadding,
                     child: Column(
                       children: [
-                        CupertinoButton(
-                          borderRadius: widget.bottomButtonBorderRadius ??
-                              _bottomButtonBorderRadius,
-                          color: widget.bottomButtonColor ?? Colors.black87,
-                          padding: const EdgeInsets.all(16),
-                          onPressed: () => {
-                            if (widget.editPageKey != null){
-                              widget.onPressedOnLastPage!()
-                            }
+                        CustomNextButton(
+                          buttonTitle: _currentPage == widget.pages.length - 1
+                              ? widget.editPageKey == null
+                                  ? confirmAndPublishTitle
+                                  : updateTitle
+                              : nextTitle,
+                          onPressedAction: () => {
+                            if (widget.editPageKey != null)
+                              {widget.onPressedOnLastPage!()}
                             else if (_currentPage == widget.pages.length - 1)
                               {
                                 if (widget.thirdFormKey!.currentState!
@@ -267,22 +270,7 @@ class _CupertinoOnboardingState extends State<CupertinoOnboarding> {
                                 widget.onPressed ?? _animateToNextPage(),
                               }
                           },
-                          child: DefaultTextStyle(
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                            ),
-                            child: Row(
-                              children: [
-                                const Spacer(),
-                                _currentPage == widget.pages.length - 1
-                                    ? Text(widget.editPageKey == null ? confirmAndPublishTitle : "Update")
-                                    : widget.bottomButtonChild,
-                                const Spacer(),
-                              ],
-                            ),
-                          ),
-                        ),
+                        )
                       ],
                     ),
                   ),
@@ -292,40 +280,12 @@ class _CupertinoOnboardingState extends State<CupertinoOnboarding> {
                     padding: widget.bottomButtonPadding,
                     child: Column(
                       children: [
-                        CupertinoButton(
-                          borderRadius: widget.bottomButtonBorderRadius ??
-                              _bottomButtonBorderRadius,
-                          color: widget.bottomButtonBackColor ??
-                              CupertinoColors.white,
-                          padding: const EdgeInsets.all(0),
-                          onPressed: _currentPage == 0
-                              ? widget.onPressedOnFirstPage
-                              : widget.onPressed ?? _animateToPreviousPage,
-                          child: Container(
-                            // wrap the text/widget using container
-                            padding: const EdgeInsets.all(16), // add padding
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: CupertinoColors.placeholderText,
-                                width: 1,
-                              ),
-                              borderRadius: const BorderRadius.all(
-                                  Radius.circular(16)), // radius as you wish
-                            ),
-                            child: DefaultTextStyle(
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16,
-                              ),
-                              child: Row(
-                                children: [
-                                  const Spacer(),
-                                  widget.bottomBackButtonChild,
-                                  const Spacer(),
-                                ],
-                              ),
-                            ),
-                          ),
+                        CustomBackButton(
+                          onPressedAction: () => {
+                            _currentPage == 0
+                                ? widget.onPressedOnFirstPage!()
+                                : widget.onPressed ?? _animateToPreviousPage(),
+                          },
                         ),
                       ],
                     ),

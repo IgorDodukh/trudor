@@ -1,31 +1,36 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:spoto/domain/auth/google_auth.dart';
 
 class GoogleAuthRepository {
   final GoogleSignIn _googleSignIn;
 
-  GoogleAuthRepository() : _googleSignIn = GoogleSignIn(clientId: dotenv.env["GOOGLE_CLIENT_ID"]);
+  GoogleAuthRepository()
+      : _googleSignIn = GoogleSignIn(clientId: dotenv.env["GOOGLE_CLIENT_ID"]);
 
   Future<GoogleAuth?> signIn() async {
     final GoogleSignInAccount? account = await _googleSignIn.signIn();
+    final UserCredential signInResult;
 
     if (_googleSignIn.currentUser != null) {
-      print('User ID: ${_googleSignIn.currentUser?.id}');
-    }
+      final GoogleSignInAuthentication googleAuth =
+          await account!.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
 
-    // If the user did not sign in successfully, return null
-    if (account == null) {
-      EasyLoading.showError("Unable to Sign In with Google");
+      final auth = FirebaseAuth.instance;
+      signInResult = await auth.signInWithCredential(credential);
+    } else {
       return null;
     }
-
-    // Map the GoogleSignInAccount to a GoogleAuth object
     return GoogleAuth(
-      id: account.id,
-      displayName: account.displayName!,
-      email: account.email,
+      id: signInResult.user!.uid,
+      displayName: signInResult.user!.displayName!,
+      email: signInResult.user!.email!,
+      photoUrl: signInResult.user!.photoURL!,
     );
   }
 

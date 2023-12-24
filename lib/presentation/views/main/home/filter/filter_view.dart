@@ -189,8 +189,6 @@ class _FilterViewState extends State<FilterView> {
                         maxCharacters: 13,
                         textInputType: const TextInputType.numberWithOptions(
                             decimal: true),
-                        contentPadding:
-                            const EdgeInsets.symmetric(horizontal: 12),
                         onChanged: (value) {
                           if (value != null && value.startsWith(",")) {
                             minPriceController.text = "0.";
@@ -213,8 +211,6 @@ class _FilterViewState extends State<FilterView> {
                         maxCharacters: 13,
                         textInputType: const TextInputType.numberWithOptions(
                             decimal: true),
-                        contentPadding:
-                            const EdgeInsets.symmetric(horizontal: 12),
                         onChanged: (value) {
                           if (value != null && value.startsWith(",")) {
                             maxPriceController.text = "0.";

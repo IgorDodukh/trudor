@@ -186,8 +186,7 @@ class _DeliveryInfoFormState extends State<DeliveryInfoForm> {
                   ),
                   InputTextFormField(
                     controller: firstName,
-                    hint: 'First name',
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                    hint: firstNameHint,
                     validation: (String? val) {
                       if (val == null || val.isEmpty) {
                         return 'This field can\'t be empty';
@@ -200,8 +199,7 @@ class _DeliveryInfoFormState extends State<DeliveryInfoForm> {
                   ),
                   InputTextFormField(
                     controller: lastName,
-                    hint: 'Last name',
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                    hint: lastNameHint,
                     validation: (String? val) {
                       if (val == null || val.isEmpty) {
                         return 'This field can\'t be empty';
@@ -215,7 +213,6 @@ class _DeliveryInfoFormState extends State<DeliveryInfoForm> {
                   InputTextFormField(
                     controller: addressLineOne,
                     hint: 'Address line one',
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 12),
                     validation: (String? val) {
                       if (val == null || val.isEmpty) {
                         return 'This field can\'t be empty';
@@ -229,7 +226,6 @@ class _DeliveryInfoFormState extends State<DeliveryInfoForm> {
                   InputTextFormField(
                     controller: addressLineTwo,
                     hint: 'Address line two',
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 12),
                     validation: (String? val) {
                       if (val == null || val.isEmpty) {
                         return 'This field can\'t be empty';
@@ -243,7 +239,6 @@ class _DeliveryInfoFormState extends State<DeliveryInfoForm> {
                   InputTextFormField(
                     controller: city,
                     hint: 'City',
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 12),
                     validation: (String? val) {
                       if (val == null || val.isEmpty) {
                         return 'This field can\'t be empty';
@@ -257,7 +252,6 @@ class _DeliveryInfoFormState extends State<DeliveryInfoForm> {
                   InputTextFormField(
                     controller: zipCode,
                     hint: 'Zip code',
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 12),
                     validation: (String? val) {
                       if (val == null || val.isEmpty) {
                         return 'This field can\'t be empty';
@@ -271,7 +265,6 @@ class _DeliveryInfoFormState extends State<DeliveryInfoForm> {
                   InputTextFormField(
                     controller: contactNumber,
                     hint: 'Contact number',
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 12),
                     validation: (String? val) {
                       if (val == null || val.isEmpty) {
                         return 'This field can\'t be empty';

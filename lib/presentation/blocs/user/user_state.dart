@@ -56,6 +56,13 @@ class UserLoggedFail extends UserState {
   List<Object> get props => [failure];
 }
 
+class UserUpdateFail extends UserState {
+  final Failure failure;
+  UserUpdateFail(this.failure);
+  @override
+  List<Object> get props => [failure];
+}
+
 class UserPasswordResetFail extends UserState {
   final Failure failure;
   UserPasswordResetFail(this.failure);

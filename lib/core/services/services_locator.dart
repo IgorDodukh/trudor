@@ -16,6 +16,8 @@ import 'package:spoto/domain/usecases/product/add_product_usecase.dart';
 import 'package:spoto/domain/usecases/product/update_product_usecase.dart';
 import 'package:spoto/domain/usecases/user/reset_password_usecase.dart';
 import 'package:spoto/domain/usecases/user/send_reset_password_email_usecase.dart';
+import 'package:spoto/domain/usecases/user/update_user_details_usecase.dart';
+import 'package:spoto/domain/usecases/user/update_user_picture_usecase.dart';
 import 'package:spoto/domain/usecases/user/validate_reset_password_code.dart';
 
 import '../../data/data_sources/local/category_local_data_source.dart';
@@ -193,13 +195,15 @@ Future<void> init() async {
   //Features - User
   // Bloc
   sl.registerFactory(
-    () => UserBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()),
+    () => UserBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()),
   );
   // Use cases
   sl.registerLazySingleton(() => GetCachedUserUseCase(sl()));
   sl.registerLazySingleton(() => SignInUseCase(sl()));
   sl.registerLazySingleton(() => SignUpUseCase(sl()));
   sl.registerLazySingleton(() => SignOutUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateUserDetailsUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateUserPictureUseCase(sl()));
   sl.registerLazySingleton(() => GoogleAuthUseCase(sl()));
   sl.registerLazySingleton(() => ResetPasswordUseCase(sl()));
   sl.registerLazySingleton(() => SendResetPasswordEmailUseCase(sl()));

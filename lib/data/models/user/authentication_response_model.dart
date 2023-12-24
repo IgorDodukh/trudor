@@ -42,6 +42,7 @@ class AuthenticationResponseModel {
             firstName: user.displayName != null ? user.displayName!.split(" ").first : "",
             lastName: user.displayName != null ? user.displayName!.split(" ").last : "",
             email: user.email!,
+            image: user.photoURL,
           ));
 
   factory AuthenticationResponseModel.fromGoogleParams(

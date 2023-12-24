@@ -1,8 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:spoto/core/error/failures.dart';
+import 'package:spoto/core/usecases/usecase.dart';
+import 'package:spoto/data/repositories/auth/google_auth_repository.dart';
+import 'package:spoto/domain/auth/google_auth.dart';
 import 'package:spoto/domain/usecases/auth/google_auth_usecase.dart';
 import 'package:spoto/domain/usecases/user/reset_password_usecase.dart';
+import 'package:spoto/domain/usecases/user/update_user_details_usecase.dart';
 
 import '../../../../core/error/exceptions.dart';
 import '../../../domain/usecases/user/sign_in_usecase.dart';
@@ -12,9 +16,14 @@ import '../../models/user/authentication_response_model.dart';
 abstract class UserRemoteDataSource {
   Future<AuthenticationResponseModel> signIn(SignInParams params);
 
-  Future<AuthenticationResponseModel> signInGoogle(SignInGoogleParams params);
+  Future<AuthenticationResponseModel> signInGoogle(NoParams params);
 
   Future<AuthenticationResponseModel> signUp(SignUpParams params);
+
+  Future<AuthenticationResponseModel> updateUserDetails(
+      UserDetailsParams params);
+
+  Future<AuthenticationResponseModel> updateUserPicture(String imageUrl);
 
   Future<AuthenticationResponseModel> sendPasswordResetEmail(String email);
 
@@ -46,7 +55,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   Future<AuthenticationResponseModel> signUp(params) async {
     UserCredential userCredential = await _auth
         .createUserWithEmailAndPassword(
-            email: params.email, password: params.password)
+            email: params.email, password: params.password!)
         .then((value) => value)
         .catchError((error) => handleSignUpError(error));
 
@@ -73,6 +82,38 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
       return authenticationResponseModelFromUserCredential(currentUser);
     }
     throw const ServerException("Send password reset Failed");
+  }
+
+  @override
+  Future<AuthenticationResponseModel> updateUserDetails(params) async {
+    print("_auth.currentUser: ${_auth.currentUser!.uid}");
+    await _auth.currentUser
+        ?.updateDisplayName("${params.firstName} ${params.lastName}")
+        .then((value) => value)
+        .catchError((error) => handleUpdateUserDetailsError(error));
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      return authenticationResponseModelFromUserCredential(currentUser);
+    }
+    throw const ServerException("Update user details Failed");
+  }
+
+  @override
+  Future<AuthenticationResponseModel> updateUserPicture(userPicture) async {
+    print("user picture: $userPicture");
+    print("user picture url: ${_auth.currentUser!.photoURL}");
+
+    await _auth.currentUser
+        ?.updatePhotoURL(userPicture)
+        .then((value) => value)
+        .catchError((error) => handleSignUpError(error));
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    print("user picture url after: ${_auth.currentUser!.photoURL}");
+
+    if (currentUser != null) {
+      return authenticationResponseModelFromUserCredential(currentUser);
+    }
+    throw const ServerException("Update user picture Failed");
   }
 
   @override
@@ -103,9 +144,14 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   }
 
   @override
-  Future<AuthenticationResponseModel> signInGoogle(
-      SignInGoogleParams params) async {
-    return authenticationResponseModelFromGoogleParams(params);
+  Future<AuthenticationResponseModel> signInGoogle(NoParams params) async {
+    GoogleAuthRepository googleAuthRepository = GoogleAuthRepository();
+    final GoogleAuth? googleSignInUser = await googleAuthRepository.signIn();
+    return authenticationResponseModelFromGoogleParams(SignInGoogleParams(
+        id: googleSignInUser!.id,
+        displayName: googleSignInUser.displayName,
+        email: googleSignInUser.email,
+        photoUrl: googleSignInUser.photoUrl));
   }
 
   Future<UserCredential> handleSignInError(error) {
@@ -119,6 +165,19 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   }
 
   Future<UserCredential> handleSignUpError(error) {
+    if (error.code == 'weak-password') {
+      throw WeakPasswordFailure();
+    } else if (error.code == 'email-already-in-use') {
+      throw ExistingEmailFailure();
+    } else if (error.code == 'invalid-email') {
+      throw InvalidEmailFailure();
+    } else {
+      throw const ServerException("Sign Up Failed");
+    }
+  }
+
+  Future<UserCredential> handleUpdateUserDetailsError(error) {
+    print("handleUpdateUserDetailsError: $error");
     if (error.code == 'weak-password') {
       throw WeakPasswordFailure();
     } else if (error.code == 'email-already-in-use') {

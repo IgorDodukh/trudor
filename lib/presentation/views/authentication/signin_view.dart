@@ -6,9 +6,6 @@ import 'package:sign_in_button/sign_in_button.dart';
 import 'package:spoto/core/constant/messages.dart';
 import 'package:spoto/core/error/failures.dart';
 import 'package:spoto/data/models/user/user_model.dart';
-import 'package:spoto/data/repositories/auth/google_auth_repository.dart';
-import 'package:spoto/domain/auth/google_auth.dart';
-import 'package:spoto/domain/usecases/auth/google_auth_usecase.dart';
 import 'package:spoto/presentation/blocs/home/navbar_cubit.dart';
 
 import '../../../core/constant/images.dart';
@@ -175,19 +172,7 @@ class _SignInViewState extends State<SignInView> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12.0)),
                         text: "Continue with Google", onPressed: () async {
-                      final GoogleAuthRepository googleAuthRepository =
-                          GoogleAuthRepository();
-                      final GoogleAuth? googleSignInUser =
-                          await googleAuthRepository.signIn();
-                      if (googleSignInUser != null) {
-                        context.read<UserBloc>().add(GoogleSignInUser(
-                            SignInGoogleParams(
-                                id: googleSignInUser.id,
-                                displayName: googleSignInUser.displayName,
-                                email: googleSignInUser.email)));
-                        Navigator.pushNamed(context, AppRouter.home);
-                        context.read<NavbarCubit>().update(0);
-                      }
+                      context.read<UserBloc>().add(GoogleSignInUser());
                     }),
                   ),
                   const Spacer(),

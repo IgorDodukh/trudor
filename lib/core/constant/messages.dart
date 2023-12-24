@@ -45,10 +45,9 @@ const String activateProductContent = "It will become visible to other users.";
 const String activateProductYes = "Activate";
 
 // sign out confirmation alert
-const String signOutConfirmTitle = "Sign out";
-const String signOutConfirmContent = "Are you sure you want to sign out?";
-const String signOutConfirmYes = "Sign out";
-const String signOutSuccess = "Signed out successfully";
+const String signOutTitle = "Sign Out";
+const String signOutConfirmContent = "Are you sure you want to Sign Out?";
+const String signOutSuccess = "Signed Out successfully";
 
 // loading
 const String loadingTitle = "Loading...";
@@ -68,8 +67,8 @@ const String nameHint = "Name";
 const String nameValidation = "Please add contact name";
 const String descriptionHint = "Description";
 const String locationHint = "Location";
-const String contactNameHint = "Contact name";
-const String phoneNumberHint = "Phone number";
+const String contactNameHint = "Contact Name";
+const String phoneNumberHint = "Phone Number";
 const String descriptionValidation = "Please enter a description";
 const String locationValidation = "Please choose location";
 const String phoneValidation = "Please add your phone number";
@@ -115,15 +114,15 @@ const String priceRangeValidationMessage =
     "Minimum price should be less than Maximum price";
 
 // authentication
-const String signUpTitle = "Sign up";
+const String signUpTitle = "Sign Up";
 const String emailHint = "Email";
 const String passwordHint = "Password";
-const String goBackTitle = "Go back";
+const String goBackTitle = "Go Back";
 const String confirmPasswordHint = "Confirm password";
 const String confirmPasswordNotMatch =
     "Password and Confirm password must be same";
-const String firstNameHint = "First name";
-const String lastNameHint = "Last name";
+const String firstNameHint = "First Name";
+const String lastNameHint = "Last Name";
 const String forgotPasswordTitle = "Forgot password?";
 const String invalidEmail = "Please enter a valid email";
 const String sendConfirmEmailTitle = "Send confirmation email";

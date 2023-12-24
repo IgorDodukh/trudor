@@ -33,7 +33,7 @@ class InputTextFormField extends StatefulWidget {
       this.validation,
       this.onChanged,
       this.initialValue,
-      this.contentPadding,
+      this.contentPadding = const EdgeInsets.symmetric(horizontal: 12),
       this.onTapAction,
       this.readOnly = false,
       this.hintTextSize = 16})

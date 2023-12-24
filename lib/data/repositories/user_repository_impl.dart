@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
 import 'package:spoto/core/usecases/usecase.dart';
-import 'package:spoto/domain/usecases/auth/google_auth_usecase.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../core/network/network_info.dart';
@@ -34,6 +33,20 @@ class UserRepositoryImpl implements UserRepository {
   Future<Either<Failure, User>> signUp(params) async {
     return await _authenticate(() {
       return remoteDataSource.signUp(params);
+    });
+  }
+
+  @override
+  Future<Either<Failure, User>> updateUserDetails(params) async {
+    return await _authenticate(() {
+      return remoteDataSource.updateUserDetails(params);
+    });
+  }
+
+  @override
+  Future<Either<Failure, User>> updateUserPicture(params) async {
+    return await _authenticate(() {
+      return remoteDataSource.updateUserPicture(params);
     });
   }
 
@@ -111,7 +124,7 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<Either<Failure, User>> googleSignIn(SignInGoogleParams params) async {
+  Future<Either<Failure, User>> googleSignIn(NoParams params) async {
     return await _authenticate(() {
       return remoteDataSource.signInGoogle(params);
     });
