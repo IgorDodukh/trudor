@@ -154,8 +154,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           CustomNextButton(
                             buttonTitle: updateTitle,
                             onPressedAction: () async {
-                              Navigator.of(context).pop();
                               if (_formKey.currentState!.validate()) {
+                                Navigator.of(context).pop();
                                 context
                                     .read<UserBloc>()
                                     .add(UpdateUserDetails(UserDetailsParams(
