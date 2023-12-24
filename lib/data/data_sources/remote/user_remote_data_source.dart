@@ -100,16 +100,11 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
 
   @override
   Future<AuthenticationResponseModel> updateUserPicture(userPicture) async {
-    print("user picture: $userPicture");
-    print("user picture url: ${_auth.currentUser!.photoURL}");
-
     await _auth.currentUser
         ?.updatePhotoURL(userPicture)
         .then((value) => value)
         .catchError((error) => handleSignUpError(error));
     User? currentUser = FirebaseAuth.instance.currentUser;
-    print("user picture url after: ${_auth.currentUser!.photoURL}");
-
     if (currentUser != null) {
       return authenticationResponseModelFromUserCredential(currentUser);
     }

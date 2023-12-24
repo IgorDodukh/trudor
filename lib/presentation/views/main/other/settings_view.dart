@@ -62,61 +62,7 @@ class _SettingsViewState extends State<SettingsView> {
           }
         },
         child: Scaffold(
-            // appBar: AppBar(
-            //   // title: const Text('Settings'),
-            //   backgroundColor: Colors.white,
-            //   surfaceTintColor: Colors.white,
-            // ),
             backgroundColor: Colors.black.withOpacity(0.05),
-            // body: SettingsList(
-            //   contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-            //   sections: [
-            //     SettingsSection(
-            //       title: const Text(
-            //         'PROFILE',
-            //         style: TextStyle(color: Colors.black, fontSize: 12),
-            //       ),
-            //       tiles: <SettingsTile>[
-            //         SettingsTile.navigation(
-            //           title: const Text('Name'),
-            //         ),
-            //         SettingsTile.navigation(
-            //           title: const Text('Language'),
-            //           value: const Text('English'),
-            //         ),
-            //         SettingsTile.switchTile(
-            //           onToggle: (value) {},
-            //           initialValue: false,
-            //           title: const Text('Notifications'),
-            //         ),
-            //       ],
-            //     ),
-            //     SettingsSection(
-            //       title: const Text(
-            //         'APPEARANCE',
-            //         style: TextStyle(color: Colors.black, fontSize: 12),
-            //       ),
-            //       tiles: <SettingsTile>[
-            //         SettingsTile.switchTile(
-            //           onToggle: (value) {},
-            //           initialValue: true,
-            //           title: const Text('Dark mode'),
-            //         ),
-            //       ],
-            //     ),
-            //     SettingsSection(
-            //       title: const Text(
-            //         'ACCOUNT',
-            //         style: TextStyle(color: Colors.black, fontSize: 12),
-            //       ),
-            //       tiles: <SettingsTile>[
-            //         SettingsTile.navigation(
-            //           title: const Text('Delete account', style: TextStyle(color: Colors.red),),
-            //         ),
-            //       ],
-            //     ),
-            //   ],
-            // ),
             body: Padding(
               padding: const EdgeInsets.only(left: 20, right: 20, bottom: 40),
               child: ListView(
