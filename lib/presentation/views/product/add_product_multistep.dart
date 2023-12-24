@@ -217,7 +217,7 @@ class _AddProductMultiStepFormState extends State<AddProductMultiStepForm> {
     } else {
       final currentUser = currentState.props.first as UserModel;
       setState(() {
-        contactName = "${currentUser.firstName} ${currentUser.lastName}";
+        contactName = currentUser.name;
         phoneNumber = currentUser.phoneNumber;
       });
       if (widget.productInfo != null) {
@@ -278,7 +278,8 @@ class _AddProductMultiStepFormState extends State<AddProductMultiStepForm> {
         if ((widget.productInfo != null && widget.pageKey == "contact") ||
             widget.productInfo == null)
           StepFormPage(
-            title: Text(widget.pageKey == null ? contactInfoTitle : "Update Contacts"),
+            title: Text(
+                widget.pageKey == null ? contactInfoTitle : "Update Contacts"),
             features: [
               const WhatsNewFeature(
                 description: Text(contactInfoDetails),

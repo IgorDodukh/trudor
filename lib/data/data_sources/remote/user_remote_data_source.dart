@@ -59,8 +59,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
         .then((value) => value)
         .catchError((error) => handleSignUpError(error));
 
-    await userCredential.user
-        ?.updateDisplayName("${params.firstName} ${params.lastName}");
+    await userCredential.user?.updateDisplayName(params.name);
     await userCredential.user?.reload();
 
     User? currentUser = FirebaseAuth.instance.currentUser;

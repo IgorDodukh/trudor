@@ -23,8 +23,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  final TextEditingController firstNameController = TextEditingController();
-  final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
@@ -116,24 +115,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     height: 40,
                   ),
                   InputTextFormField(
-                    controller: firstNameController,
+                    controller: nameController,
                     hint: firstNameHint,
                     validation: (String? val) {
                       if (val == null || val.isEmpty) {
                         return "$firstNameHint $fieldCantBeEmpty";
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  InputTextFormField(
-                    controller: lastNameController,
-                    hint: lastNameHint,
-                    validation: (String? val) {
-                      if (val == null || val.isEmpty) {
-                        return "$lastNameHint $fieldCantBeEmpty";
                       }
                       return null;
                     },
@@ -180,8 +166,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     onClick: () {
                       if (_formKey.currentState!.validate()) {
                         context.read<UserBloc>().add(SignUpUser(SignUpParams(
-                              firstName: firstNameController.text,
-                              lastName: lastNameController.text,
+                              name: nameController.text,
                               email: emailController.text,
                               password: passwordController.text,
                             )));

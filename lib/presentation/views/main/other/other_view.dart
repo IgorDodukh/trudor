@@ -94,7 +94,7 @@ class OtherView extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "${state.user.firstName} ${state.user.lastName}",
+                              state.user.name,
                               style: Theme.of(context).textTheme.titleLarge,
                             ),
                             Text(state.user.email)

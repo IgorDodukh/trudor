@@ -17,15 +17,13 @@ class SignUpUseCase implements UseCase<User, SignUpParams> {
 }
 
 class SignUpParams {
-  final String firstName;
-  final String lastName;
+  final String name;
   final String email;
   final String? password;
   final String? phoneNumber;
 
   const SignUpParams({
-    required this.firstName,
-    required this.lastName,
+    required this.name,
     required this.email,
     this.password,
     this.phoneNumber,

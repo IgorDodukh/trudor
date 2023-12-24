@@ -32,7 +32,7 @@ class _SettingsViewState extends State<SettingsView> {
   Widget buildName(User user) => Column(
         children: [
           Text(
-            "${user.firstName} ${user.lastName}",
+            user.name,
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
           ),
           const SizedBox(height: 4),
@@ -75,8 +75,7 @@ class _SettingsViewState extends State<SettingsView> {
                   const SizedBox(height: 10),
                   SmallUserCard(
                     cardColor: kLightPrimaryColor,
-                    userName:
-                        "${currentUser.firstName} ${currentUser.lastName}",
+                    userName: currentUser.name,
                     userProfilePic: (currentUser.image != null
                             ? NetworkImage(currentUser.image!)
                             : const AssetImage(kUserAvatar))

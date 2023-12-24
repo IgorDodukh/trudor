@@ -1,4 +1,8 @@
 import 'dart:convert';
+
+import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart' as http;
+import 'package:mocktail/mocktail.dart';
 import 'package:spoto/core/constant/strings.dart';
 import 'package:spoto/core/error/exceptions.dart';
 import 'package:spoto/core/error/failures.dart';
@@ -6,9 +10,6 @@ import 'package:spoto/data/data_sources/remote/user_remote_data_source.dart';
 import 'package:spoto/data/models/user/authentication_response_model.dart';
 import 'package:spoto/domain/usecases/user/sign_in_usecase.dart';
 import 'package:spoto/domain/usecases/user/sign_up_usecase.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:http/http.dart' as http;
-import 'package:mocktail/mocktail.dart';
 
 import '../../../fixtures/fixture_reader.dart';
 
@@ -116,8 +117,7 @@ void main() {
         () async {
       /// Arrange
       const fakeParams = SignUpParams(
-        firstName: 'John',
-        lastName: 'Doe',
+        name: 'John',
         email: 'john.doe@example.com',
         password: 'password',
       );
@@ -129,8 +129,7 @@ void main() {
               'Content-Type': 'application/json',
             },
             body: jsonEncode({
-              'firstName': fakeParams.firstName,
-              'lastName': fakeParams.lastName,
+              'name': fakeParams.name,
               'email': fakeParams.email,
               'password': fakeParams.password,
             }),
@@ -146,8 +145,7 @@ void main() {
               'Content-Type': 'application/json',
             },
             body: jsonEncode({
-              'firstName': fakeParams.firstName,
-              'lastName': fakeParams.lastName,
+              'name': fakeParams.name,
               'email': fakeParams.email,
               'password': fakeParams.password,
             }),
@@ -159,8 +157,7 @@ void main() {
         () async {
       /// Arrange
       const fakeParams = SignUpParams(
-        firstName: 'John',
-        lastName: 'Doe',
+        name: 'John',
         email: 'john.doe@example.com',
         password: 'password',
       );
@@ -171,8 +168,7 @@ void main() {
               'Content-Type': 'application/json',
             },
             body: jsonEncode({
-              'firstName': fakeParams.firstName,
-              'lastName': fakeParams.lastName,
+              'name': fakeParams.name,
               'email': fakeParams.email,
               'password': fakeParams.password,
             }),
@@ -190,8 +186,7 @@ void main() {
         () async {
       /// Arrange
       const fakeParams = SignUpParams(
-        firstName: 'John',
-        lastName: 'Doe',
+        name: 'John Doe',
         email: 'john.doe@example.com',
         password: 'password',
       );
@@ -202,8 +197,7 @@ void main() {
               'Content-Type': 'application/json',
             },
             body: jsonEncode({
-              'firstName': fakeParams.firstName,
-              'lastName': fakeParams.lastName,
+              'name': fakeParams.name,
               'email': fakeParams.email,
               'password': fakeParams.password,
             }),

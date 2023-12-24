@@ -11,8 +11,7 @@ String userModelToJson(UserModel data) => json.encode(data.toJson());
 class UserModel extends User {
   const UserModel({
     required String id,
-    required String firstName,
-    required String lastName,
+    required String name,
     required String email,
     String? phoneNumber,
     String? image,
@@ -21,8 +20,7 @@ class UserModel extends User {
     bool? enableNotification,
   }) : super(
           id: id,
-          firstName: firstName,
-          lastName: lastName,
+          name: name,
           email: email,
           phoneNumber: phoneNumber,
           image: image,
@@ -33,23 +31,20 @@ class UserModel extends User {
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         id: json["_id"],
-        firstName: json["firstName"],
-        lastName: json["lastName"],
+        name: json["name"],
         email: json["email"],
       );
 
   factory UserModel.fromGoogleParams(SignInGoogleParams params) => UserModel(
         id: params.id,
-        firstName: params.displayName.split(" ").first,
-        lastName: params.displayName.split(" ").last,
+        name: params.displayName,
         email: params.email,
         image: params.photoUrl,
       );
 
   Map<String, dynamic> toJson() => {
         "_id": id,
-        "firstName": firstName,
-        "lastName": lastName,
+        "name": name,
         "email": email,
       };
 }

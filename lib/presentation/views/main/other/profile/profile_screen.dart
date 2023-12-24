@@ -23,7 +23,7 @@ class UserProfileScreen extends StatefulWidget {
 }
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
-  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController email = TextEditingController();
   final TextEditingController phoneNumber = TextEditingController();
@@ -35,8 +35,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   @override
   void initState() {
     super.initState();
-    firstNameController.text = widget.user.firstName;
-    lastNameController.text = widget.user.lastName;
+    nameController.text = widget.user.name;
     email.text = widget.user.email;
     phoneNumber.text = widget.user.phoneNumber ?? "";
     userImage = widget.user.image;
@@ -102,22 +101,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             height: 50,
                           ),
                           InputTextFormField(
-                            controller: firstNameController,
+                            controller: nameController,
                             hint: firstNameHint,
                             validation: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter your first name';
-                              }
-                              return null;
-                            },
-                          ),
-                          SizedBox(height: formDividerHeight),
-                          InputTextFormField(
-                            controller: lastNameController,
-                            hint: lastNameHint,
-                            validation: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your last name';
+                                return 'Please enter your name';
                               }
                               return null;
                             },
@@ -171,7 +159,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                 context
                                     .read<UserBloc>()
                                     .add(UpdateUserDetails(UserDetailsParams(
-                                      firstName: firstNameController.text,
+                                      firstName: nameController.text,
                                       lastName: lastNameController.text,
                                       email: email.text,
                                       phoneNumber: phoneNumber.text,

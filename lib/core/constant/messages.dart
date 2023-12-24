@@ -121,7 +121,7 @@ const String goBackTitle = "Go Back";
 const String confirmPasswordHint = "Confirm password";
 const String confirmPasswordNotMatch =
     "Password and Confirm password must be same";
-const String firstNameHint = "First Name";
+const String firstNameHint = "Name";
 const String lastNameHint = "Last Name";
 const String forgotPasswordTitle = "Forgot password?";
 const String invalidEmail = "Please enter a valid email";

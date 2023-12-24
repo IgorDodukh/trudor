@@ -1,6 +1,6 @@
 import 'package:spoto/core/constant/collections.dart';
-import 'package:spoto/data/models/favorites/favorites_item_model.dart';
 import 'package:spoto/data/models/category/category_model.dart';
+import 'package:spoto/data/models/favorites/favorites_item_model.dart';
 import 'package:spoto/data/models/order/order_details_model.dart';
 import 'package:spoto/data/models/order/order_item_model.dart';
 import 'package:spoto/data/models/product/pagination_data_model.dart';
@@ -101,8 +101,7 @@ final tOrderItemModel = OrderItemModel(
 //user
 const tUserModel = UserModel(
   id: '1',
-  firstName: 'Text',
-  lastName: 'Text',
+  name: 'Text',
   email: 'text@gmail.com',
 );
 
@@ -111,8 +110,5 @@ const tAuthenticationResponseModel =
     AuthenticationResponseModel(token: 'token', user: tUserModel);
 //params
 const tSignInParams = SignInParams(username: 'username', password: 'password');
-const tSignUpParams = SignUpParams(
-    firstName: 'firstName',
-    lastName: 'lastName',
-    email: 'email',
-    password: 'password');
+const tSignUpParams =
+    SignUpParams(name: 'firstName', email: 'email', password: 'password');
