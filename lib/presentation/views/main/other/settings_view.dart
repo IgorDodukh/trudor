@@ -64,7 +64,7 @@ class _SettingsViewState extends State<SettingsView> {
         child: Scaffold(
             backgroundColor: Colors.black.withOpacity(0.05),
             body: Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20, bottom: 40),
+              padding: const EdgeInsets.only(left: 25, right: 25, bottom: 40),
               child: ListView(
                 children: [
                   const Text("Settings",

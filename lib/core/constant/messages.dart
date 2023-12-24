@@ -1,7 +1,7 @@
 // favorites
 const String addedToFavoritesTitle = "Successfully added to Favorites";
 const String removedFromFavoritesTitle = "Successfully removed from Favorites";
-const String noFavoritesYet = "You don't have Favorites yet!";
+const String noFavoritesYet = "You have no Favorites yet!";
 
 // delivery info
 const String addDeliveryInfoSuccess = "Delivery info successfully added!";

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -179,7 +180,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
 
   Widget deactivateProductButton() {
     return IconButton(
-      icon: const Icon(Icons.close_rounded, color: Colors.white, size: 36),
+      icon: const Icon(CupertinoIcons.xmark, color: Colors.white, size: 36),
       onPressed: () async {
         return showDialog(
           context: context,
@@ -280,7 +281,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
         foregroundColor: Colors.black,
         backgroundColor: Colors.white,
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.message)),
+          IconButton(onPressed: () {}, icon: const Icon(CupertinoIcons.chat_bubble_text)),
           IconButton(onPressed: () {}, icon: const Icon(Icons.share)),
         ],
       ),
@@ -517,8 +518,8 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                                 },
                                 icon: Icon(
                                   isFavorite
-                                      ? Icons.favorite
-                                      : Icons.favorite_border,
+                                      ? CupertinoIcons.heart_fill
+                                      : CupertinoIcons.heart,
                                   color: Colors.white,
                                   size: 36,
                                 ),
@@ -536,7 +537,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                             );
                           },
                           icon: Icon(
-                            isFavorite ? Icons.favorite : Icons.favorite_border,
+                            isFavorite ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
                             color: Colors.white,
                             size: 36,
                           ),

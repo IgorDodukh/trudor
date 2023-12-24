@@ -6,14 +6,14 @@ import 'package:spoto/core/constant/colors.dart';
 import 'package:spoto/core/constant/messages.dart';
 import 'package:spoto/core/router/app_router.dart';
 import 'package:spoto/presentation/blocs/user/user_bloc.dart';
+import 'package:spoto/presentation/views/main/chats/chats_view.dart';
+import 'package:spoto/presentation/views/main/favorites/favorites_view.dart';
 import 'package:spoto/presentation/views/main/other/blank_view.dart';
 import 'package:spoto/presentation/views/main/other/settings_view.dart';
 import 'package:spoto/presentation/views/product/add_product_multistep.dart';
 import 'package:spoto/presentation/widgets/adaptive_alert_dialog.dart';
 
 import '../../blocs/home/navbar_cubit.dart';
-import 'category/category_view.dart';
-import 'favorites/favorites_view.dart';
 import 'home/home_view.dart';
 
 class MainView extends StatefulWidget {
@@ -41,7 +41,7 @@ class _MainViewState extends State<MainView> {
                   controller: context.read<NavbarCubit>().controller,
                   children: const <Widget>[
                     HomeView(),
-                    CategoryView(),
+                    ChatsView(),
                     BlankView(),
                     FavoritesView(),
                     SettingsView(),
@@ -120,13 +120,15 @@ class _MainViewState extends State<MainView> {
                     }),
                     items: [
                       BottomNavigationBarItem(
-                        icon: Icon(Icons.home_outlined, size: iconSize),
-                        activeIcon: Icon(Icons.home, size: iconSize),
+                        icon: Icon(CupertinoIcons.house_alt, size: iconSize),
+                        activeIcon:
+                            Icon(CupertinoIcons.house_alt_fill, size: iconSize),
                         // label: 'Home',
                       ),
                       BottomNavigationBarItem(
-                        icon: Icon(Icons.dashboard_outlined, size: iconSize),
-                        activeIcon: Icon(Icons.dashboard, size: iconSize),
+                        icon: Icon(CupertinoIcons.chat_bubble, size: iconSize),
+                        activeIcon: Icon(CupertinoIcons.chat_bubble_fill,
+                            size: iconSize),
                         // label: 'Category'
                       ),
                       const BottomNavigationBarItem(
@@ -135,14 +137,16 @@ class _MainViewState extends State<MainView> {
                         // label: 'Publish'
                       ),
                       BottomNavigationBarItem(
-                        icon: Icon(Icons.favorite_border, size: iconSize),
-                        activeIcon: Icon(Icons.favorite, size: iconSize),
+                        icon: Icon(CupertinoIcons.heart, size: iconSize),
+                        activeIcon:
+                            Icon(CupertinoIcons.heart_fill, size: iconSize),
                         // label: 'Favorites'
                       ),
                       BottomNavigationBarItem(
-                        icon: Icon(Icons.manage_accounts_outlined,
+                        icon:
+                            Icon(CupertinoIcons.person_circle, size: iconSize),
+                        activeIcon: Icon(CupertinoIcons.person_circle_fill,
                             size: iconSize),
-                        activeIcon: Icon(Icons.manage_accounts, size: iconSize),
                         // label: 'User'
                       ),
                     ],
