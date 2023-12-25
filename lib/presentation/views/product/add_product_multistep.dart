@@ -158,6 +158,9 @@ class _AddProductMultiStepFormState extends State<AddProductMultiStepForm> {
         ],
         // categories: [CategoryModel.fromEntity(selectedCategory!)],
         category: category!,
+        contactName: contactName!,
+        contactPhone: phoneNumber ?? "",
+        location: location!.city!,
         images: images.isEmpty ? [] : images,
         createdAt: widget.productInfo!.createdAt,
         updatedAt: DateTime.now());
@@ -190,6 +193,9 @@ class _AddProductMultiStepFormState extends State<AddProductMultiStepForm> {
           ],
           category: category!,
           images: images.isEmpty ? [] : images,
+          contactName: contactName!,
+          contactPhone: phoneNumber ?? "",
+          location: location!.city!,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now());
       context.read<ProductBloc>().add(AddProduct(updatedModel));
@@ -227,6 +233,9 @@ class _AddProductMultiStepFormState extends State<AddProductMultiStepForm> {
         description = widget.productInfo!.description;
         price = widget.productInfo!.priceTags.first.price.toString();
         isNew = widget.productInfo!.isNew;
+        location = Place(city: widget.productInfo!.location);
+        phoneNumber = widget.productInfo!.contactPhone;
+        contactName = widget.productInfo!.contactName;
       }
     }
   }

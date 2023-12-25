@@ -1,7 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:spoto/presentation/views/authentication/forgot_password_view.dart';
 import 'package:spoto/presentation/views/main/home/filter/filter_view.dart';
-import 'package:flutter/material.dart';
 import 'package:spoto/presentation/views/main/other/my_publications/my_publications_view.dart';
+import 'package:spoto/presentation/views/product/add_product_multistep.dart';
 import 'package:spoto/presentation/widgets/splash_screen.dart';
 
 import '../../domain/entities/favorites/favorites_item.dart';
@@ -24,12 +25,16 @@ class AppRouter {
   //main menu
   static const String home = '/';
   static const String splash = '/splash';
+
   //authentication
   static const String signIn = '/sign-in';
   static const String signUp = '/sign-up';
   static const String forgotPassword = '/forgot-password';
+
   //products
   static const String productDetails = '/product-details';
+  static const String addProduct = '/add-product';
+
   //other
   static const String userProfile = '/user-profile';
   static const String orderCheckout = '/order-checkout';
@@ -53,11 +58,18 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const SignUpScreen());
       case forgotPassword:
         return MaterialPageRoute(builder: (_) => const ForgotPasswordScreen());
-      case myPublications: return MaterialPageRoute(builder: (_) => const MyPublicationsView());
+      case myPublications:
+        return MaterialPageRoute(builder: (_) => const MyPublicationsView());
       case productDetails:
         Product product = routeSettings.arguments as Product;
         return MaterialPageRoute(
             builder: (_) => ProductDetailsView(product: product));
+      case addProduct:
+        Map<String, dynamic> args =
+            routeSettings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+            builder: (_) => AddProductMultiStepForm(
+                pageKey: args["result"], productInfo: args["product"]));
       case userProfile:
         User user = routeSettings.arguments as User;
         return MaterialPageRoute(
@@ -65,7 +77,8 @@ class AppRouter {
                   user: user,
                 ));
       case orderCheckout:
-        List<ListViewItem> items = routeSettings.arguments as List<ListViewItem>;
+        List<ListViewItem> items =
+            routeSettings.arguments as List<ListViewItem>;
         return MaterialPageRoute(
             builder: (_) => OrderCheckoutView(
                   items: items,

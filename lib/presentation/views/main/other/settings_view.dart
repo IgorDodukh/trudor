@@ -7,8 +7,13 @@ import 'package:spoto/core/constant/colors.dart';
 import 'package:spoto/core/constant/images.dart';
 import 'package:spoto/core/constant/messages.dart';
 import 'package:spoto/core/router/app_router.dart';
+import 'package:spoto/core/util/firestore/firestore_products.dart';
+import 'package:spoto/core/util/typesense/typesense_products.dart';
 import 'package:spoto/data/models/user/user_model.dart';
+import 'package:spoto/domain/entities/product/product.dart';
 import 'package:spoto/domain/entities/user/user.dart';
+import 'package:spoto/domain/usecases/product/get_product_usecase.dart';
+import 'package:spoto/domain/usecases/product/update_product_usecase.dart';
 import 'package:spoto/presentation/blocs/favorites/favorites_bloc.dart';
 import 'package:spoto/presentation/blocs/user/user_bloc.dart';
 import 'package:spoto/presentation/widgets/adaptive_alert_dialog.dart';
@@ -27,6 +32,41 @@ class _SettingsViewState extends State<SettingsView> {
   void initState() {
     super.initState();
     currentUser = context.read<UserBloc>().state.props.first as UserModel;
+  }
+
+  Future<void> updateTypesenseFirestore() async {
+    EasyLoading.show(status: loadingTitle, dismissOnTap: false);
+    TypesenseProducts typesenseService = TypesenseProducts();
+    FirestoreProducts firestoreService = FirestoreProducts();
+    final products = await typesenseService
+        .getProducts(const FilterProductParams(pageSize: 100));
+    print("Found ${products.toJson()['meta']["total"]} products");
+    for (var product in products.products) {
+      final productData = Product(
+        id: product.id,
+        name: product.name,
+        description: product.description,
+        price: product.priceTags[0].price,
+        priceTags: product.priceTags,
+        // categories: product.categories,
+        category: product.category,
+        images: product.images,
+        createdAt: product.createdAt,
+        updatedAt: product.updatedAt,
+        ownerId: product.ownerId,
+        isNew: product.isNew,
+        status: product.status,
+        contactName: product.contactName,
+        contactPhone: product.contactPhone,
+        location: product.location,
+      );
+      print("Product data $productData");
+      firestoreService.updateProduct(UpdateProductParams(
+          product: productData, isPublicationsAction: false));
+    }
+    EasyLoading.dismiss();
+    EasyLoading.showToast(
+        "${products.toJson()['meta']["total"]} products found");
   }
 
   Widget buildName(User user) => Column(
@@ -167,6 +207,11 @@ class _SettingsViewState extends State<SettingsView> {
                   ),
                   // You can add a settings title
                   SettingsGroup(
+                    settingsGroupTitleStyle: const TextStyle(
+                      color: Colors.black87,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
                     settingsGroupTitle: "Account",
                     items: [
                       SettingsItem(
@@ -204,6 +249,33 @@ class _SettingsViewState extends State<SettingsView> {
                       ),
                     ],
                   ),
+                  // SettingsGroup(
+                  //   settingsGroupTitleStyle: const TextStyle(
+                  //     color: Colors.redAccent,
+                  //     fontWeight: FontWeight.bold,
+                  //     fontSize: 18,
+                  //   ),
+                  //   settingsGroupTitle: "Service",
+                  //   items: [
+                  //     SettingsItem(
+                  //       onTap: () async {
+                  //         await updateTypesenseFirestore();
+                  //       },
+                  //       icons:
+                  //           CupertinoIcons.arrow_right_arrow_left_square_fill,
+                  //       iconStyle: IconStyle(
+                  //         iconsColor: Colors.redAccent,
+                  //         withBackground: true,
+                  //         backgroundColor: Colors.transparent,
+                  //       ),
+                  //       title: 'Migrate DB',
+                  //       titleStyle: const TextStyle(
+                  //         color: Colors.redAccent,
+                  //         fontWeight: FontWeight.bold,
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                 ],
               ),
             )));

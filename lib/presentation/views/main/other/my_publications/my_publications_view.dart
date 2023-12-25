@@ -1,8 +1,10 @@
 import 'package:basic_utils/basic_utils.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:spoto/core/constant/collections.dart';
+import 'package:spoto/core/constant/colors.dart';
 import 'package:spoto/core/constant/images.dart';
 import 'package:spoto/core/constant/messages.dart';
 import 'package:spoto/core/error/failures.dart';
@@ -12,8 +14,13 @@ import 'package:spoto/domain/usecases/product/get_product_usecase.dart';
 import 'package:spoto/presentation/blocs/product/product_bloc.dart';
 import 'package:spoto/presentation/blocs/user/user_bloc.dart';
 import 'package:spoto/presentation/widgets/alert_card.dart';
+import 'package:spoto/presentation/widgets/buttons/top_back_button.dart';
 import 'package:spoto/presentation/widgets/list_view_item_card.dart';
-import 'package:toggle_switch/toggle_switch.dart';
+
+List<Tab> tabs = <Tab>[
+  Tab(text: StringUtils.capitalize(ProductStatus.active.name)),
+  Tab(text: StringUtils.capitalize(ProductStatus.inactive.name)),
+];
 
 class MyPublicationsView extends StatefulWidget {
   const MyPublicationsView({Key? key}) : super(key: key);
@@ -33,7 +40,9 @@ class _MyPublicationsViewState extends State<MyPublicationsView> {
     double scrollPercentage = 0.7;
     if (currentScroll > (maxScroll * scrollPercentage)) {
       if (context.read<ProductBloc>().state is ProductLoaded) {
-        context.read<ProductBloc>().add(const GetMoreProducts(FilterProductParams()));
+        context
+            .read<ProductBloc>()
+            .add(const GetMoreProducts(FilterProductParams()));
       }
     }
   }
@@ -65,121 +74,160 @@ class _MyPublicationsViewState extends State<MyPublicationsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        surfaceTintColor: Theme.of(context).scaffoldBackgroundColor,
-        title: const Text(publicationsTitle),
-      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Stack(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
+            const SizedBox(height: 60),
+            const Stack(
               children: [
-                ToggleSwitch(
-                  minWidth: MediaQuery.of(context).size.width * 0.43,
-                  cornerRadius: 20.0,
-                  activeBgColor: const [Colors.black87],
-                  activeFgColor: Colors.white,
-                  inactiveBgColor: Colors.black12,
-                  initialLabelIndex: 0,
-                  totalSwitches: 2,
-                  labels: ProductStatus.values
-                      .map((e) =>
-                          StringUtils.capitalize(e.toString().split('.').last))
-                      .toList(),
-                  radiusStyle: true,
-                  onToggle: (index) {
-                    currentIndex = index!;
-                    if (currentIndex == 0) {
-                      getOwnedActiveProducts();
-                    } else {
-                      getOwnedInactiveProducts();
-                    }
-                  },
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: BlocListener<ProductBloc, ProductState>(
-                      listener: (context, state) {
-                        if (state is ProductError) {
-                          print(
-                              "state is ProductError in My Publications View");
-                        }
-                      },
-                      child: BlocBuilder<ProductBloc, ProductState>(
-                        builder: (context, state) {
-                          if (state is ProductLoaded &&
-                              state.products.isEmpty) {
-                            return const AlertCard(
-                              image: kEmpty,
-                              message: "No publications found!",
-                            );
-                          }
-                          if (state is ProductError && state.products.isEmpty) {
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                if (state.failure is NetworkFailure)
-                                  Image.asset(kNoConnection),
-                                if (state.failure is ServerFailure)
-                                  Image.asset(kInternalServerError),
-                                if (state.failure is ExceptionFailure)
-                                  Image.asset(kInternalServerError),
-                                Text(state.failure.toString()),
-                                const Text("No publications found"),
-                                SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.1,
-                                )
-                              ],
-                            );
-                          }
-                          return RefreshIndicator(
-                            onRefresh: () async {
-                              if (currentIndex == 0) {
-                                getOwnedActiveProducts();
-                              } else {
-                                getOwnedInactiveProducts();
-                              }
-                            },
-                            child: ListView.builder(
-                              itemCount: state.products.length +
-                                  ((state is ProductLoading) ? 10 : 0),
-                              controller: scrollController,
-                              padding: EdgeInsets.only(
-                                  top:
-                                      (MediaQuery.of(context).padding.top + 20),
-                                  bottom:
-                                      MediaQuery.of(context).padding.bottom +
-                                          200),
-                              physics: const BouncingScrollPhysics(),
-                              shrinkWrap: true,
-                              itemBuilder:
-                                  (BuildContext context, int index) {
-                                if (state.products.length > index) {
-                                  return ListViewItemCard(
-                                      listViewItem:
-                                          ProductMapping.productToListViewItem(
-                                              state.products[index]),
-                                      isOwned: true);
-                                }
-                                return Shimmer.fromColors(
-                                  baseColor: Colors.grey.shade100,
-                                  highlightColor: Colors.white,
-                                  child: const ListViewItemCard(isOwned: true),
-                                );
-                              },
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ),
+                TopBackButton(buttonTitle: ""),
+                Positioned.fill(
+                  child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        publicationsTitle,
+                        style: TextStyle(
+                            fontSize: 23,
+                            fontWeight: FontWeight.w600,
+                            color: CupertinoColors.black),
+                      )),
+                )
               ],
             ),
+            SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.8,
+                child: DefaultTabController(
+                  animationDuration: const Duration(milliseconds: 0),
+                  length: tabs.length,
+                  // The Builder widget is used to have a different BuildContext to access
+                  // closest DefaultTabController.
+                  child: Builder(builder: (BuildContext context) {
+                    final TabController tabController =
+                        DefaultTabController.of(context);
+                    tabController.addListener(() {
+                      if (!tabController.indexIsChanging) {
+                        if (tabController.index == 0) {
+                          getOwnedActiveProducts();
+                        } else if (tabController.index == 1) {
+                          getOwnedInactiveProducts();
+                        } else {
+                          print("Invalid tab index on Publications page.");
+                        }
+                      }
+                    });
+                    return Column(children: [
+                      TabBar(
+                        overlayColor:
+                            MaterialStateProperty.all(Colors.transparent),
+                        indicatorColor: kLightPrimaryColor,
+                        unselectedLabelColor: Colors.black38,
+                        labelStyle: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black),
+                        tabs: tabs,
+                      ),
+                      Expanded(
+                        child: TabBarView(
+                          children: tabs.map((Tab tab) {
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8),
+                              child: BlocListener<ProductBloc, ProductState>(
+                                listener: (context, state) {
+                                  if (state is ProductError) {
+                                    print(
+                                        "state is ProductError in My Publications View");
+                                  }
+                                },
+                                child: BlocBuilder<ProductBloc, ProductState>(
+                                  builder: (context, state) {
+                                    if (state is ProductLoaded &&
+                                        state.products.isEmpty) {
+                                      return const AlertCard(
+                                        image: kEmpty,
+                                        message: "No publications found!",
+                                      );
+                                    }
+                                    if (state is ProductError &&
+                                        state.products.isEmpty) {
+                                      return Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          if (state.failure is NetworkFailure)
+                                            Image.asset(kNoConnection),
+                                          if (state.failure is ServerFailure)
+                                            Image.asset(kInternalServerError),
+                                          if (state.failure is ExceptionFailure)
+                                            Image.asset(kInternalServerError),
+                                          Text(state.failure.toString()),
+                                          const Text("No publications found"),
+                                          SizedBox(
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.1,
+                                          )
+                                        ],
+                                      );
+                                    }
+                                    return RefreshIndicator(
+                                      onRefresh: () async {
+                                        if (currentIndex == 0) {
+                                          getOwnedActiveProducts();
+                                        } else {
+                                          getOwnedInactiveProducts();
+                                        }
+                                      },
+                                      child: ListView.builder(
+                                        itemCount: state.products.length +
+                                            ((state is ProductLoading)
+                                                ? 10
+                                                : 0),
+                                        controller: scrollController,
+                                        padding: EdgeInsets.only(
+                                            top: (MediaQuery.of(context)
+                                                    .padding
+                                                    .top *
+                                                0.5),
+                                            bottom: MediaQuery.of(context)
+                                                    .padding
+                                                    .bottom +
+                                                200),
+                                        physics: const BouncingScrollPhysics(),
+                                        shrinkWrap: true,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          if (state.products.length > index) {
+                                            return ListViewItemCard(
+                                                listViewItem: ProductMapping
+                                                    .productToListViewItem(
+                                                        state.products[index]),
+                                                isOwned: true);
+                                          }
+                                          return Shimmer.fromColors(
+                                            baseColor: Colors.grey.shade100,
+                                            highlightColor: Colors.white,
+                                            child: const ListViewItemCard(
+                                                isOwned: true),
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ]);
+                  }),
+                )),
           ],
         ),
       ),

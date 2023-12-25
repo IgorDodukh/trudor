@@ -58,7 +58,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                             style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
-                                color: CupertinoColors.black),
+                                color: Colors.black87),
                           ),
                           SizedBox(
                             height: MediaQuery.of(context).size.height * 0.1,
@@ -106,7 +106,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                           style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w600,
-                              color: CupertinoColors.black),
+                              color: Colors.black87),
                         )),
                         SizedBox(
                           height: MediaQuery.of(context).size.height * 0.1,

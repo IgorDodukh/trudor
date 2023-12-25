@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -16,9 +17,9 @@ import 'package:spoto/presentation/blocs/favorites/favorites_bloc.dart' as fav;
 import 'package:spoto/presentation/blocs/product/product_bloc.dart' as prod;
 import 'package:spoto/presentation/blocs/user/user_bloc.dart';
 import 'package:spoto/presentation/widgets/adaptive_alert_dialog.dart';
+import 'package:spoto/presentation/widgets/modal_actions/edit_product.dart';
 
 import '../../core/router/app_router.dart';
-import '../views/product/add_product_pages/add_product_form.dart';
 
 class ListViewItemCard extends StatelessWidget {
   final ListViewItem? listViewItem;
@@ -56,7 +57,8 @@ class ListViewItemCard extends StatelessWidget {
 
   Widget renewProductButton(BuildContext context) {
     return IconButton(
-      icon: const Icon(Icons.restore_outlined, color: Colors.black, size: 36),
+      icon: const Icon(CupertinoIcons.arrow_counterclockwise,
+          color: Colors.black, size: 26),
       onPressed: () async {
         return showDialog(
           context: context,
@@ -81,6 +83,9 @@ class ListViewItemCard extends StatelessWidget {
                     //   CategoryModel.fromEntity(
                     //       listViewItem!.product.categories.first)
                     // ],
+                    contactName: listViewItem!.product.contactName,
+                    contactPhone: listViewItem!.product.contactPhone,
+                    location: listViewItem!.product.location,
                     category: listViewItem!.product.category,
                     images: listViewItem!.product.images,
                     createdAt: listViewItem!.product.createdAt,
@@ -123,6 +128,9 @@ class ListViewItemCard extends StatelessWidget {
                     //   CategoryModel.fromEntity(
                     //       listViewItem!.product.categories.first)
                     // ],
+                    contactName: listViewItem!.product.contactName,
+                    contactPhone: listViewItem!.product.contactPhone,
+                    location: listViewItem!.product.location,
                     category: listViewItem!.product.category,
                     images: listViewItem!.product.images,
                     createdAt: listViewItem!.product.createdAt,
@@ -141,20 +149,7 @@ class ListViewItemCard extends StatelessWidget {
   Widget editProductButton(BuildContext context) {
     return IconButton(
       onPressed: () {
-        showModalBottomSheet<void>(
-          isDismissible: false,
-          context: context,
-          isScrollControlled: true,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24.0),
-          ),
-          builder: (BuildContext context) {
-            return Padding(
-                padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom),
-                child: AddProductForm(productInfo: listViewItem!.product));
-          },
-        );
+        EditProductModal(listViewItem!.product).openEditModal(context);
       },
       icon: const Icon(Icons.edit),
     );

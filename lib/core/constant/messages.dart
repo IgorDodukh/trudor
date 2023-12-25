@@ -97,7 +97,7 @@ const String searchProductHint = "Search Product";
 // page titles
 const String profileTitle = "Profile";
 const String favoritesTitle = "Favorites";
-const String publicationsTitle = "My Publications";
+const String publicationsTitle = "Publications";
 const String addPublication = "Add Publication";
 const String updatePublication = "Update Publication";
 const String deliveryDetailsTitle = "Delivery Details";
@@ -126,3 +126,7 @@ const String lastNameHint = "Last Name";
 const String forgotPasswordTitle = "Forgot password?";
 const String invalidEmail = "Please enter a valid email";
 const String sendConfirmEmailTitle = "Send confirmation email";
+
+// chats
+const String chatsTitle = "Chats";
+const String noChatsYetTitle = "You have no chats yet.";

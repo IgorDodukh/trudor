@@ -1,13 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:spoto/core/constant/messages.dart';
-import 'package:spoto/core/util/firestore/firestore_products.dart';
-import 'package:spoto/core/util/typesense/typesense_products.dart';
-import 'package:spoto/domain/entities/product/product.dart';
-import 'package:spoto/domain/usecases/product/get_product_usecase.dart';
-import 'package:spoto/domain/usecases/product/update_product_usecase.dart';
 import 'package:spoto/presentation/widgets/adaptive_alert_dialog.dart';
 
 import '../../../../core/constant/images.dart';
@@ -18,41 +12,6 @@ import '../../../widgets/other_item_card.dart';
 
 class OtherView extends StatelessWidget {
   const OtherView({Key? key}) : super(key: key);
-
-  Widget updateTypesenseFirestore() {
-    return OtherItemCard(
-      onClick: () async {
-        EasyLoading.show(status: loadingTitle, dismissOnTap: false);
-        TypesenseProducts typesenseService = TypesenseProducts();
-        FirestoreProducts firestoreService = FirestoreProducts();
-        final products = await typesenseService
-            .getProducts(const FilterProductParams(pageSize: 100));
-        for (var product in products.products) {
-          final productData = Product(
-            id: product.id,
-            name: product.name,
-            description: product.description,
-            price: product.priceTags[0].price,
-            priceTags: product.priceTags,
-            // categories: product.categories,
-            category: product.category,
-            images: product.images,
-            createdAt: product.createdAt,
-            updatedAt: product.updatedAt,
-            ownerId: product.ownerId,
-            isNew: product.isNew,
-            status: product.status,
-          );
-          firestoreService.updateProduct(UpdateProductParams(
-              product: productData, isPublicationsAction: false));
-        }
-        EasyLoading.dismiss();
-        EasyLoading.showToast(
-            "${products.toJson()['meta']["total"]} products found");
-      },
-      title: "Update Typesense & Firestore",
-    );
-  }
 
   @override
   Widget build(BuildContext context) {

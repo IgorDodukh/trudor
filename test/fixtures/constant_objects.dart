@@ -29,6 +29,9 @@ final tProductModel = ProductModel(
   ownerId: '1',
   isNew: true,
   status: ProductStatus.active,
+  contactName: 'contactName',
+  contactPhone: 'contactPhone',
+  location: 'location',
 );
 
 final tProductModelList = [tProductModel, tProductModel];

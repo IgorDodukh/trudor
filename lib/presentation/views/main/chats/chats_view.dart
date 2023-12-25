@@ -34,7 +34,7 @@ class _ChatsViewState extends State<ChatsView> {
           padding: const EdgeInsets.only(left: 25, right: 25, bottom: 40),
           child: ListView(
             children: [
-              const Text("Chats",
+              const Text(chatsTitle,
                   style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.w600,
@@ -42,14 +42,13 @@ class _ChatsViewState extends State<ChatsView> {
               const SizedBox(height: 10),
               const SizedBox(height: 120),
               Image.asset(noChatsAsset),
-              Center(
-                  child: Text("You have no chats yet.",
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          color: CupertinoColors.black)),)
-
-
+              const Center(
+                child: Text(noChatsYetTitle,
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87)),
+              )
             ],
           ),
         )));

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:atlas_icons/atlas_icons.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,9 +18,9 @@ import 'package:spoto/data/models/product/product_model.dart';
 import 'package:spoto/data/models/user/user_model.dart';
 import 'package:spoto/domain/usecases/product/update_product_usecase.dart';
 import 'package:spoto/presentation/blocs/user/user_bloc.dart';
-import 'package:spoto/presentation/views/product/add_product_multistep.dart';
 import 'package:spoto/presentation/widgets/adaptive_alert_dialog.dart';
 import 'package:spoto/presentation/widgets/image_fullscreen_view.dart';
+import 'package:spoto/presentation/widgets/modal_actions/edit_product.dart';
 
 import '../../../../../domain/entities/favorites/favorites_item.dart';
 import '../../../../../domain/entities/product/price_tag.dart';
@@ -137,7 +137,8 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
 
   Widget renewProductButton() {
     return IconButton(
-      icon: const Icon(Icons.restore_outlined, color: Colors.white, size: 36),
+      icon: const Icon(CupertinoIcons.arrow_counterclockwise,
+          color: Colors.white, size: 26),
       onPressed: () async {
         return showDialog(
           context: context,
@@ -162,6 +163,9 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                     // categories: [
                     //   CategoryModel.fromEntity(widget.product.categories.first)
                     // ],
+                    contactName: widget.product.contactName,
+                    contactPhone: widget.product.contactPhone,
+                    location: widget.product.location,
                     category: widget.product.category,
                     images: widget.product.images,
                     createdAt: widget.product.createdAt,
@@ -205,6 +209,9 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                     // categories: [
                     //   CategoryModel.fromEntity(widget.product.categories.first)
                     // ],
+                    contactName: widget.product.contactName,
+                    contactPhone: widget.product.contactPhone,
+                    location: widget.product.location,
                     category: widget.product.category,
                     images: widget.product.images,
                     createdAt: widget.product.createdAt,
@@ -281,7 +288,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
         foregroundColor: Colors.black,
         backgroundColor: Colors.white,
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(CupertinoIcons.chat_bubble_text)),
+          IconButton(onPressed: () {}, icon: const Icon(Atlas.chat_dots)),
           IconButton(onPressed: () {}, icon: const Icon(Icons.share)),
         ],
       ),
@@ -473,30 +480,9 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                           IconButton(
                             icon: const Icon(Icons.edit,
                                 color: Colors.white, size: 36),
-                            onPressed: () async {
-                              final result = await showModalActionSheet(
-                                  context: context,
-                                  title: "What would you like to update?",
-                                  actions: [
-                                    const SheetAction(
-                                      label: "Pictures",
-                                      key: "pictures",
-                                    ),
-                                    const SheetAction(
-                                        label: "Details", key: "details"),
-                                    const SheetAction(
-                                        label: "Contact Info", key: "contact"),
-                                  ]);
-                              if (result != null) {
-                                await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          AddProductMultiStepForm(
-                                              pageKey: result,
-                                              productInfo: widget.product)),
-                                );
-                              }
+                            onPressed: () {
+                              EditProductModal(widget.product)
+                                  .openEditModal(context);
                             },
                           ),
                         ],
@@ -537,7 +523,9 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                             );
                           },
                           icon: Icon(
-                            isFavorite ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
+                            isFavorite
+                                ? CupertinoIcons.heart_fill
+                                : CupertinoIcons.heart,
                             color: Colors.white,
                             size: 36,
                           ),
