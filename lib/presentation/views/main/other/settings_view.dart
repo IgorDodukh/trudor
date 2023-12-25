@@ -40,7 +40,7 @@ class _SettingsViewState extends State<SettingsView> {
     FirestoreProducts firestoreService = FirestoreProducts();
     final products = await typesenseService
         .getProducts(const FilterProductParams(pageSize: 100));
-    print("Found ${products.toJson()['meta']["total"]} products");
+    print("Updating ${products.toJson()['meta']["total"]} products");
     for (var product in products.products) {
       final productData = Product(
         id: product.id,
@@ -60,13 +60,12 @@ class _SettingsViewState extends State<SettingsView> {
         contactPhone: product.contactPhone,
         location: product.location,
       );
-      print("Product data $productData");
       firestoreService.updateProduct(UpdateProductParams(
           product: productData, isPublicationsAction: false));
     }
     EasyLoading.dismiss();
     EasyLoading.showToast(
-        "${products.toJson()['meta']["total"]} products found");
+        "Updated ${products.toJson()['meta']["total"]} products.", duration: const Duration(seconds: 5));
   }
 
   Widget buildName(User user) => Column(

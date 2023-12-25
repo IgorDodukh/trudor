@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:spoto/core/constant/messages.dart';
-import 'package:spoto/core/util/price_handler.dart';
 import 'package:spoto/domain/entities/product/product.dart';
 import 'package:spoto/presentation/widgets/address/address_search.dart';
 import 'package:spoto/presentation/widgets/address/place_service.dart';
@@ -48,10 +47,22 @@ class _ConfirmContactsFormState extends State<ConfirmContactsForm> {
 
   @override
   void initState() {
+    final String locationValue;
+    if (widget.contactLocation!.areaLvl3 != "null") {
+      locationValue = widget.contactLocation!.areaLvl3!;
+    } else if (widget.contactLocation!.areaLvl2 != "null") {
+      locationValue = widget.contactLocation!.areaLvl2!;
+    } else if (widget.contactLocation!.areaLvl1 != "null") {
+      locationValue = widget.contactLocation!.areaLvl1!;
+    } else if (widget.contactLocation!.city != "null") {
+      locationValue = widget.contactLocation!.city!;
+    } else {
+      locationValue = '';
+    }
     super.initState();
     contactNameController.text = widget.contactName ?? '';
     phoneController.text = widget.contactPhoneNumber ?? '';
-    locationController.text = widget.contactLocation?.city ?? '';
+    locationController.text = locationValue;
   }
 
   Widget contactName() {
@@ -113,7 +124,17 @@ class _ConfirmContactsFormState extends State<ConfirmContactsForm> {
           final placeDetails = await PlaceApiProvider(sessionToken)
               .getPlaceDetailFromId(result.placeId);
           setState(() {
-            if (placeDetails.city != null) {
+            print(placeDetails);
+            if (placeDetails.areaLvl3 != null) {
+              widget.onLocationChanged!(placeDetails);
+              locationController.text = "${placeDetails.areaLvl3}";
+            } else if (placeDetails.areaLvl2 != null) {
+              widget.onLocationChanged!(placeDetails);
+              locationController.text = "${placeDetails.areaLvl2}";
+            } else if (placeDetails.areaLvl1 != null) {
+              widget.onLocationChanged!(placeDetails);
+              locationController.text = "${placeDetails.areaLvl1}";
+            } else if (placeDetails.city != null) {
               widget.onLocationChanged!(placeDetails);
               locationController.text = "${placeDetails.city}";
             }

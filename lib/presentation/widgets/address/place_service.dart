@@ -9,17 +9,35 @@ class Place {
   String? street;
   String? city;
   String? zipCode;
+  String? areaLvl1;
+  String? areaLvl2;
+  String? areaLvl3;
 
   Place({
     this.streetNumber,
     this.street,
     this.city,
     this.zipCode,
+    this.areaLvl1,
+    this.areaLvl2,
+    this.areaLvl3,
   });
 
   @override
   String toString() {
-    return 'Place(streetNumber: $streetNumber, street: $street, city: $city, zipCode: $zipCode)';
+    return '{"areaLvl1": "$areaLvl1", "areaLvl2": "$areaLvl2", "areaLvl3": "$areaLvl3", "streetNumber": "$streetNumber", "street": "$street", "city": "$city", "zipCode": "$zipCode"}';
+  }
+
+  Place.fromJsonString(String jsonString) {
+    print("fromJsonString object $jsonString");
+    Map<String, dynamic> json = jsonDecode(jsonString);
+    areaLvl1 = json['areaLvl1'];
+    areaLvl2 = json['areaLvl2'];
+    areaLvl3 = json['areaLvl3'];
+    streetNumber = json['streetNumber'];
+    street = json['street'];
+    city = json['city'];
+    zipCode = json['zipCode'];
   }
 }
 
@@ -49,7 +67,7 @@ class PlaceApiProvider {
 
   Future<List<Suggestion>> fetchSuggestions(String input, String lang) async {
     final request =
-        'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$input&types=locality&language=$lang&components=country:$searchCountry&key=$apiKey&sessiontoken=$sessionToken';
+        'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$input&types=administrative_area_level_3&language=$lang&components=country:$searchCountry&key=$apiKey&sessiontoken=$sessionToken';
     final response = await client.get(Uri.parse(request));
 
     if (response.statusCode == 200) {
@@ -83,6 +101,15 @@ class PlaceApiProvider {
         final place = Place();
         for (var c in components) {
           final type = c['types'];
+          if (type.contains('administrative_area_level_1')) {
+            place.areaLvl1 = c['long_name'];
+          }
+          if (type.contains('administrative_area_level_2')) {
+            place.areaLvl2 = c['long_name'];
+          }
+          if (type.contains('administrative_area_level_3')) {
+            place.areaLvl3 = c['long_name'];
+          }
           if (type.contains('street_number')) {
             place.streetNumber = c['long_name'];
           }
