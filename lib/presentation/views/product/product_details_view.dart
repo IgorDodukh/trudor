@@ -288,8 +288,8 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
         foregroundColor: Colors.black,
         backgroundColor: Colors.white,
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Atlas.chat_dots)),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.share)),
+          IconButton(onPressed: () {}, icon: const Icon(CupertinoIcons.chat_bubble)),
+          IconButton(onPressed: () {}, icon: const Icon(Atlas.share)),
         ],
       ),
       body: ListView(

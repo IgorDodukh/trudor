@@ -18,8 +18,8 @@ import 'package:spoto/domain/entities/product/price_tag.dart';
 import 'package:spoto/presentation/blocs/favorites/favorites_bloc.dart' as fav;
 import 'package:spoto/presentation/blocs/user/user_bloc.dart';
 
-import '../../core/router/app_router.dart';
-import '../../domain/entities/product/product.dart';
+import '../../../core/router/app_router.dart';
+import '../../../domain/entities/product/product.dart';
 
 class ProductCard extends StatefulWidget {
   final Product? product;
@@ -241,7 +241,7 @@ class _ProductCardState extends State<ProductCard> {
                         child: favoritesButtonLoading())
                     : IconButton(
                         visualDensity: VisualDensity.compact,
-                        iconSize: 25,
+                        iconSize: 22,
                         onPressed: () {
                           addToFavorites();
                         },

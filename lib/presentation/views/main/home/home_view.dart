@@ -11,7 +11,7 @@ import '../../../blocs/filter/filter_cubit.dart';
 import '../../../blocs/product/product_bloc.dart';
 import '../../../widgets/alert_card.dart';
 import '../../../widgets/input_form_button.dart';
-import '../../../widgets/product_card.dart';
+import '../../../widgets/product/product_card.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
