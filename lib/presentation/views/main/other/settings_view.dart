@@ -131,7 +131,7 @@ class _SettingsViewState extends State<SettingsView> {
                     items: [
                       SettingsItem(
                         onTap: () {},
-                        icons: Icons.dark_mode_rounded,
+                        icons: Icons.dark_mode_outlined,
                         iconStyle: IconStyle(
                           iconsColor: Colors.black54,
                           withBackground: true,
@@ -153,7 +153,7 @@ class _SettingsViewState extends State<SettingsView> {
                           Navigator.of(context)
                               .pushNamed(AppRouter.myPublications);
                         },
-                        icons: CupertinoIcons.square_list_fill,
+                        icons: CupertinoIcons.square_list,
                         iconStyle: IconStyle(
                           iconsColor: Colors.black54,
                           withBackground: true,
@@ -163,7 +163,7 @@ class _SettingsViewState extends State<SettingsView> {
                       ),
                       SettingsItem(
                         onTap: () {},
-                        icons: Icons.notifications_active_rounded,
+                        icons: Icons.notifications_none,
                         iconStyle: IconStyle(
                           iconsColor: Colors.black54,
                           withBackground: true,
@@ -182,7 +182,7 @@ class _SettingsViewState extends State<SettingsView> {
                     items: [
                       SettingsItem(
                         onTap: () {},
-                        icons: CupertinoIcons.mail_solid,
+                        icons: CupertinoIcons.mail,
                         iconStyle: IconStyle(
                           iconsColor: Colors.black54,
                           withBackground: true,
@@ -194,7 +194,7 @@ class _SettingsViewState extends State<SettingsView> {
                         onTap: () {
                           Navigator.of(context).pushNamed(AppRouter.about);
                         },
-                        icons: CupertinoIcons.info_circle_fill,
+                        icons: CupertinoIcons.info_circle,
                         iconStyle: IconStyle(
                           iconsColor: Colors.black54,
                           withBackground: true,
@@ -230,19 +230,24 @@ class _SettingsViewState extends State<SettingsView> {
                           );
                         },
                         icons: Icons.exit_to_app_rounded,
+                        iconStyle: IconStyle(
+                          iconsColor: Colors.black54,
+                          withBackground: true,
+                          backgroundColor: Colors.transparent,
+                        ),
                         title: "Sign Out",
                       ),
                       SettingsItem(
                         onTap: () {},
-                        icons: CupertinoIcons.delete_solid,
+                        icons: CupertinoIcons.delete,
                         iconStyle: IconStyle(
-                          iconsColor: Colors.red,
+                          iconsColor: Colors.redAccent,
                           withBackground: true,
                           backgroundColor: Colors.transparent,
                         ),
                         title: "Delete account",
                         titleStyle: const TextStyle(
-                          color: Colors.red,
+                          color: Colors.redAccent,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
