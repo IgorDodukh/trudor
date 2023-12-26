@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class FavoriteIconButton extends StatelessWidget {
@@ -17,7 +18,7 @@ class FavoriteIconButton extends StatelessWidget {
           padding: const EdgeInsets.all(4),
         ),
         child: const Icon(
-          Icons.favorite_border,
+          CupertinoIcons.heart,
           color: Colors.white,
           size: 18,
         ),

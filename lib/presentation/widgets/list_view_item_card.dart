@@ -167,7 +167,7 @@ class ListViewItemCard extends StatelessWidget {
                 priceTag: listViewItem!.priceTag)));
         EasyLoading.showSuccess(removedFromFavoritesTitle);
       },
-      icon: const Icon(Icons.favorite),
+      icon: const Icon(CupertinoIcons.heart_fill, color: Colors.black87),
     );
   }
 
@@ -182,7 +182,7 @@ class ListViewItemCard extends StatelessWidget {
                 userId: userId,
                 priceTag: listViewItem!.priceTag)));
       },
-      icon: const Icon(Icons.favorite_border),
+      icon: const Icon(CupertinoIcons.heart),
     );
   }
 

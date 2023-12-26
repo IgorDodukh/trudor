@@ -13,4 +13,18 @@ class NumberHandler {
       return number.toStringAsFixed(2);
     }
   }
+
+  static String compactPrice(num number) {
+    final String price;
+    if (number >= 1000 && number < 1000000) {
+      price = '${(number / 1000).toStringAsFixed(0)}K';
+    } else if (number >= 1000000 && number < 1000000000) {
+      price = '${(number / 1000000).toStringAsFixed(0)}M';
+    } else if (number >= 1000000000) {
+      price = '${(number / 1000000000).toStringAsFixed(0)}B';
+    } else {
+      price = number.toStringAsFixed(2);
+    }
+    return price;
+  }
 }
